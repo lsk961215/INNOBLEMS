@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user">
+
+	<resultMap id="userMap" type="com.innoblems.dto.UserDTO">
+	  <result column="USR_SEQ" property="usrSeq"/>
+	  <result column="USR_ID" property="usrId"/>
+	  <result column="USR_PW" property="usrPw"/>
+	  <result column="USR_NM" property="usrNm"/>
+	  <result column="USR_BDT" property="usrBDT"/>
+	  <result column="GD_CD" property="genderCD"/>
+	  <result column="USR_IN_DT" property="usrINDT"/>
+	  <result column="ST_CD" property="statusCD"/>
+	  <result column="RA_CD" property="rankCD"/>
+	  <result column="GR_CD" property="gradeCD"/>
+	  <result column="DV_CD" property="devCD"/>
+	  <result column="USR_IMG" property="usrImg"/>
+	  <result column="USR_PN" property="usrPn"/>
+	  <result column="USR_EM" property="usrEm"/>
+	  <result column="USR_AD" property="usrAd"/>
+	</resultMap>
+	
+	<select id="getUserList" resultMap="userMap">
+		SELECT 
+		    USR_SEQ,
+		    USR_ID,
+		    USR_PW, 
+		    USR_NM,
+		    USR_BDT, 
+		    GD_CD, 
+		    USR_IN_DT,
+		    ST_CD,
+		    RA_CD,
+		    GR_CD,
+		    DV_CD,
+		    USR_IMG,
+		    USR_PN, 
+		    USR_EM, 
+		    USR_AD
+		FROM
+		    USER_INFO
+	</select>
+	
+</mapper>
