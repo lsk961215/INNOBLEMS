@@ -1,0 +1,25 @@
+
+aside{
+	width: 20%;
+	background-color: white;
+	
+	margin: 50px;
+		
+	display: flex;
+	flex-direction: column;
+	
+	height: inherit;
+	
+	min-height: 50vh;
+	border: 2px solid lightgrey;
+}
+aside {
+	text-align: center;
+}
+aside a{
+	text-decoration: none;
+	color: black;
+}
+aside a:hover {
+	color: grey;
+}

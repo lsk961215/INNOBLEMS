@@ -11,7 +11,7 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="com.innoblems.spring">
+	<logger name="com.spring.frontline">
 		<level value="info" />
 	</logger>
 	
