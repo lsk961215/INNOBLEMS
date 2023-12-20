@@ -23,7 +23,11 @@
 		})
 		
 		$("#minDT").change(function(){
-			console.log("min Hi")
+			$("#maxDT").attr("min", $(this).val())
+		})
+		
+		$("#maxDT").change(function(){
+			$("#minDT").attr("max", $(this).val())
 		})
 	})
 	
@@ -33,15 +37,36 @@
 		var usrNm = $("#usrNm").val()
 		var grCD = $("#grCD").val()
 		var stCD = $("#stCD").val()
+		var minDT = $("#minDT").val()
+		var maxDT = $("#maxDT").val()
+		var skills = new Array();
 		
 		if(usrSeq == ""){
 			usrSeq = 0
 		}
 		
+		$(".skill").each(function(){
+			if($(this).is(":checked")==true){
+				skills.push($(this).val())
+		    }
+		})
+		
 		var param = "usrSeq="+usrSeq
 		param += "&usrNm="+usrNm
 		param += "&grCD="+grCD
 		param += "&stCD="+stCD
+		param += "&minDT="+minDT
+		param += "&maxDT="+maxDT
+		param += "&skills="
+		
+		for(var i = 0; i<skills.length; i++){
+			param += skills[i]
+			if(i != skills.length - 1){
+				param += ","
+			}
+		}
+		
+		console.log("param : " + param)
 		
 		$.ajax({
 	        url: "getUserList", 
@@ -59,7 +84,7 @@
 	               		str += "<td>" + data[i].raCD + "</td>"
 	               		str += "<td>" + data[i].usrNm + "</td>"
 	               		str += "<td>" + data[i].grCD + "</td>"
-	               		str += "<td></td>"
+	               		str += "<td>" + data[i].skills + "</td>"
 	               		str += "<td>" + data[i].stCD + "</td>"
 	               		str += '<td><input id="edit" type="button" value="상세/수정"></td>'
 	              		str += '<td><input id="project" type="button" value="프로젝트 관리"></td>'
@@ -103,7 +128,11 @@ input[type=text], select {
 	
 .middle {
 	display: flex;
-	margin: 50px;
+	
+	margin-bottom: 50px;
+	margin-left: 100px;
+	margin-right: 50px;
+	
 	border: 2px solid lightgrey;
 }
 	
@@ -115,11 +144,13 @@ input[type=text], select {
 	padding-left: 10px;
 	padding-right: 10px;
 		
-	height: 60px;
+	height: 50px;
 		
-	position: absolute;
-	top: 130px;
-	left: 90px;
+	position: relative;
+	top: 25px;
+	left: 130px;
+	
+	width: max-content;
 	
 	font-size: 150%;
 }
@@ -205,10 +236,10 @@ input[type=text], select {
 
 .inDT {
 	margin-left: 6px;
-	margin-right: 16px;
+	margin-right: 4px;
 }
 
-.skill {
+.skillText {
 	margin-right: 5px;
 }
 
@@ -278,76 +309,79 @@ table th {
 <body>
 <jsp:include page="header.jsp"/>
 <main>
-	<div class="middle">
+	<div class="wrap">
 		<div class="pageTitle"><h1>사원 관리</h1></div>
-		<jsp:include page="aside.jsp"/>
-		<section>
-			<div class="filter"> 
-				<div class="filterTitle"><h1>검색 조건</h1></div>
-				<div class="filterDetail">
-					<div class="filterSection_1">
-						<small>사원번호</small>
-						<input name="usrSeq" id="usrSeq" type="text">
-						<small>사원명</small>
-						<input name="usrNm" id="usrNm" type="text">
-						<small>기술등급</small>
-						<select name="grCD" id="grCD">
-							<option value="0">선택</option>
-							<option value="1">초급</option>
-							<option value="2">중급</option>
-							<option value="3">고급</option>
-						</select>
-						<small>재직상태</small>
-						<select name="stCD" id="stCD">
-							<option value="0">선택</option>
-							<option value="1">재직</option>
-							<option value="2">휴가</option>
-							<option value="3">퇴직</option>
-						</select>
-					</div>
-					<div class="filterSection_2">
-						<small class="inDT">입사일</small> <input id="minDT" type="date"> ~ <input id="maxDT" type="date">
-					</div>
-					<div class="filterSection_3">
-						<small class="skill">보유기술</small> 
-						<input type="checkbox" name="Java"> <small>Java</small> <input type="checkbox" name="JavaScript"> <small>JavaScript</small>
-						<input type="checkbox" name="Spring"> <small>Spring</small> <input type="checkbox" name="HTML/CSS"> <small>HTML/CSS</small>
-						<input type="checkbox" name="jQuery"> <small>jQuery</small> <input type="checkbox" name="JSP"> <small>JSP</small>
-						<input type="checkbox" name="SQL"> <small>SQL</small> <input type="checkbox" name="React"> <small>React</small>
-						<input type="checkbox" name="Kotlin"> <small>Kotlin</small> <input type="checkbox" name="C#"> <small>C#</small>
-					</div>
-					<div class="filterSection_4">
-						<input id="search" type="button" value="조회">
+		<div class="middle">
+			<jsp:include page="aside.jsp"/>
+			<section>
+				<div class="filter"> 
+					<div class="filterTitle"><h1>검색 조건</h1></div>
+					<div class="filterDetail">
+						<div class="filterSection_1">
+							<small>사원번호</small>
+							<input name="usrSeq" id="usrSeq" type="text">
+							<small>사원명</small>
+							<input name="usrNm" id="usrNm" type="text">
+							<small>기술등급</small>
+							<select name="grCD" id="grCD">
+								<option value="0">선택</option>
+								<option value="1">초급</option>
+								<option value="2">중급</option>
+								<option value="3">고급</option>
+							</select>
+							<small>재직상태</small>
+							<select name="stCD" id="stCD">
+								<option value="0">선택</option>
+								<option value="1">재직</option>
+								<option value="2">휴가</option>
+								<option value="3">퇴직</option>
+							</select>
+						</div>
+						<div class="filterSection_2">
+							<small class="inDT">입사일</small> <input id="minDT" type="date"> ~ <input id="maxDT" type="date">
+						</div>
+						<div class="filterSection_3">
+							<small class="skillText">보유기술</small> 
+							<input type="checkbox" class="skill" value="1" name="Java"> <small>Java</small> <input type="checkbox" class="skill" value="2" name="JavaScript"> <small>JavaScript</small>
+							<input type="checkbox" class="skill" value="3" name="Spring"> <small>Spring</small> <input type="checkbox" class="skill" value="4" name="HTML/CSS"> <small>HTML/CSS</small>
+							<input type="checkbox" class="skill" value="5" name="jQuery"> <small>jQuery</small> <input type="checkbox" class="skill" value="6" name="JSP"> <small>JSP</small>
+							<input type="checkbox" class="skill" value="7" name="SQL"> <small>SQL</small> <input type="checkbox" class="skill" value="8" name="React"> <small>React</small>
+							<input type="checkbox" class="skill" value="9" name="Kotlin"> <small>Kotlin</small> <input type="checkbox" class="skill" value="10" name="C#"> <small>C#</small>
+						</div>
+						<div class="filterSection_4">
+							<input id="search" type="button" value="조회">
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="result">
-				<div class="resultTitle"><h1>사원 리스트</h1></div>
-				<div class="resultDetail">
-					<table>
-						<thead>
-							<tr>
-								<th><input type="checkbox"></th>
-								<th>사원번호</th>
-								<th>입사일</th>
-								<th>직급</th>
-								<th>사원명</th>
-								<th>기술등급</th>
-								<th>보유기술</th>
-								<th>재직상태</th>
-								<th>상세/수정</th>
-								<th>프로젝트관리</th>
-							</tr>
-						</thead>
-						<tbody id="tbody">
-							<tr>
-								<td colspan="10"><h3>데이터가 없습니다.</h3></td>
-							</tr>
-						</tbody>
-					</table>
+				<div class="result">
+					<div class="resultTitle"><h1>사원 리스트</h1></div>
+					<div class="resultDetail">
+						<table>
+							<thead>
+								<tr>
+									<th><input type="checkbox"></th>
+									<th>사원번호</th>
+									<th>입사일</th>
+									<th>직급</th>
+									<th>사원명</th>
+									<th>기술등급</th>
+									<th>보유기술</th>
+									<th>재직상태</th>
+									<th>상세/수정</th>
+									<th>프로젝트관리</th>
+								</tr>
+							</thead>
+							<tbody id="tbody">
+								<tr>
+									<td colspan="10"><h3>데이터가 없습니다.</h3></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
-			</div>
-		</section>
+			</section>
+		</div>
+		
 	</div>
 	
 </main>

@@ -16,7 +16,7 @@ public class MainDAOImpl implements MainDAO{
 	SqlSession sqlSession;
 
 	@Override
-	public List getUserList(UserDTO userDTO) {
-		return sqlSession.selectList("user.getUserList", userDTO);
+	public List getUserList(Map map) {
+		return sqlSession.selectList("user.getUserList", map);
 	}
 }

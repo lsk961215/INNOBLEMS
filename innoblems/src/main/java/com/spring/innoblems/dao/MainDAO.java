@@ -6,5 +6,5 @@ import java.util.Map;
 import com.spring.innoblems.dto.UserDTO;
 
 public interface MainDAO {
-	List getUserList(UserDTO userDTO);
+	List getUserList(Map map);
 }

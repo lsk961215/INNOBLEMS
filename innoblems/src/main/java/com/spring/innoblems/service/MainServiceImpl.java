@@ -18,8 +18,8 @@ public class MainServiceImpl implements MainService {
 	MainDAO mainDAO;
 	
 	@Override
-	public List getUserList(UserDTO userDTO) {
-		return mainDAO.getUserList(userDTO);
+	public List getUserList(Map map) {
+		return mainDAO.getUserList(map);
 	}
 	
 }

@@ -44,16 +44,23 @@ public class MainController {
 	@ResponseBody
 	@RequestMapping("/getUserList")
 	public List getUserList(UserDTO userDTO) throws Exception {
-		String returnVal ="";
-		List userList = null;
-		System.out.println(userDTO);
+		String str = userDTO.getSkills();
+		String[] skillArray = str.split(",");
+		List skills = new ArrayList();
+		
+		for (int i = 0; i<skillArray.length; i++) {
+			skills.add(skillArray[i]);
+		}
+		
+		Map selectMap = new HashMap();
+		
+		selectMap.put("skills", skills);
+		selectMap.put("userDTO", userDTO);
+		
+		List userList = new ArrayList();
 		
 		try {
-			userList = mainService.getUserList(userDTO);
-				
-			for(int i = 0; i<userList.size(); i++) {
-				System.out.println(userList.get(i).toString());
-			}
+			userList = mainService.getUserList(selectMap);
 		}catch(Exception e){
 			e.printStackTrace();
 			System.out.println("오류가 발생했습니다.");

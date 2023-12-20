@@ -16,6 +16,10 @@ public class UserDTO {
 	private String usrPn;
 	private String usrEm;
 	private String usrAd;
+	private String minDT;
+	private String maxDT;
+	private String skills;
+	
 	public int getUsrSeq() {
 		return usrSeq;
 	}
@@ -106,15 +110,30 @@ public class UserDTO {
 	public void setUsrAd(String usrAd) {
 		this.usrAd = usrAd;
 	}
+	public String getMinDT() {
+		return minDT;
+	}
+	public void setMinDT(String minDT) {
+		this.minDT = minDT;
+	}
+	public String getMaxDT() {
+		return maxDT;
+	}
+	public void setMaxDT(String maxDT) {
+		this.maxDT = maxDT;
+	}
+	public String getSkills() {
+		return skills;
+	}
+	public void setSkills(String skills) {
+		this.skills = skills;
+	}
+	
 	@Override
 	public String toString() {
 		return "UserDTO [usrSeq=" + usrSeq + ", usrId=" + usrId + ", usrPw=" + usrPw + ", usrNm=" + usrNm + ", usrBDT="
 				+ usrBDT + ", gdCD=" + gdCD + ", usrINDT=" + usrINDT + ", stCD=" + stCD + ", raCD=" + raCD + ", grCD="
 				+ grCD + ", dvCD=" + dvCD + ", usrImg=" + usrImg + ", usrPn=" + usrPn + ", usrEm=" + usrEm + ", usrAd="
-				+ usrAd + "]";
+				+ usrAd + ", minDT=" + minDT + ", maxDT=" + maxDT + ", skills=" + skills + "]";
 	}
-	
-	
-	
-	
 }
