@@ -7,4 +7,7 @@ import com.spring.innoblems.dto.UserDTO;
 
 public interface MainDAO {
 	List getUserList(Map map);
+	List getCodeList();
+	int getUserTotal(Map map);
+	void delUser(List list);
 }

@@ -19,4 +19,20 @@ public class MainDAOImpl implements MainDAO{
 	public List getUserList(Map map) {
 		return sqlSession.selectList("user.getUserList", map);
 	}
+	
+	@Override
+	public int getUserTotal(Map map) {
+		return sqlSession.selectOne("user.getUserTotal", map);
+	}
+	
+	@Override
+	public List getCodeList() {
+		return sqlSession.selectList("code.getCodeList");
+	}
+
+	@Override
+	public void delUser(List list) {
+		sqlSession.delete("user.delUser", list);
+		return;
+	}
 }

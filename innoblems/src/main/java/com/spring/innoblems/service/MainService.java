@@ -6,6 +6,7 @@ import java.util.Map;
 import com.spring.innoblems.dto.UserDTO;
 
 public interface MainService {
-	List getUserList(Map map);
-	
+	Map getUserList(Map map);
+	List getCodeList();
+	void delUser(List list);
 }

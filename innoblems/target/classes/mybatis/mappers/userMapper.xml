@@ -24,40 +24,27 @@
 	</resultMap>
 	
 	<select id="getUserList" parameterType="java.util.HashMap" resultMap="userMap">
-		<if test="userDTO.skills != ''">
-	    	SELECT d.*
-			FROM (
-			        SELECT a.USR_SEQ
-					FROM USER_INFO a
-			        RIGHT OUTER JOIN (SELECT USR_SEQ
-			            , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
-			        FROM 
-			        (
-			            SELECT *
-			            FROM USER_SKILL_TABLE
-			            WHERE SK_CD IN <foreach item="item" collection="skills" open="(" separator="," close=")"> #{item} </foreach>
-			        )
-			        GROUP BY USR_SEQ) b
-			        ON a.USR_SEQ = b.USR_SEQ
-			WHERE b.SKILLS = #{userDTO.skills}
-			) c
-			
-			LEFT OUTER JOIN 
-			
-			(
-        </if>
-		SELECT a.*, b.SKILLS
+	    SELECT *
+	    FROM (
+	    SELECT ROWNUM as rnum, b.*
+		FROM (
+		SELECT a.USR_SEQ
 		FROM USER_INFO a
-		LEFT OUTER JOIN (SELECT USR_SEQ
+		RIGHT OUTER JOIN (SELECT USR_SEQ
 		, LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
-        FROM 
-        (
-            SELECT *
-            FROM USER_SKILL_TABLE
-        )
+		FROM (
+		SELECT *
+		FROM USER_SKILL_TABLE
+        <if test="userDTO.skills != ''">
+			WHERE SK_CD IN <foreach item="item" collection="skills" open="(" separator="," close=")"> #{item} </foreach>
+		</if>
+		)
 		GROUP BY USR_SEQ) b
 		ON a.USR_SEQ = b.USR_SEQ
 		WHERE 1=1
+        <if test="userDTO.skills != ''">
+			AND SKILLS = #{userDTO.skills}
+		</if>
 		<if test="userDTO.usrSeq != 0">
 			AND a.USR_SEQ = #{userDTO.usrSeq}
 		</if>
@@ -79,12 +66,96 @@
 		<if test="userDTO.minDT != '' and userDTO.maxDT == ''">
 			AND a.USR_IN_DT <![CDATA[ >= ]]> #{userDTO.minDT}
 		</if>
+		) a
+			
+		LEFT OUTER JOIN 
+			
+		(
+		SELECT a.*, b.SKILLS
+		FROM USER_INFO a
+		LEFT OUTER JOIN (SELECT USR_SEQ
+		     , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+		FROM USER_SKILL_TABLE
+		GROUP BY USR_SEQ
+		) b
+		ON a.USR_SEQ = b.USR_SEQ
+		) b
+		ON a.USR_SEQ = b.USR_SEQ
 		ORDER BY a.USR_SEQ
-		<if test="userDTO.skills != ''">
-	    	) d
-			ON c.USR_SEQ = d.USR_SEQ
-			ORDER BY d.USR_SEQ
-        </if>
+		)
+		WHERE RNUM <![CDATA[>=]]> #{startNum} and RNUM <![CDATA[<=]]> #{endNum}
 	</select>
+	
+	<select id="getUserTotal" parameterType="java.util.HashMap" resultType="int">
+	    SELECT COUNT(*)
+		FROM (
+	    SELECT *
+		FROM (
+		SELECT a.USR_SEQ
+		FROM USER_INFO a
+		RIGHT OUTER JOIN (SELECT USR_SEQ
+		, LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+		FROM (
+		SELECT *
+		FROM USER_SKILL_TABLE
+		<if test="userDTO.skills != ''">
+			WHERE SK_CD IN <foreach item="item" collection="skills" open="(" separator="," close=")"> #{item} </foreach>
+		</if>
+		)
+		GROUP BY USR_SEQ) b
+		ON a.USR_SEQ = b.USR_SEQ
+		WHERE 1=1
+		<if test="userDTO.skills != ''">
+			AND SKILLS = #{userDTO.skills}
+		</if>
+		<if test="userDTO.usrSeq != 0">
+			AND a.USR_SEQ = #{userDTO.usrSeq}
+		</if>
+		<if test="userDTO.usrNm != '' and userDTO.usrNm != null">
+			AND a.USR_NM like '%' || #{userDTO.usrNm} || '%'
+		</if>
+		<if test="userDTO.grCD != 0">
+			AND a.GR_CD = #{userDTO.grCD}
+		</if>
+		<if test="userDTO.stCD != 0">
+			AND a.ST_CD = #{userDTO.stCD}
+		</if>
+		<if test="userDTO.minDT != '' and userDTO.maxDT != ''">
+			AND a.USR_IN_DT BETWEEN #{userDTO.minDT} AND #{userDTO.maxDT}
+		</if>
+		<if test="userDTO.minDT == '' and userDTO.maxDT != ''">
+			AND a.USR_IN_DT <![CDATA[ <= ]]> #{userDTO.maxDT}
+		</if>
+		<if test="userDTO.minDT != '' and userDTO.maxDT == ''">
+			AND a.USR_IN_DT <![CDATA[ >= ]]> #{userDTO.minDT}
+		</if>
+		) a
+			
+		LEFT OUTER JOIN 
+			
+		(
+		SELECT a.*, b.SKILLS
+		FROM USER_INFO a
+		LEFT OUTER JOIN (SELECT USR_SEQ
+		     , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+		FROM USER_SKILL_TABLE
+		GROUP BY USR_SEQ
+		) b
+		ON a.USR_SEQ = b.USR_SEQ
+		) b
+		ON a.USR_SEQ = b.USR_SEQ
+		ORDER BY a.USR_SEQ
+		)
+	</select>
+	
+	<delete id="delUser" parameterType="java.util.List">
+		DELETE FROM
+		    USER_INFO
+		WHERE
+		    USR_SEQ IN
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
 	
 </mapper>

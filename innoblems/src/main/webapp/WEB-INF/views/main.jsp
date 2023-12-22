@@ -19,7 +19,7 @@
 <script>
 	$(function(){
 		$("#search").click(function(){
-			getUserList()
+			getUserList(1)
 		})
 		
 		$("#minDT").change(function(){
@@ -31,15 +31,14 @@
 		})
 	})
 	
-	var getUserList = function(){
-		
+	function getUserList(pageNum){
 		var usrSeq = $("#usrSeq").val()
 		var usrNm = $("#usrNm").val()
 		var grCD = $("#grCD").val()
 		var stCD = $("#stCD").val()
 		var minDT = $("#minDT").val()
 		var maxDT = $("#maxDT").val()
-		var skills = new Array();
+		var skills = new Array()
 		
 		if(usrSeq == ""){
 			usrSeq = 0
@@ -66,6 +65,8 @@
 			}
 		}
 		
+		param += "&pageNum="+pageNum
+		
 		console.log("param : " + param)
 		
 		$.ajax({
@@ -74,28 +75,94 @@
 	        data: param,
 	        success: function(data) {
 	        	var str = ""
+	        	var page = ""
+	        	var add = "<button id='add' onclick='addUser()'>추가</button>"
+	        	var del = "<button id='del' onclick='delUser()'>삭제</button>"
+	        	
 		        $("#tbody").empty()
-		        if(data.length >= 1){
-		        	$.each(data, function(i){
+		        $(".resultPage").empty()
+		        $(".resultButton").empty()
+		        
+		        if(data.userList.length >= 1){
+		        	$.each(data.userList, function(i){
 	                	str += "<tr>"
-	                	str += "<td><input type='checkbox' name=" + data[i].usrSeq + "></td>"
-	               		str += "<td>" + data[i].usrSeq + "</td>"
-	               		str += "<td>" + data[i].usrINDT + "</td>"
-	               		str += "<td>" + data[i].raCD + "</td>"
-	               		str += "<td>" + data[i].usrNm + "</td>"
-	               		str += "<td>" + data[i].grCD + "</td>"
-	               		str += "<td>" + data[i].skills + "</td>"
-	               		str += "<td>" + data[i].stCD + "</td>"
+	                	str += "<td><input type='checkbox' class='usrSeq' value=" + data.userList[i].usrSeq + "></td>"
+	               		str += "<td>" + data.userList[i].usrSeq + "</td>"
+	               		str += "<td>" + data.userList[i].usrINDT + "</td>"
+	               		str += "<td>" + data.userList[i].raCD + "</td>"
+	               		str += "<td>" + data.userList[i].usrNm + "</td>"
+	               		str += "<td>" + data.userList[i].grCD + "</td>"
+	               		str += "<td>" + data.userList[i].skills + "</td>"
+	               		str += "<td>" + data.userList[i].stCD + "</td>"
 	               		str += '<td><input id="edit" type="button" value="상세/수정"></td>'
 	              		str += '<td><input id="project" type="button" value="프로젝트 관리"></td>'
 	              		str += "</tr>"
-	                });
+	                })
+	                
+		        	if(data.beginPaging != 1){
+		        		page += "<a href=getUserList?pageNum=" + (data.beginPaging - 1) + ">이전</a>"
+		        	}
+		        	
+		        	for(var i = data.beginPaging; i <= data.endPaging; i++){
+		        		if(i == data.pageNum){
+		        			page += "<button style='font-size:2em' class='page' value=" + i +">" + i + "</button>"
+		        		} else {
+		        			page += "<button class='page' value=" + i +" onclick='getUserList(" + i + ")'>" + i + "</button>"
+		        		}
+		        	}
+		        	
+		        	if(data.endPaging != data.totalPaging){
+		        		page += "<a href=getUserList?pageNum=" + (data.endPaging + 1) + ">다음</a>"
+		        	}
+		        	
 		        } else {
 		        	str += "<tr>"
 		        	str += '<td colspan="10"><h3>검색결과가 없습니다.</h3></td>'
 		        	str += "</tr>"
 		        }
+	        	
 	        	$("#tbody").append(str)
+	        	$(".resultPage").append(page)
+	        	$(".resultButton").append(add)
+	        	$(".resultButton").append(del)
+	        },
+	        error: function() {
+	            alert("통신실패")
+	        }
+	    })
+	}
+	
+	function delUser(){
+		var usrSeqList = new Array()
+		
+		$(".usrSeq").each(function(){
+			if($(this).is(":checked")==true){
+				usrSeqList.push($(this).val())
+		    }
+		})
+		
+		var param = "&usrSeqList="
+		
+		for(var i = 0; i<usrSeqList.length; i++){
+			param += usrSeqList[i]
+			if(i != usrSeqList.length - 1){
+				param += ","
+			}
+		}
+		
+		console.log("param : " + param)
+		
+		$.ajax({
+	        url: "delUser", 
+	        type:"post",
+	        data: param,
+	        success: function(data) {
+	        	if(data == 0){
+	        		alert("삭제 되었습니다.")
+	        		getUserList(1)
+	        	} else {
+	        		alert("해당 사원은 현재 소속되어있는 프로젝트가 있습니다.")
+	        	}
 	        },
 	        error: function() {
 	            alert("통신실패")
@@ -120,6 +187,12 @@ section {
 	margin-top: 50px;
 	margin-bottom: 50px;
 	margin-right: 50px;
+}
+
+button {
+	border: none;
+	background-color: white;
+	cursor: pointer;
 }
 
 input[type=text], select {
@@ -257,6 +330,36 @@ input[type=text], select {
 	cursor: pointer;
 }
 
+#add {
+	border: none;
+	background-color: #0C70F2;
+	color: white;
+	
+	font-weight: bold;
+	font-size: 105%;
+	
+	width: 80px;
+	height: 30px;
+	
+	cursor: pointer;
+	
+	margin-right: 50px;
+}
+
+#del {
+	border: none;
+	background-color: red;
+	color: white;
+	
+	font-weight: bold;
+	font-size: 105%;
+	
+	width: 80px;
+	height: 30px;
+	
+	cursor: pointer;
+}
+
 #edit {
 	border: none;
 	background-color: #0C70F2;
@@ -304,6 +407,19 @@ table th {
 	background-color: #E4E4E4;
 	color: black;
 }
+
+.resultPage {
+	display: flex;
+	justify-content: center;
+}
+
+.resultButtonWrap {
+	display:flex;
+	justify-content: center;
+}
+
+.resultButton {
+}
 </style>
 </head>
 <body>
@@ -325,16 +441,16 @@ table th {
 							<small>기술등급</small>
 							<select name="grCD" id="grCD">
 								<option value="0">선택</option>
-								<option value="1">초급</option>
-								<option value="2">중급</option>
-								<option value="3">고급</option>
+								<c:forEach var="item" items="${grList}" varStatus="i">
+									<option value="${i.count}">${item}</option>
+								</c:forEach>
 							</select>
 							<small>재직상태</small>
 							<select name="stCD" id="stCD">
 								<option value="0">선택</option>
-								<option value="1">재직</option>
-								<option value="2">휴가</option>
-								<option value="3">퇴직</option>
+								<c:forEach var="item" items="${stList}" varStatus="i">
+									<option value="${i.count}">${item}</option>
+								</c:forEach>
 							</select>
 						</div>
 						<div class="filterSection_2">
@@ -342,14 +458,12 @@ table th {
 						</div>
 						<div class="filterSection_3">
 							<small class="skillText">보유기술</small> 
-							<input type="checkbox" class="skill" value="1" name="Java"> <small>Java</small> <input type="checkbox" class="skill" value="2" name="JavaScript"> <small>JavaScript</small>
-							<input type="checkbox" class="skill" value="3" name="Spring"> <small>Spring</small> <input type="checkbox" class="skill" value="4" name="HTML/CSS"> <small>HTML/CSS</small>
-							<input type="checkbox" class="skill" value="5" name="jQuery"> <small>jQuery</small> <input type="checkbox" class="skill" value="6" name="JSP"> <small>JSP</small>
-							<input type="checkbox" class="skill" value="7" name="SQL"> <small>SQL</small> <input type="checkbox" class="skill" value="8" name="React"> <small>React</small>
-							<input type="checkbox" class="skill" value="9" name="Kotlin"> <small>Kotlin</small> <input type="checkbox" class="skill" value="10" name="C#"> <small>C#</small>
+							<c:forEach var="item" items="${skList}" varStatus="i">
+								<input type="checkbox" class="skill" value="${i.count}"> <small>${item}</small> 
+							</c:forEach>
 						</div>
 						<div class="filterSection_4">
-							<input id="search" type="button" value="조회">
+							<button id="search">조회</button>
 						</div>
 					</div>
 				</div>
@@ -377,6 +491,14 @@ table th {
 								</tr>
 							</tbody>
 						</table>
+					</div>
+					<div class="resultPage">
+						
+					</div>
+					<div class="resultButtonWrap">
+						<div class="resultButton">
+					
+						</div>
 					</div>
 				</div>
 			</section>

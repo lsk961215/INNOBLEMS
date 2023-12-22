@@ -38,12 +38,21 @@ public class MainController {
 	
 	@RequestMapping("/")
 	public String goMain(Model model) {
+		List codeList = mainService.getCodeList();
+		
+		model.addAttribute("codeList", codeList);
+		
 		return "main";
 	}
 	
 	@ResponseBody
 	@RequestMapping("/getUserList")
-	public List getUserList(UserDTO userDTO) throws Exception {
+	public Map getUserList(HttpServletRequest request, UserDTO userDTO) throws Exception {
+		Map selectMap = new HashMap();
+		
+		int pageNum = 1;
+		int countPerPage = 5;
+		
 		String str = userDTO.getSkills();
 		String[] skillArray = str.split(",");
 		List skills = new ArrayList();
@@ -52,21 +61,64 @@ public class MainController {
 			skills.add(skillArray[i]);
 		}
 		
-		Map selectMap = new HashMap();
+		String tmp_pageNum = request.getParameter("pageNum");
+		
+		if(tmp_pageNum != null) {
+			try { 
+				pageNum = Integer.parseInt(tmp_pageNum);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		String tmp_countPerPage = request.getParameter("countPerPage");
+		
+		if(tmp_countPerPage != null) {
+			try { 
+				countPerPage = Integer.parseInt(tmp_countPerPage);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
 		
 		selectMap.put("skills", skills);
 		selectMap.put("userDTO", userDTO);
+		selectMap.put("pageNum", pageNum);
+		selectMap.put("countPerPage", countPerPage);
 		
-		List userList = new ArrayList();
+		Map userMap = new HashMap();
 		
 		try {
-			userList = mainService.getUserList(selectMap);
+			userMap = mainService.getUserList(selectMap);
 		}catch(Exception e){
 			e.printStackTrace();
 			System.out.println("오류가 발생했습니다.");
 		}
 		
-		return userList;
+		return userMap;
 	}
 	
+	@ResponseBody
+	@RequestMapping("/delUser")
+	public int delUser(HttpServletRequest request, UserDTO userDTO) throws Exception {
+		String tmp_usrSeqList = request.getParameter("usrSeqList");
+		
+		String[] usrSeqArray = tmp_usrSeqList.split(",");
+		List usrSeqList = new ArrayList();
+		
+		for (int i = 0; i<usrSeqArray.length; i++) {
+			usrSeqList.add(usrSeqArray[i]);
+		}
+		
+		try {
+			mainService.delUser(usrSeqList);
+			return 0;
+		}catch(Exception e){
+			e.printStackTrace();
+			System.out.println("오류가 발생했습니다.");
+			return 1;
+		}
+	}
 }

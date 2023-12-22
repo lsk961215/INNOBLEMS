@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="code">
+
+	<resultMap id="codeMap" type="com.spring.innoblems.dto.codeDTO">
+	  <result column="MST_CD" property="mstCD"/>
+	  <result column="MST_NM" property="mstNM"/>
+	  <result column="DT_CD" property="dtCD"/>
+	  <result column="DT_NM" property="dtNM"/>
+	</resultMap>
+	
+	<select id="getCodeList" resultMap="codeMap">
+	    SELECT *
+		FROM DT_CD_DATA
+		ORDER BY MST_CD, TO_NUMBER(DT_CD)
+	</select>
+	
+	<select id="getCodeMap" resultMap="codeMap">
+		SELECT *
+	    FROM DT_CD_DATA
+	    ORDER BY MST_CD
+	</select>
+</mapper>
