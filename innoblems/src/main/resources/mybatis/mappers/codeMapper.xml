@@ -6,9 +6,9 @@
 
 	<resultMap id="codeMap" type="com.spring.innoblems.dto.codeDTO">
 	  <result column="MST_CD" property="mstCD"/>
-	  <result column="MST_NM" property="mstNM"/>
+	  <result column="MST_CD_NM" property="mstCDNM"/>
 	  <result column="DT_CD" property="dtCD"/>
-	  <result column="DT_NM" property="dtNM"/>
+	  <result column="DT_CD_NM" property="dtCDNM"/>
 	</resultMap>
 	
 	<select id="getCodeList" resultMap="codeMap">
@@ -17,9 +17,4 @@
 		ORDER BY MST_CD, TO_NUMBER(DT_CD)
 	</select>
 	
-	<select id="getCodeMap" resultMap="codeMap">
-		SELECT *
-	    FROM DT_CD_DATA
-	    ORDER BY MST_CD
-	</select>
 </mapper>

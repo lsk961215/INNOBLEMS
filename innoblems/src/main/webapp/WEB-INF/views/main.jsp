@@ -79,21 +79,67 @@
 	        	var add = "<button id='add' onclick='addUser()'>추가</button>"
 	        	var del = "<button id='del' onclick='delUser()'>삭제</button>"
 	        	
+	        	
+	        	/* model 에서 toString() 으로 받아온 문자열을 배열로 파싱 */
+	        	var codeList = '${codeList}'
+	        	
+	        	codeList = codeList.substring(1, codeList.length-1)
+	        	codeList = codeList.split("codeDTO")
+	        	codeList.shift()
+	        	
+	        	for(var i = 0; i<codeList.length; i++){
+	        		var str = codeList[i]
+	        		
+	        		codeList[i] = str.substring(2, str.length-3)
+	        	}
+	        	
+	        	console.log(codeList)
+	        	
 		        $("#tbody").empty()
 		        $(".resultPage").empty()
 		        $(".resultButton").empty()
 		        
 		        if(data.userList.length >= 1){
 		        	$.each(data.userList, function(i){
+		        		var rank
+		        		var grade
+		        		var status
+		        		var skills = ""
+		        		
+		        		var skillArr = data.userList[i].skills.split(",")
+		        		
+		        		console.log(skillArr)
+		        		
+		        		for(var j = 0; j<codeList.length; j++){
+		        			if(codeList[j].indexOf("mstCD=RA01") != -1 && codeList[j].indexOf("dtCD=" + data.userList[i].raCD + ",") != -1){
+		        				rank = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
+		        			}
+		        			if(codeList[j].indexOf("mstCD=GR01") != -1 && codeList[j].indexOf("dtCD=" + data.userList[i].grCD + ",") != -1){
+		        				grade = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
+		        			}
+		        			if(codeList[j].indexOf("mstCD=ST01") != -1 && codeList[j].indexOf("dtCD=" + data.userList[i].stCD + ",") != -1){
+		        				status = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
+		        			}
+		        			
+		        			for(var k = 0; k<skillArr.length; k++){
+		        				if(codeList[j].indexOf("mstCD=SK01") != -1 && codeList[j].indexOf("dtCD=" + skillArr[k] + ",") != -1){
+			        				skills += codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
+			        				if(k != skillArr.length-1){
+			        					skills += ","
+			        				}
+			        			}
+		        			}
+		        		}
+		        		
 	                	str += "<tr>"
 	                	str += "<td><input type='checkbox' class='usrSeq' value=" + data.userList[i].usrSeq + "></td>"
 	               		str += "<td>" + data.userList[i].usrSeq + "</td>"
 	               		str += "<td>" + data.userList[i].usrINDT + "</td>"
-	               		str += "<td>" + data.userList[i].raCD + "</td>"
+	               		str += "<td>" + rank + "</td>"
 	               		str += "<td>" + data.userList[i].usrNm + "</td>"
-	               		str += "<td>" + data.userList[i].grCD + "</td>"
-	               		str += "<td>" + data.userList[i].skills + "</td>"
-	               		str += "<td>" + data.userList[i].stCD + "</td>"
+	               		str += "<td>" + grade + "</td>"
+	               		str += "<td>" + skills + "</td>"
+	               		str += "<td>" + status + "</td>"
 	               		str += '<td><input id="edit" type="button" value="상세/수정"></td>'
 	              		str += '<td><input id="project" type="button" value="프로젝트 관리"></td>'
 	              		str += "</tr>"
@@ -441,15 +487,19 @@ table th {
 							<small>기술등급</small>
 							<select name="grCD" id="grCD">
 								<option value="0">선택</option>
-								<c:forEach var="item" items="${grList}" varStatus="i">
-									<option value="${i.count}">${item}</option>
+								<c:forEach var="item" items="${codeList}" varStatus="i">
+									<c:if test = "${item.mstCD == 'GR01'}">
+										<option value="${item.dtCD}">${item.dtCDNM}</option>
+									</c:if>
 								</c:forEach>
 							</select>
 							<small>재직상태</small>
 							<select name="stCD" id="stCD">
 								<option value="0">선택</option>
-								<c:forEach var="item" items="${stList}" varStatus="i">
-									<option value="${i.count}">${item}</option>
+								<c:forEach var="item" items="${codeList}" varStatus="i">
+									<c:if test = "${item.mstCD == 'ST01'}">
+										<option value="${item.dtCD}">${item.dtCDNM}</option>
+									</c:if>
 								</c:forEach>
 							</select>
 						</div>
@@ -458,8 +508,10 @@ table th {
 						</div>
 						<div class="filterSection_3">
 							<small class="skillText">보유기술</small> 
-							<c:forEach var="item" items="${skList}" varStatus="i">
-								<input type="checkbox" class="skill" value="${i.count}"> <small>${item}</small> 
+							<c:forEach var="item" items="${codeList}" varStatus="i">
+								<c:if test = "${item.mstCD == 'SK01'}">
+									<input type="checkbox" class="skill" value="${item.dtCD}"> <small>${item.dtCDNM}</small> 
+								</c:if>
 							</c:forEach>
 						</div>
 						<div class="filterSection_4">
