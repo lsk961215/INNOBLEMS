@@ -1,6 +1,5 @@
-
 aside{
-	width: 20%;
+	min-width: 130px;
 	background-color: white;
 	
 	margin: 50px;
@@ -15,10 +14,17 @@ aside{
 }
 aside {
 	text-align: center;
+	padding: 1%;
 }
 aside a{
 	text-decoration: none;
 	color: black;
+	
+	font-size: 110%;
+	font-weight: bold;
+	
+	margin-bottom: 10%;
+	
 }
 aside a:hover {
 	color: grey;

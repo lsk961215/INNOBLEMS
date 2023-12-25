@@ -183,6 +183,14 @@
 		  <artifactId>jackson-databind</artifactId>
 		  <version>2.10.1</version>
 		</dependency>
+		
+		<!-- 이미지업로드 -->
+		<dependency>
+		  <groupId>commons-fileupload</groupId>
+		  <artifactId>commons-fileupload</artifactId>
+		  <version>1.4</version>
+		</dependency>
+		
 	</dependencies>
     <build>
         <plugins>

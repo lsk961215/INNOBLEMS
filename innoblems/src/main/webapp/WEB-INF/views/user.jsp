@@ -238,6 +238,60 @@
 		}
 	}
 </script>
+<script type="text/javascript">
+    //이미지 미리보기
+    var sel_file;
+ 
+    $(document).ready(function() {
+        $("#file1").on("change", handleImgFileSelect);
+    });
+ 
+    function handleImgFileSelect(e) {
+        var files = e.target.files;
+        var filesArr = Array.prototype.slice.call(files);
+ 
+        var reg = /(.*?)\/(jpg|jpeg|png|bmp)$/;
+ 
+        filesArr.forEach(function(f) {
+            if (!f.type.match(reg)) {
+                alert("확장자는 이미지 확장자만 가능합니다.");
+                return;
+            }
+ 
+            sel_file = f;
+ 
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $("#img").attr("src", e.target.result);
+            }
+            reader.readAsDataURL(f);
+        });
+    }
+</script>
+<script>
+//파일 업로드
+function fn_submit(){
+        
+        var form = new FormData();
+        form.append( "file1", $("#file1")[0].files[0] );
+        
+         jQuery.ajax({
+             url : "result"
+           , type : "POST"
+           , processData : false
+           , contentType : false
+           , data : form
+           , success:function(response) {
+               alert("성공하였습니다.");
+               console.log(response);
+           }
+           ,error: function (jqXHR) 
+           { 
+               alert(jqXHR.responseText); 
+           }
+       });
+}
+</script>
 <style>
 main {
 	display: flex;
@@ -247,7 +301,7 @@ main {
 	
 section {
 	background-color: white;
-	width: 75%;
+	width: 100%;
 			
 	display: flex;
 	flex-direction: column;
@@ -255,6 +309,8 @@ section {
 	margin-top: 50px;
 	margin-bottom: 50px;
 	margin-right: 50px;
+	
+	border: 2px solid lightgrey;
 }
 
 button {
@@ -297,98 +353,6 @@ input[type=text], select {
 	font-size: 150%;
 }
 
-.filterTitle {
-	display: flex;
-	align-items: center;
-	background-color: white;
-	
-	padding-left: 10px;
-	padding-right: 10px;
-		
-	height: 30px;
-		
-	position: relative;
-	top: -15px;
-	left: -10px;
-	
-	width: max-content;
-	
-	font-size: 150%;
-}
-
-.resultTitle {
-	display: flex;
-	align-items: center;
-	background-color: white;
-	
-	padding-left: 10px;
-	padding-right: 10px;
-		
-	position: relative;
-	top: -15px;
-	left: -10px;
-	
-	width: max-content;
-	height: 30px;
-	
-	font-size: 150%;
-}
-
-.resultDetail {
-	width:100%;
-	overflow: auto;
-}
-
-.filter {
-	heigth: 500px;
-	
-	margin-bottom: 50px;
-	
-	padding-left: 30px;
-	padding-right: 30px;
-	padding-bottom: 30px;
-	
-	border: 2px solid lightgrey;
-}
-
-.result {
-	heigth: 500px;
-	
-	padding-left: 30px;
-	padding-right: 30px;
-	padding-bottom: 30px;
-	
-	border: 2px solid lightgrey;
-}
-
-.filterSection_1 {
-	display: flex;
-	justify-content: space-between;
-	
-	margin-bottom: 10px;
-}
-
-.filterSection_3 {
-	display: flex;
-	justify-content: space-between;
-	
-	margin-top: 10px;
-	margin-bottom: 20px;
-}
-
-.filterSection_4 {
-	display: flex;
-	justify-content: center;
-}
-
-.inDT {
-	margin-left: 6px;
-	margin-right: 37px;
-}
-
-.skillText {
-	margin-right: 5px;
-}
 
 #search {
 	border: none;
@@ -468,38 +432,6 @@ input[type=text], select {
 	cursor: pointer;
 }
 
-table {
-	margin-bottom: 1%;
-		
-	border-collapse : collapse;
-}
-  	
-table td, table th{
-  	padding-left: 5px;
-	padding-right: 5px;
-	
-	min-width: 100px;
-	
-	text-align: center;
-		
-	border: 2px solid lightgrey;
-}
-	
-table th {
-	background-color: #E4E4E4;
-	color: black;
-}
-
-table .checkRow {
-	min-width: 50px;
-	text-align: center;
-}
-
-table .skillsRow {
-	min-width: 400px;
-	text-align: left;
-}
-
 .resultPage {
 	display: flex;
 	justify-content: center;
@@ -514,93 +446,36 @@ table .skillsRow {
 	display:flex;
 	justify-content: center;
 }
+
+.imgSection {
+	display:flex;
+	flex-direction: column;
+}
 </style>
 </head>
 <body>
 <jsp:include page="header.jsp"/>
 <main>
 	<div class="wrap">
-		<div class="pageTitle"><h1>사원 관리</h1></div>
+		<div class="pageTitle"><h1>사원 등록</h1></div>
 		<div class="middle">
 			<jsp:include page="aside.jsp"/>
 			<section>
-				<div class="filter"> 
-					<div class="filterTitle"><h1>검색 조건</h1></div>
-					<div class="filterDetail">
-						<div class="filterSection_1">
-							<small>사원번호</small>
-							<input name="usrSeq" id="usrSeq" type="text">
-							<small>사원명</small>
-							<input name="usrNm" id="usrNm" type="text">
-							<small>기술등급</small>
-							<select name="grCD" id="grCD">
-								<option value="0">선택</option>
-								<c:forEach var="item" items="${codeList}" varStatus="i">
-									<c:if test = "${item.mstCD == 'GR01'}">
-										<option value="${item.dtCD}">${item.dtCDNM}</option>
-									</c:if>
-								</c:forEach>
-							</select>
-							<small>재직상태</small>
-							<select name="stCD" id="stCD">
-								<option value="0">선택</option>
-								<c:forEach var="item" items="${codeList}" varStatus="i">
-									<c:if test = "${item.mstCD == 'ST01'}">
-										<option value="${item.dtCD}">${item.dtCDNM}</option>
-									</c:if>
-								</c:forEach>
-							</select>
-						</div>
-						<div class="filterSection_2">
-							<small class="inDT">입사일</small> <input id="minDT" type="date"> ~ <input id="maxDT" type="date">
-						</div>
-						<div class="filterSection_3">
-							<small class="skillText">보유기술</small> 
-							<c:forEach var="item" items="${codeList}" varStatus="i">
-								<c:if test = "${item.mstCD == 'SK01'}">
-									<input type="checkbox" class="skill" value="${item.dtCD}"> <small>${item.dtCDNM}</small> 
-								</c:if>
-							</c:forEach>
-						</div>
-						<div class="filterSection_4">
-							<button id="search">조회</button>
-						</div>
+				<div>
+					<div class=imgSection>
+					    <label for="file1"><img id="img" /></label> 
+					    <input type="file" id="file1" name="file1"> 
+					    <button id="btn_submit" onclick="javascript:fn_submit()">전송</button>    
+					</div>
+					<div class=detailSection>
+					       <table>
+					       </table>
 					</div>
 				</div>
-				<div class="result">
-					<div class="resultTitle"><h1>사원 리스트</h1></div>
-					<div class="resultDetail">
-						<table>
-							<thead>
-								<tr>
-									<th class="checkRow"><input type="checkbox" id="checkAll"></th>
-									<th>사원번호</th>
-									<th>입사일</th>
-									<th>직급</th>
-									<th>사원명</th>
-									<th>기술등급</th>
-									<th class="skillsRow">보유기술</th>
-									<th>재직상태</th>
-									<th>상세/수정</th>
-									<th>프로젝트관리</th>
-								</tr>
-							</thead>
-							<tbody id="tbody">
-								<tr>
-									<td colspan="10"><h3>데이터가 없습니다.</h3></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="resultPage">
-						
-					</div>
-					<div class="resultButtonWrap">
-						<div class="resultButton">
+				<div class="buttonSection">
 					
-						</div>
-					</div>
 				</div>
+				
 			</section>
 		</div>
 		

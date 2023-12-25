@@ -56,23 +56,6 @@ public class MainServiceImpl implements MainService {
 		resultMap.put("userList", userList);
 		resultMap.put("pageNum", pageNum);
 		
-		System.out.println("startNum" + startNum);
-		System.out.println("endNum" + endNum);
-		System.out.println("total" + total);
-		
-		
-		
-		
-		for(int i = 0; i<userList.size(); i++) {
-			if(i == 0) {
-				System.out.println("start");
-			}
-			System.out.println(userList.get(i).toString());
-			if(i==(userList.size()-1)) {
-				System.out.println("end");
-			}
-		}
-		
 		return resultMap;
 	}
 

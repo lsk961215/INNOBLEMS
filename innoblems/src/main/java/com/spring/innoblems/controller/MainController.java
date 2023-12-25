@@ -45,6 +45,13 @@ public class MainController {
 		return "main";
 	}
 	
+	@RequestMapping("/addUser")
+	public String addUser(Model model) {
+		model.addAttribute("addUser", true);
+		
+		return "user";
+	}
+	
 	@ResponseBody
 	@RequestMapping("/getUserList")
 	public Map getUserList(HttpServletRequest request, UserDTO userDTO) throws Exception {
