@@ -18,225 +18,8 @@
   crossorigin="anonymous"></script>
 <script>
 	$(function(){
-		$("#search").click(function(){
-			getUserList(1)
-		})
 		
-		$("#minDT").change(function(){
-			$("#maxDT").attr("min", $(this).val())
-		})
-		
-		$("#maxDT").change(function(){
-			$("#minDT").attr("max", $(this).val())
-		})
-		
-		$("#checkAll").change(function(){
-			if($(this).is(":checked") == true){
-				$(".usrSeq").each(function(){
-					$(this).prop('checked',true)
-				})
-			} else {
-				$(".usrSeq").each(function(){
-					$(this).prop('checked',false)
-				})
-			}
-		})
 	})
-	
-	function getUserList(pageNum){
-		var usrSeq = $("#usrSeq").val()
-		var usrNm = $("#usrNm").val()
-		var grCD = $("#grCD").val()
-		var stCD = $("#stCD").val()
-		var minDT = $("#minDT").val()
-		var maxDT = $("#maxDT").val()
-		var skills = new Array()
-		
-		if(usrSeq == ""){
-			usrSeq = 0
-		}
-		
-		$(".skill").each(function(){
-			if($(this).is(":checked")==true){
-				skills.push($(this).val())
-		    }
-		})
-		
-		var param = "usrSeq="+usrSeq
-		param += "&usrNm="+usrNm
-		param += "&grCD="+grCD
-		param += "&stCD="+stCD
-		param += "&minDT="+minDT
-		param += "&maxDT="+maxDT
-		param += "&skills="
-		
-		for(var i = 0; i<skills.length; i++){
-			param += skills[i]
-			if(i != skills.length - 1){
-				param += ","
-			}
-		}
-		
-		param += "&pageNum="+pageNum
-		
-		$.ajax({
-	        url: "getUserList", 
-	        type:"post",
-	        data: param,
-	        success: function(data) {
-	        	var str = ""
-	        	var page = ""
-	        	var add = "<a id='add' href='addUser'>추가</a>"
-	        	var del = "<button id='del' onclick='delUser()'>삭제</button>"
-	        	
-	        	
-	        	/* model 에서 toString() 으로 받아온 문자열을 배열로 파싱 */
-	        	var codeList = '${codeList}'
-	        	
-	        	codeList = codeList.substring(1, codeList.length-1)
-	        	codeList = codeList.split("codeDTO")
-	        	codeList.shift()
-	        	
-	        	for(var i = 0; i<codeList.length; i++){
-	        		var str = codeList[i]
-	        		
-	        		codeList[i] = str.substring(2, str.length-3)
-	        	}
-	        	
-		        $("#tbody").empty()
-		        $(".resultPage").empty()
-		        $(".resultButton").empty()
-		        
-		        if(data.userList.length >= 1){
-		        	$.each(data.userList, function(i){
-		        		var rank
-		        		var grade
-		        		var status
-		        		var skills = ""
-		        		
-		        		var skillArr = data.userList[i].skills.split(",")
-		        		
-		        		for(var j = 0; j<codeList.length; j++){
-		        			if(codeList[j].indexOf("mstCD=RA01") != -1 && codeList[j].indexOf("dtCD=" + data.userList[i].raCD + ",") != -1){
-		        				rank = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
-		        			}
-		        			if(codeList[j].indexOf("mstCD=GR01") != -1 && codeList[j].indexOf("dtCD=" + data.userList[i].grCD + ",") != -1){
-		        				grade = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
-		        			}
-		        			if(codeList[j].indexOf("mstCD=ST01") != -1 && codeList[j].indexOf("dtCD=" + data.userList[i].stCD + ",") != -1){
-		        				status = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
-		        			}
-		        			
-		        			for(var k = 0; k<skillArr.length; k++){
-		        				if(codeList[j].indexOf("mstCD=SK01") != -1 && codeList[j].indexOf("dtCD=" + skillArr[k] + ",") != -1){
-			        				skills += codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
-			        				if(k != skillArr.length-1){
-			        					skills += ","
-			        				}
-			        			}
-		        			}
-		        		}
-		        		
-	                	str += "<tr>"
-	                	str += "<td class='checkRow'><input type='checkbox' class='usrSeq' value=" + data.userList[i].usrSeq + " onclick='checkOne()'></td>"
-	               		str += "<td>" + data.userList[i].usrSeq + "</td>"
-	               		str += "<td>" + data.userList[i].usrINDT + "</td>"
-	               		str += "<td>" + rank + "</td>"
-	               		str += "<td>" + data.userList[i].usrNm + "</td>"
-	               		str += "<td>" + grade + "</td>"
-	               		str += "<td class='skillsRow'>" + skills + "</td>"
-	               		str += "<td>" + status + "</td>"
-	               		str += '<td><input id="edit" type="button" value="상세/수정"></td>'
-	              		str += '<td><input id="project" type="button" value="프로젝트 관리"></td>'
-	              		str += "</tr>"
-	                })
-	                
-		        	if(data.beginPaging != 1){
-		        		page += "<a href=getUserList?pageNum=" + (data.beginPaging - 1) + ">이전</a>"
-		        	}
-		        	
-		        	for(var i = data.beginPaging; i <= data.endPaging; i++){
-		        		if(i == data.pageNum){
-		        			page += "<button style='font-size:2em' class='page' value=" + i +">" + i + "</button>"
-		        		} else {
-		        			page += "<button class='page' value=" + i +" onclick='getUserList(" + i + ")'>" + i + "</button>"
-		        		}
-		        	}
-		        	
-		        	if(data.endPaging != data.totalPaging){
-		        		page += "<a href=getUserList?pageNum=" + (data.endPaging + 1) + ">다음</a>"
-		        	}
-		        	
-		        } else {
-		        	str += "<tr>"
-		        	str += '<td colspan="10"><h3>검색결과가 없습니다.</h3></td>'
-		        	str += "</tr>"
-		        }
-	        	
-	        	$("#tbody").append(str)
-	        	$(".resultPage").append(page)
-	        	$(".resultButton").append(add)
-	        	$(".resultButton").append(del)
-	        },
-	        error: function() {
-	            alert("통신실패")
-	        }
-	    })
-	}
-	
-	function delUser(){
-		var usrSeqList = new Array()
-		
-		$(".usrSeq").each(function(){
-			if($(this).is(":checked")==true){
-				usrSeqList.push($(this).val())
-		    }
-		})
-		
-		var param = "&usrSeqList="
-		
-		for(var i = 0; i<usrSeqList.length; i++){
-			param += usrSeqList[i]
-			if(i != usrSeqList.length - 1){
-				param += ","
-			}
-		}
-		
-		console.log("param : " + param)
-		
-		$.ajax({
-	        url: "delUser", 
-	        type:"post",
-	        data: param,
-	        success: function(data) {
-	        	if(data == 0){
-	        		alert("삭제 되었습니다.")
-	        		getUserList(1)
-	        	} else {
-	        		alert("해당 사원은 현재 소속되어있는 프로젝트가 있습니다.")
-	        	}
-	        },
-	        error: function() {
-	            alert("통신실패")
-	        }
-	    })
-	}
-	
-	function checkOne(){
-		var count = 0
-		
-		$(".usrSeq").each(function(){
-			 if( $(this).is(":checked") == true ){
-				 count += 1
-			 }
-		})
-		
-		if(count == $(".usrSeq").length){
-			$("#checkAll").prop('checked',true)
-		} else {
-			$("#checkAll").prop('checked',false)
-		}
-	}
 </script>
 <script type="text/javascript">
     //이미지 미리보기
@@ -311,6 +94,8 @@ section {
 	margin-right: 50px;
 	
 	border: 2px solid lightgrey;
+	
+	padding: 50px;
 }
 
 button {
@@ -319,15 +104,28 @@ button {
 	cursor: pointer;
 }
 
-input[type=text], select {
-	width: 100px;
+table input[type=text], table input[type=password] {
+	width: 80%;
 }
+
+select {
+	width: 80%;
+}
+
+table {
+	width: 100%;
 	
+	font-size: 80%;
+}
+
+table td{
+	min-width: 100px;
+}
+
 .middle {
 	display: flex;
 	
 	margin-bottom: 50px;
-	margin-right: 50px;
 	
 	border: 2px solid lightgrey;
 	
@@ -353,26 +151,7 @@ input[type=text], select {
 	font-size: 150%;
 }
 
-
-#search {
-	border: none;
-	background-color: #0C70F2;
-	color: white;
-	
-	font-weight: bold;
-	font-size: 105%;
-	
-	width: 80px;
-	height: 30px;
-	
-	cursor: pointer;
-}
-
 #add {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-
 	border: none;
 	background-color: #0C70F2;
 	color: white;
@@ -386,13 +165,11 @@ input[type=text], select {
 	cursor: pointer;
 	
 	margin-right: 50px;
-	
-	text-decoration: none;
 }
 
-#del {
+#cancel {
 	border: none;
-	background-color: red;
+	background-color: lightgrey;
 	color: white;
 	
 	font-weight: bold;
@@ -404,13 +181,12 @@ input[type=text], select {
 	cursor: pointer;
 }
 
-#edit {
+#search {
 	border: none;
 	background-color: #0C70F2;
 	color: white;
 	
 	font-weight: bold;
-	font-size: 80%;
 	
 	width: 80px;
 	height: 20px;
@@ -418,38 +194,66 @@ input[type=text], select {
 	cursor: pointer;
 }
 
-#project {
-	border: none;
+.buttonSection {
+	display: flex;
+	justify-content: center;
+	
+	margin-top: 50px;
+}
+
+.imgSection {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.sectionMain {
+	display: flex;
+}
+
+#img {
+	max-width: 200px;
+	max-heigth: 200px;
+	
+	border: 2px solid lightgrey;
+}
+
+.imgLabel {
+ 	border: none;
 	background-color: #0C70F2;
 	color: white;
 	
 	font-weight: bold;
-	font-size: 80%;
+	font-size: 105%;
 	
 	width: 100px;
-	height: 20px;
+	height: 30px;
+    cursor: pointer;
+    
+    display: flex;
+	align-items: center;
+	justify-content: center;
 	
-	cursor: pointer;
+	margin-top: 30px;
 }
 
-.resultPage {
+#file1, #btn_submit {
+	display: none;
+}
+
+.detailSection {
+	border: 2px solid lightgrey;
+	
+	margin-left: 50px;
+	
+	width: 100%;
+	
+	padding: 30px;
+}
+
+.skills {
 	display: flex;
-	justify-content: center;
-}
-
-.resultButtonWrap {
-	display:flex;
-	justify-content: center;
-}
-
-.resultButton {
-	display:flex;
-	justify-content: center;
-}
-
-.imgSection {
-	display:flex;
-	flex-direction: column;
+	flex-wrap: wrap;
 }
 </style>
 </head>
@@ -461,19 +265,127 @@ input[type=text], select {
 		<div class="middle">
 			<jsp:include page="aside.jsp"/>
 			<section>
-				<div>
+				<div class="sectionMain">
 					<div class=imgSection>
-					    <label for="file1"><img id="img" /></label> 
+						<img id="img" src="resources/userImages/default.png">
+					    <label for="file1" class="imgLabel">파일 선택</label> 
 					    <input type="file" id="file1" name="file1"> 
 					    <button id="btn_submit" onclick="javascript:fn_submit()">전송</button>    
 					</div>
-					<div class=detailSection>
-					       <table>
-					       </table>
+					<div class="detailSection">
+						<table>
+					    	<tr>
+					    		<td>사원명</td>
+					    		<td><input type="text"></td>
+					    		<td>입사일</td>
+					    		<td><input type="date"></td>
+					    	</tr> 
+					    	<tr>
+					    		<td>아이디</td>
+					    		<td><input type="text"></td>
+					    		<td>직급</td>
+					    		<td>
+						    		<select name="raCD" id="raCD">
+										<option value="0">선택</option>
+										<c:forEach var="item" items="${codeList}" varStatus="i">
+											<c:if test = "${item.mstCD == 'RA01'}">
+												<option value="${item.dtCD}">${item.dtCDNM}</option>
+											</c:if>
+										</c:forEach>
+									</select>
+					    		</td>
+					    	</tr> 
+					    	<tr>
+					    		<td>비밀번호</td>
+					    		<td><input type="password"></td>
+					    		<td>기술등급</td>
+					    		<td>
+					    			<select name="grCD" id="grCD">
+										<option value="0">선택</option>
+										<c:forEach var="item" items="${codeList}" varStatus="i">
+											<c:if test = "${item.mstCD == 'GR01'}">
+												<option value="${item.dtCD}">${item.dtCDNM}</option>
+											</c:if>
+										</c:forEach>
+									</select>
+								</td>
+					    	</tr> 
+					    	<tr>
+					    		<td>비밀번호 확인</td>
+					    		<td><input type="password"></td>
+					    		<td>개발분야</td>
+					    		<td>
+						    		<select name="dvCD" id="dvCD">
+										<option value="0">선택</option>
+										<c:forEach var="item" items="${codeList}" varStatus="i">
+											<c:if test = "${item.mstCD == 'DV01'}">
+												<option value="${item.dtCD}">${item.dtCDNM}</option>
+											</c:if>
+										</c:forEach>
+									</select>
+					    		</td>
+					    	</tr> 
+					    	<tr>
+					    		<td colspan="2"></td>
+					    		<td>전화번호</td>
+					    		<td><input type="text"></td>
+					    	</tr> 
+					    	<tr>
+					    		<td>생년월일</td>
+					    		<td><input type="date"></td>
+					    		<td>이메일</td>
+					    		<td><input type="text"></td>
+					    	</tr> 
+					    	<tr>
+					    		<td>성별</td>
+					    		<td>
+					    			<select name="gdCD" id="gdCD">
+										<option value="0">선택</option>
+										<c:forEach var="item" items="${codeList}" varStatus="i">
+											<c:if test = "${item.mstCD == 'GD01'}">
+												<option value="${item.dtCD}">${item.dtCDNM}</option>
+											</c:if>
+										</c:forEach>
+									</select>
+					    		</td>
+					    		<td colspan="2"></td>
+					    	</tr> 
+					    	<tr>
+					    		<td>주소</td>
+					    		<td colspan="3">
+					    			<input type="text">
+					    			<button id="search">주소 검색</button>
+					    		</td>
+					    	</tr> 
+					    	<tr>
+					    		<td>보유기술</td>
+					    		<td colspan="3">
+						    		<div class="skills">
+						    			<c:forEach var="item" items="${codeList}" varStatus="i">
+											<c:if test = "${item.mstCD == 'SK01'}">
+												<div>
+													<input type="checkbox" class="skill" id="${item.dtCD}" value="${item.dtCD}">
+													<label for="${item.dtCD}">${item.dtCDNM} </label>
+												</div>
+											</c:if>
+										</c:forEach>
+						    		</div>
+					    		</td>
+					    	</tr> 
+					    	<tr>
+					    		<td></td>
+					    		<td colspan="3"></td>
+					    	</tr> 
+					    	<tr>
+					    		<td></td>
+					    		<td colspan="3"></td>
+					    	</tr> 
+						</table>
 					</div>
 				</div>
 				<div class="buttonSection">
-					
+					<button id="add">등록</button>
+					<button id="cancel">취소</button>
 				</div>
 				
 			</section>

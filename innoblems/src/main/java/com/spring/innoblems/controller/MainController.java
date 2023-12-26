@@ -49,6 +49,10 @@ public class MainController {
 	public String addUser(Model model) {
 		model.addAttribute("addUser", true);
 		
+		List codeList = mainService.getCodeList();
+		
+		model.addAttribute("codeList", codeList);
+		
 		return "user";
 	}
 	

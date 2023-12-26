@@ -131,7 +131,7 @@
 		        				if(codeList[j].indexOf("mstCD=SK01") != -1 && codeList[j].indexOf("dtCD=" + skillArr[k] + ",") != -1){
 			        				skills += codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
 			        				if(k != skillArr.length-1){
-			        					skills += ","
+			        					skills += ", "
 			        				}
 			        			}
 		        			}
@@ -271,7 +271,6 @@ input[type=text], select {
 	display: flex;
 	
 	margin-bottom: 50px;
-	margin-right: 50px;
 	
 	border: 2px solid lightgrey;
 	
@@ -558,7 +557,8 @@ table .skillsRow {
 							<small class="skillText">보유기술</small> 
 							<c:forEach var="item" items="${codeList}" varStatus="i">
 								<c:if test = "${item.mstCD == 'SK01'}">
-									<input type="checkbox" class="skill" value="${item.dtCD}"> <small>${item.dtCDNM}</small> 
+									<input type="checkbox" class="skill" id="${item.dtCD}" value="${item.dtCD}">
+									<label for="${item.dtCD}">${item.dtCDNM} </label>
 								</c:if>
 							</c:forEach>
 						</div>
