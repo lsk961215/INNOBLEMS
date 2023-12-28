@@ -79,6 +79,8 @@
 		
 		param += "&pageNum="+pageNum
 		
+		console.log("param = " + param)
+		
 		$.ajax({
 	        url: "getUserList", 
 	        type:"post",
@@ -86,7 +88,7 @@
 	        success: function(data) {
 	        	var str = ""
 	        	var page = ""
-	        	var add = "<a id='add' href='addUser'>추가</a>"
+	        	var add = "<a id='add' href='goAddUserPage'>추가</a>"
 	        	var del = "<button id='del' onclick='delUser()'>삭제</button>"
 	        	
 	        	
@@ -94,7 +96,7 @@
 	        	var codeList = '${codeList}'
 	        	
 	        	codeList = codeList.substring(1, codeList.length-1)
-	        	codeList = codeList.split("codeDTO")
+	        	codeList = codeList.split("CodeDTO")
 	        	codeList.shift()
 	        	
 	        	for(var i = 0; i<codeList.length; i++){
@@ -102,6 +104,8 @@
 	        		
 	        		codeList[i] = str.substring(2, str.length-3)
 	        	}
+	        	
+	        	console.log("codeList = " + codeList)
 	        	
 		        $("#tbody").empty()
 		        $(".resultPage").empty()
@@ -146,7 +150,7 @@
 	               		str += "<td>" + grade + "</td>"
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
 	               		str += "<td>" + status + "</td>"
-	               		str += '<td><input id="edit" type="button" value="상세/수정"></td>'
+	               		str += "<td class='editRow'><a id='edit' href='getUserDetail?usrSeq=" + data.userList[i].usrSeq + "'>상세/수정</a></td>"
 	              		str += '<td><input id="project" type="button" value="프로젝트 관리"></td>'
 	              		str += "</tr>"
 	                })
@@ -440,6 +444,10 @@ input[type=text], select {
 }
 
 #edit {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
 	border: none;
 	background-color: #0C70F2;
 	color: white;
@@ -448,9 +456,11 @@ input[type=text], select {
 	font-size: 80%;
 	
 	width: 80px;
-	height: 20px;
+	height: 18px;
 	
 	cursor: pointer;
+	
+	text-decoration: none;
 }
 
 #project {
@@ -512,6 +522,10 @@ table .skillsRow {
 .resultButton {
 	display:flex;
 	justify-content: center;
+}
+
+.editRow {
+	text-align:center;
 }
 </style>
 </head>

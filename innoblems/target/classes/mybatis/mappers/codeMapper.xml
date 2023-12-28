@@ -4,7 +4,7 @@
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="code">
 
-	<resultMap id="codeMap" type="com.spring.innoblems.dto.codeDTO">
+	<resultMap id="codeMap" type="com.spring.innoblems.dto.CodeDTO">
 	  <result column="MST_CD" property="mstCD"/>
 	  <result column="MST_CD_NM" property="mstCDNM"/>
 	  <result column="DT_CD" property="dtCD"/>

@@ -19,7 +19,8 @@
 <script>
 	$(function(){
 		setBirth()
-		
+		setAddress()
+		setSkills()
 		pwCheck()
 	})	
 	
@@ -59,7 +60,31 @@
 		})
 	}
 	
-	function add(){
+	function setAddress() {
+		var usrAd = '${userDTO.usrAd}'
+		
+		var usrAdArr = usrAd.split(", ")
+		
+		$("#postcode").val(usrAdArr[0])
+		$("#roadAddress").val(usrAdArr[1])
+		$("#detailAddress").val(usrAdArr[2])
+		
+	}
+	
+	function setSkills() {
+		var skills = '${userDTO.skills}'
+		
+		console.log(skills)
+		
+		var skillArr = skills.split(",")
+		
+		for(var i = 0; i<skillArr.length; i++){
+			$("input[id=" + skillArr[i] + "]").prop('checked',true);
+		}
+		
+	}
+	
+	function save(){
         
         var usrId = $("#usrId").val()
 		var usrPw = $("#usrPw").val()
@@ -123,7 +148,7 @@
                console.log("param" + param)
                
                $.ajax({
-			        url: "addUser", 
+			        url: "saveUser", 
 			        type:"post",
 			        data: param,
 			        success: function(data) {
@@ -227,6 +252,7 @@ function fn_submit(){
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
                 document.getElementById('postcode').value = data.zonecode;
                 document.getElementById("roadAddress").value = roadAddr;
+                document.getElementById("jibunAddress").value = data.jibunAddress;
                 
             }
         }).open();
@@ -308,7 +334,7 @@ table td{
 	font-size: 150%;
 }
 
-#add {
+#save {
 	border: none;
 	background-color: #0C70F2;
 	color: white;
@@ -325,6 +351,10 @@ table td{
 }
 
 #cancel {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
 	border: none;
 	background-color: lightgrey;
 	color: white;
@@ -336,6 +366,10 @@ table td{
 	height: 30px;
 	
 	cursor: pointer;
+	
+	margin-right: 50px;
+	
+	text-decoration: none;
 }
 
 #search {
@@ -421,41 +455,86 @@ table td{
 	display: none;
 }
 
+#usrSeq {
+	background-color: lightgrey;
+}
+
+#usrId {
+	background-color: lightgrey;
+}
+
+#postcode {
+	background-color: lightgrey;
+}
+
+#roadAddress {
+	background-color: lightgrey;
+}
 </style>
 </head>
 <body>
 <jsp:include page="header.jsp"/>
 <main>
 	<div class="wrap">
-		<div class="pageTitle"><h1>사원 등록</h1></div>
+		<div class="pageTitle"><h1>사원 상세/수정</h1></div>
 		<div class="middle">
 			<jsp:include page="aside.jsp"/>
 			<section>
 				<div class="sectionMain">
 					<div class=imgSection>
-						<img id="img" src="resources/userImages/default.png">
+						<c:if test = "${userDTO.usrImg == null}">
+							<img id="img" src="resources/userImages/default.png">
+						</c:if>
+						<c:if test = "${userDTO.usrImg != null}">
+							<img id="img" src="resources/userImages/${userDTO.usrImg}">
+						</c:if>
 					    <label for="file1" class="imgLabel">파일 선택</label> 
 					    <input type="file" id="file1" name="file1"> 
 					    <button id="btn_submit" onclick="javascript:fn_submit()">전송</button>    
 					</div>
 					<div class="detailSection">
 						<table>
+							<tr>
+								<td>사원번호</td>
+								<td><input type="text" id="usrSeq" value="${userDTO.usrSeq}" readonly></td>
+								<td>입사일</td>
+					    		<td><input type="date" id="usrINDT" value="${userDTO.usrINDT}"></td>
+							</tr>
 					    	<tr>
 					    		<td>사원명</td>
-					    		<td><input type="text" id="usrNm" maxlength="10"></td>
-					    		<td>입사일</td>
-					    		<td><input type="date" id="usrINDT"></td>
+					    		<td><input type="text" id="usrNm" value="${userDTO.usrNm}" maxlength="10"></td>
+					    		<td>재직상태</td>
+					    		<td>
+					    			<select name="stCD" id="stCD">
+										<option value="0">선택</option>
+										<c:forEach var="item" items="${codeList}" varStatus="i">
+											<c:if test = "${item.mstCD == 'ST01'}">
+												<c:if test = "${item.dtCD == userDTO.stCD}">
+													<option value="${item.dtCD}" selected>${item.dtCDNM}</option>
+												</c:if>
+												<c:if test = "${item.dtCD != userDTO.stCD}">
+													<option value="${item.dtCD}">${item.dtCDNM}</option>
+												</c:if>
+											</c:if>
+										</c:forEach>
+									</select>
+					    		</td>
 					    	</tr> 
 					    	<tr>
 					    		<td>아이디</td>
-					    		<td><input type="text" id="usrId" maxlength="20"></td>
+					    		<td><input type="text" id="usrId"  value="${userDTO.usrId}" readonly></td>
 					    		<td>직급</td>
 					    		<td>
 						    		<select name="raCD" id="raCD">
 										<option value="0">선택</option>
 										<c:forEach var="item" items="${codeList}" varStatus="i">
 											<c:if test = "${item.mstCD == 'RA01'}">
-												<option value="${item.dtCD}">${item.dtCDNM}</option>
+												<c:if test = "${item.dtCD == userDTO.raCD}">
+													<option value="${item.dtCD}" selected>${item.dtCDNM}</option>
+												</c:if>
+												<c:if test = "${item.dtCD != userDTO.raCD}">
+													<option value="${item.dtCD}">${item.dtCDNM}</option>
+												</c:if>
 											</c:if>
 										</c:forEach>
 									</select>
@@ -463,14 +542,19 @@ table td{
 					    	</tr> 
 					    	<tr>
 					    		<td>비밀번호</td>
-					    		<td><input type="password" id="usrPw" maxlength="16"></td>
+					    		<td><input type="password" id="usrPw" value="${userDTO.usrPw}" maxlength="16"></td>
 					    		<td>기술등급</td>
 					    		<td>
 					    			<select name="grCD" id="grCD">
 										<option value="0">선택</option>
 										<c:forEach var="item" items="${codeList}" varStatus="i">
 											<c:if test = "${item.mstCD == 'GR01'}">
-												<option value="${item.dtCD}">${item.dtCDNM}</option>
+												<c:if test = "${item.dtCD == userDTO.grCD}">
+													<option value="${item.dtCD}" selected>${item.dtCDNM}</option>
+												</c:if>
+												<c:if test = "${item.dtCD != userDTO.grCD}">
+													<option value="${item.dtCD}">${item.dtCDNM}</option>
+												</c:if>
 											</c:if>
 										</c:forEach>
 									</select>
@@ -478,14 +562,19 @@ table td{
 					    	</tr> 
 					    	<tr>
 					    		<td>비밀번호 확인</td>
-					    		<td><input type="password" id="usrPwCheck" maxlength="16"></td>
+					    		<td><input type="password" id="usrPwCheck" value="${userDTO.usrPw}" maxlength="16"></td>
 					    		<td>개발분야</td>
 					    		<td>
 						    		<select name="dvCD" id="dvCD">
 										<option value="0">선택</option>
 										<c:forEach var="item" items="${codeList}" varStatus="i">
 											<c:if test = "${item.mstCD == 'DV01'}">
-												<option value="${item.dtCD}">${item.dtCDNM}</option>
+												<c:if test = "${item.dtCD == userDTO.dvCD}">
+													<option value="${item.dtCD}" selected>${item.dtCDNM}</option>
+												</c:if>
+												<c:if test = "${item.dtCD != userDTO.dvCD}">
+													<option value="${item.dtCD}">${item.dtCDNM}</option>
+												</c:if>
 											</c:if>
 										</c:forEach>
 									</select>
@@ -497,13 +586,13 @@ table td{
 					    			</div>
 					    		</td>
 					    		<td>전화번호</td>
-					    		<td><input type="text" id="usrPn" placeholder="숫자만 입력해주세요" maxlength="11"></td>
+					    		<td><input type="text" id="usrPn" value="${userDTO.usrPn}" placeholder="숫자만 입력해주세요" maxlength="11"></td>
 					    	</tr> 
 					    	<tr>
 					    		<td>생년월일</td>
-					    		<td><input type="date" id="usrBDT"></td>
+					    		<td><input type="date" id="usrBDT" value="${userDTO.usrBDT}"></td>
 					    		<td>이메일</td>
-					    		<td><input type="text" id="usrEm" placeholder="~@~ 형식으로 입력해주세요"></td>
+					    		<td><input type="text" id="usrEm" value="${userDTO.usrEm}" placeholder="~@~ 형식으로 입력해주세요"></td>
 					    	</tr> 
 					    	<tr>
 					    		<td>성별</td>
@@ -512,7 +601,12 @@ table td{
 										<option value="0">선택</option>
 										<c:forEach var="item" items="${codeList}" varStatus="i">
 											<c:if test = "${item.mstCD == 'GD01'}">
-												<option value="${item.dtCD}">${item.dtCDNM}</option>
+												<c:if test = "${item.dtCD == userDTO.gdCD}">
+													<option value="${item.dtCD}" selected>${item.dtCDNM}</option>
+												</c:if>
+												<c:if test = "${item.dtCD != userDTO.gdCD}">
+													<option value="${item.dtCD}">${item.dtCDNM}</option>
+												</c:if>
 											</c:if>
 										</c:forEach>
 									</select>
@@ -547,8 +641,8 @@ table td{
 					</div>
 				</div>
 				<div class="buttonSection">
-					<button id="add" onclick="add()">등록</button>
-					<button id="cancel">취소</button>
+					<button id="save" onclick="save()">저장</button>
+					<a id="cancel" href="/innoblems">취소</a>
 				</div>
 				
 			</section>

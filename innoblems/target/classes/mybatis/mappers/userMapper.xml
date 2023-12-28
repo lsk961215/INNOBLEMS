@@ -158,4 +158,80 @@
 		</foreach>
 	</delete>
 	
+	<insert id="addUser" parameterType="com.spring.innoblems.dto.UserDTO">
+		 INSERT INTO
+		 	USER_INFO (
+		 		USR_SEQ,
+		 		USR_ID,
+		 		USR_PW,
+		 		USR_NM,
+		 		USR_BDT,
+		 		GD_CD,
+		 		USR_IN_DT,
+		 		ST_CD,
+		 		RA_CD,
+		 		GR_CD,
+		 		DV_CD,
+		 		USR_IMG,
+		 		USR_PN,
+		 		USR_EM,
+		 		USR_AD
+		 		)
+		 VALUES (
+		 	USR_SEQ.NEXTVAL,
+		 	#{usrId},
+		 	#{usrPw},
+		 	#{usrNm},
+		 	#{usrBDT},
+		 	#{gdCD},
+		 	#{usrINDT},
+		 	'1',
+		 	#{raCD},
+		 	#{grCD},
+		 	#{dvCD},
+		 	#{usrImg},
+		 	#{usrPn},
+		 	#{usrEm},
+		 	#{usrAd}
+		 )
+		<selectKey resultType="int" keyProperty="usrSeq" order="AFTER">
+	        SELECT USR_SEQ FROM USER_INFO WHERE USR_ID = #{usrId}
+	    </selectKey>
+	</insert>
+	
+	<select id="getUserDetail" parameterType="com.spring.innoblems.dto.UserDTO" resultMap="userMap">
+	   SELECT a.*, b.SKILLS
+		FROM USER_INFO a
+		LEFT OUTER JOIN (SELECT USR_SEQ
+		     , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+		FROM USER_SKILL_TABLE
+		GROUP BY USR_SEQ) b
+		ON a.USR_SEQ = b.USR_SEQ
+		WHERE a.USR_SEQ = #{usrSeq}
+	</select>
+	
+	<update id="saveUser" parameterType="com.spring.innoblems.dto.UserDTO">
+		 UPDATE
+		 	USER_INFO
+		 SET
+		 	USR_PW = #{usrPw},
+		 	USR_NM = #{usrNm},
+		 	USR_BDT = #{usrBDT},
+		 	GD_CD = #{gdCD},
+		 	USR_IN_DT = #{usrINDT},
+		 	ST_CD = #{stCD},
+		 	RA_CD = #{raCD},
+		 	GR_CD = #{grCD},
+		 	DV_CD = #{dvCD},
+		 	USR_IMG = #{usrImg},
+		 	USR_PN = #{usrPn},
+		 	USR_EM = #{usrEm},
+		 	USR_AD = #{usrAd}
+		WHERE
+			USR_SEQ = #{usrSeq}
+		<selectKey resultType="int" keyProperty="usrSeq" order="AFTER">
+	        SELECT USR_SEQ FROM USER_INFO WHERE USR_ID = #{usrId}
+	    </selectKey>
+	</update>
+	
 </mapper>

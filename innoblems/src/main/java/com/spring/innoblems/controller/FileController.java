@@ -43,7 +43,7 @@ public class FileController {
                 File file = new File(uploadpath, saveFileName);
                 multi.transferTo(file);
                 
-                return "0";
+                return saveFileName;
             }
         }catch(Exception e)
         {

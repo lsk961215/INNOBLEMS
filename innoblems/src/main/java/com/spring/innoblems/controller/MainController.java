@@ -45,7 +45,7 @@ public class MainController {
 		return "main";
 	}
 	
-	@RequestMapping("/addUser")
+	@RequestMapping("/goAddUserPage")
 	public String addUser(Model model) {
 		model.addAttribute("addUser", true);
 		
@@ -54,82 +54,5 @@ public class MainController {
 		model.addAttribute("codeList", codeList);
 		
 		return "user";
-	}
-	
-	@ResponseBody
-	@RequestMapping("/getUserList")
-	public Map getUserList(HttpServletRequest request, UserDTO userDTO) throws Exception {
-		Map selectMap = new HashMap();
-		
-		int pageNum = 1;
-		int countPerPage = 5;
-		
-		String str = userDTO.getSkills();
-		String[] skillArray = str.split(",");
-		List skills = new ArrayList();
-		
-		for (int i = 0; i<skillArray.length; i++) {
-			skills.add(skillArray[i]);
-		}
-		
-		String tmp_pageNum = request.getParameter("pageNum");
-		
-		if(tmp_pageNum != null) {
-			try { 
-				pageNum = Integer.parseInt(tmp_pageNum);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-		}
-		
-		String tmp_countPerPage = request.getParameter("countPerPage");
-		
-		if(tmp_countPerPage != null) {
-			try { 
-				countPerPage = Integer.parseInt(tmp_countPerPage);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-		}
-		
-		selectMap.put("skills", skills);
-		selectMap.put("userDTO", userDTO);
-		selectMap.put("pageNum", pageNum);
-		selectMap.put("countPerPage", countPerPage);
-		
-		Map userMap = new HashMap();
-		
-		try {
-			userMap = mainService.getUserList(selectMap);
-		}catch(Exception e){
-			e.printStackTrace();
-			System.out.println("오류가 발생했습니다.");
-		}
-		
-		return userMap;
-	}
-	
-	@ResponseBody
-	@RequestMapping("/delUser")
-	public int delUser(HttpServletRequest request, UserDTO userDTO) throws Exception {
-		String tmp_usrSeqList = request.getParameter("usrSeqList");
-		
-		String[] usrSeqArray = tmp_usrSeqList.split(",");
-		List usrSeqList = new ArrayList();
-		
-		for (int i = 0; i<usrSeqArray.length; i++) {
-			usrSeqList.add(usrSeqArray[i]);
-		}
-		
-		try {
-			mainService.delUser(usrSeqList);
-			return 0;
-		}catch(Exception e){
-			e.printStackTrace();
-			System.out.println("오류가 발생했습니다.");
-			return 1;
-		}
 	}
 }

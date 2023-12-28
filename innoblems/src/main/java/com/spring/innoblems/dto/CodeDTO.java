@@ -1,6 +1,6 @@
 package com.spring.innoblems.dto;
 
-public class codeDTO {
+public class CodeDTO {
 	private String mstCD;
 	private String mstCDNM;
 	private String dtCD;
@@ -33,7 +33,7 @@ public class codeDTO {
 	
 	@Override
 	public String toString() {
-		return "codeDTO [mstCD=" + mstCD + ", mstCDNM=" + mstCDNM + ", dtCD=" + dtCD + ", dtCDNM=" + dtCDNM + "]";
+		return "CodeDTO [mstCD=" + mstCD + ", mstCDNM=" + mstCDNM + ", dtCD=" + dtCD + ", dtCDNM=" + dtCDNM + "]";
 	}
 	
 }
