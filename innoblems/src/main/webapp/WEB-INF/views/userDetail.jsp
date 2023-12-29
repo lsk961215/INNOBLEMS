@@ -86,6 +86,7 @@
 	
 	function save(){
         
+        var usrSeq = $("#usrSeq").val()
         var usrId = $("#usrId").val()
 		var usrPw = $("#usrPw").val()
 		var usrNm = $("#usrNm").val()
@@ -96,6 +97,7 @@
 		var usrEm = $("#usrEm").val()
 		var usrAd = $("#postcode").val() + ", " + $("#roadAddress").val() + ", " + $("#detailAddress").val()
 		var raCD = $("#raCD").val()
+		var stCD = $("#stCD").val()
 		var gdCD = $("#gdCD").val()
 		var grCD = $("#grCD").val()
 		var dvCD = $("#dvCD").val()
@@ -110,30 +112,19 @@
 		var form = new FormData();
         form.append( "file1", $("#file1")[0].files[0] );
         
-        console.log("form")
-        
-        jQuery.ajax({
-             url : "result"
-           , type : "POST"
-           , processData : false
-           , contentType : false
-           , data : form
-           , success:function(response) {
-               alert("성공하였습니다.");
-               
-               usrImg = response;
-               
-               console.log("usrImg = " + usrImg)
-               
-              	var param = "usrId="+usrId
+        	if(form.get("file1") == "undefined") {
+        		console.log("업로드된 이미지 없음")
+        		
+        		var param = "usrId="+usrId
+	       		param += "&usrSeq="+usrSeq
 	       		param += "&usrPw="+usrPw
 	       		param += "&usrNm="+usrNm
-	       		param += "&usrImg="+usrImg
 	       		param += "&usrBDT="+usrBDT
 	       		param += "&usrINDT="+usrINDT
 	       		param += "&usrPn="+usrPn
 	       		param += "&usrEm="+usrEm
 	       		param += "&usrAd="+usrAd
+	       		param += "&stCD="+stCD
 	       		param += "&raCD="+raCD
 	       		param += "&gdCD="+gdCD
 	       		param += "&grCD="+grCD
@@ -160,14 +151,67 @@
 			            alert("통신실패")
 			        }
 			    })
-           }
-           ,error: function (jqXHR) 
-           { 
-               console.log(jqXHR); 
-           }
-       	})
-       	
-		
+        	} else {
+        		console.log("업로드된 이미지 있음")
+        		
+        		jQuery.ajax({
+		             url : "result"
+		           , type : "POST"
+		           , processData : false
+		           , contentType : false
+		           , data : form
+		           , success:function(response) {
+		               alert("성공하였습니다.");
+		               
+		               usrImg = response;
+		               
+		               console.log("usrImg = " + usrImg)
+		               
+		              	var param = "usrId="+usrId
+			       		param += "&usrSeq="+usrSeq
+			       		param += "&usrPw="+usrPw
+			       		param += "&usrNm="+usrNm
+			       		param += "&usrImg="+usrImg
+			       		param += "&usrBDT="+usrBDT
+			       		param += "&usrINDT="+usrINDT
+			       		param += "&usrPn="+usrPn
+			       		param += "&usrEm="+usrEm
+			       		param += "&usrAd="+usrAd
+			       		param += "&stCD="+stCD
+			       		param += "&raCD="+raCD
+			       		param += "&gdCD="+gdCD
+			       		param += "&grCD="+grCD
+			       		param += "&dvCD="+dvCD
+			       		param += "&skills="
+			       		
+			       		for(var i = 0; i<skills.length; i++){
+			       			param += skills[i]
+			       			if(i != skills.length - 1){
+			       				param += ","
+			       			}
+			       		}
+		               
+		               console.log("param" + param)
+		               
+		               $.ajax({
+					        url: "saveUser", 
+					        type:"post",
+					        data: param,
+					        success: function(data) {
+					        	alert("등록되었습니다.")
+					        },
+					        error: function() {
+					            alert("통신실패")
+					        }
+					    })
+		           }
+		           ,error: function (jqXHR) 
+		           { 
+		               console.log(jqXHR); 
+		           }
+		       	})
+        	}
+        
 	}
 </script>
 <script type="text/javascript">

@@ -541,7 +541,7 @@ table .numberRow {
 <jsp:include page="header.jsp"/>
 <main>
 	<div class="wrap">
-		<div class="pageTitle"><h1>사원 관리</h1></div>
+		<div class="pageTitle"><h1>프로젝트 관리</h1></div>
 		<div class="middle">
 			<jsp:include page="aside.jsp"/>
 			<section>
@@ -590,7 +590,7 @@ table .numberRow {
 					</div>
 				</div>
 				<div class="result">
-					<div class="resultTitle"><h1>사원 리스트</h1></div>
+					<div class="resultTitle"><h1>프로젝트 리스트</h1></div>
 					<div class="resultDetail">
 						<table>
 							<thead>

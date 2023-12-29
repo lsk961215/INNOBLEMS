@@ -4,7 +4,7 @@
 		<a href="/innoblems">
 			사원 관리
 		</a>
-		<a href="goAdminComment">
+		<a href="goProjectPage">
 			프로젝트 관리
 		</a>
 </aside>

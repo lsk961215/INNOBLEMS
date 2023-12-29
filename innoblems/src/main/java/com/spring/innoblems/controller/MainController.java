@@ -46,13 +46,22 @@ public class MainController {
 	}
 	
 	@RequestMapping("/goAddUserPage")
-	public String addUser(Model model) {
-		model.addAttribute("addUser", true);
+	public String goAddUserPage(Model model) {
 		
 		List codeList = mainService.getCodeList();
 		
 		model.addAttribute("codeList", codeList);
 		
 		return "user";
+	}
+	
+	@RequestMapping("/goProjectPage")
+	public String goProjectPage(Model model) {
+		
+		List codeList = mainService.getCodeList();
+		
+		model.addAttribute("codeList", codeList);
+		
+		return "project";
 	}
 }
