@@ -105,8 +105,6 @@ public class UserController {
 				skillList.add(skillDTO);
 			}
 			
-			System.out.println("usrSeq = " + usrSeq);
-			
 			userService.addUserSkill(skillList);
 			
 			return 0;
@@ -157,7 +155,7 @@ public class UserController {
 	public int saveUser(HttpServletRequest request, UserDTO userDTO) throws Exception {
 		
 		try {
-			int usrSeq = userService.saveUser(userDTO);
+			userService.saveUser(userDTO);
 			
 			List<SkillDTO> skillList = new ArrayList();
 			
@@ -168,13 +166,13 @@ public class UserController {
 			for (int i = 0; i<skillArray.length; i++) {
 				SkillDTO skillDTO = new SkillDTO();
 				
-				skillDTO.setUsrSeq(usrSeq);
+				skillDTO.setUsrSeq(userDTO.getUsrSeq());
 				skillDTO.setSkill(skillArray[i]);
 				
 				skillList.add(skillDTO);
 			}
 			
-			System.out.println("usrSeq = " + usrSeq);
+			System.out.println("usrSeq saveUser = " + userDTO.getUsrSeq());
 			
 			userService.addUserSkill(skillList);
 			

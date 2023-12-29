@@ -12,5 +12,5 @@ public interface UserService {
 	void addUserSkill(List<SkillDTO> skillList);
 	void delUser(List list);
 	UserDTO getUserDetail(UserDTO userDTO);
-	int saveUser(UserDTO userDTO);
+	void saveUser(UserDTO userDTO);
 }

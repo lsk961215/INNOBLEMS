@@ -89,7 +89,7 @@
         var usrId = $("#usrId").val()
 		var usrPw = $("#usrPw").val()
 		var usrNm = $("#usrNm").val()
-		var usrImg = "";
+		var usrImg
 		var usrBDT = $("#usrBDT").val()
 		var usrINDT = $("#usrINDT").val()
 		var usrPn = $("#usrPn").val()
@@ -109,6 +109,8 @@
 		
 		var form = new FormData();
         form.append( "file1", $("#file1")[0].files[0] );
+        
+        console.log("form")
         
         jQuery.ajax({
              url : "result"
@@ -161,7 +163,7 @@
            }
            ,error: function (jqXHR) 
            { 
-               alert(jqXHR.responseText); 
+               console.log(jqXHR); 
            }
        	})
        	

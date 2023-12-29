@@ -16,4 +16,11 @@
 				)
 	</insert>
 	
+	<delete id="delUserSkill" parameterType="com.spring.innoblems.dto.SkillDTO">
+		DELETE FROM
+			USER_SKILL_TABLE
+		WHERE
+			USR_SEQ = #{usrSeq}
+	</delete>
+	
 </mapper>

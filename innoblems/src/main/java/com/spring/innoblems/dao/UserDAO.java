@@ -10,8 +10,9 @@ public interface UserDAO {
 	List getUserList(Map map);
 	int getUserTotal(Map map);
 	int addUser(UserDTO userDTO);
+	void delUserSkill(SkillDTO skillDTO);
 	void addUserSkill(SkillDTO skillDTO);
 	void delUser(List list);
 	UserDTO getUserDetail(UserDTO userDTO);
-	int saveUser(UserDTO userDTO);
+	void saveUser(UserDTO userDTO);
 }

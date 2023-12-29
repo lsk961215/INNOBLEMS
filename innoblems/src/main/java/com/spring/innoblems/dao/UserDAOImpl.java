@@ -24,6 +24,11 @@ public class UserDAOImpl implements UserDAO {
 	}
 	
 	@Override
+	public void delUserSkill(SkillDTO skillDTO) {
+		sqlSession.insert("skill.delUserSkill", skillDTO);
+	}
+	
+	@Override
 	public void addUserSkill(SkillDTO skillDTO) {
 		sqlSession.insert("skill.addUserSkill", skillDTO);
 	}
@@ -50,8 +55,8 @@ public class UserDAOImpl implements UserDAO {
 	}
 
 	@Override
-	public int saveUser(UserDTO userDTO) {
+	public void saveUser(UserDTO userDTO) {
 		sqlSession.update("user.saveUser", userDTO);
-		return userDTO.getUsrSeq();
+		return;
 	}
 }

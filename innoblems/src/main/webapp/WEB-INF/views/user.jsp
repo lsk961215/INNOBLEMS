@@ -92,11 +92,8 @@
            , contentType : false
            , data : form
            , success:function(response) {
-               alert("성공하였습니다.");
                
                usrImg = response;
-               
-               console.log("usrImg = " + usrImg)
                
               	var param = "usrId="+usrId
 	       		param += "&usrPw="+usrPw

@@ -229,9 +229,6 @@
 		 	USR_AD = #{usrAd}
 		WHERE
 			USR_SEQ = #{usrSeq}
-		<selectKey resultType="int" keyProperty="usrSeq" order="AFTER">
-	        SELECT USR_SEQ FROM USER_INFO WHERE USR_ID = #{usrId}
-	    </selectKey>
 	</update>
 	
 </mapper>

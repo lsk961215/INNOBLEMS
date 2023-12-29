@@ -24,6 +24,10 @@ public class UserServiceImpl  implements UserService {
 
 	@Override
 	public void addUserSkill(List skillList) {
+		SkillDTO tmp_skillDTO = (SkillDTO) skillList.get(0);
+		
+		userDAO.delUserSkill(tmp_skillDTO);
+		
 		for(int i = 0; i<skillList.size(); i++) {
 			SkillDTO skillDTO = (SkillDTO) skillList.get(i);
 			userDAO.addUserSkill(skillDTO);
@@ -84,7 +88,8 @@ public class UserServiceImpl  implements UserService {
 	}
 
 	@Override
-	public int saveUser(UserDTO userDTO) {
-		return userDAO.saveUser(userDTO);
+	public void saveUser(UserDTO userDTO) {
+		userDAO.saveUser(userDTO);
+		return;
 	}
 }
