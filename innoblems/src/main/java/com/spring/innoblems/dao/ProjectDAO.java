@@ -1,0 +1,16 @@
+package com.spring.innoblems.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import com.spring.innoblems.dto.ProjectDTO;
+import com.spring.innoblems.dto.SkillDTO;
+import com.spring.innoblems.dto.UserDTO;
+
+public interface ProjectDAO {
+	List getProjectList(Map map);
+	int getProjectTotal(Map map);
+	int addProject(ProjectDTO projectDTO);
+	void delProjectSkill(SkillDTO skillDTO);
+	void addProjectSkill(SkillDTO skillDTO);
+}
