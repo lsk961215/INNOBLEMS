@@ -7,7 +7,7 @@ import com.spring.innoblems.dto.SkillDTO;
 import com.spring.innoblems.dto.UserDTO;
 
 public interface UserService {
-	Map getUserList(Map map);
+	Map getUserList(Map selectMap);
 	int addUser(UserDTO userDTO);
 	void addUserSkill(List<SkillDTO> skillList);
 	void delUser(List list);

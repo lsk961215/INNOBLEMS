@@ -19,41 +19,50 @@
 <script>
 	$(function(){
 		$("#search").click(function(){
-			getUserList(1)
+			getProjectList(1)
 		})
 		
-		$("#minDT").change(function(){
-			$("#maxDT").attr("min", $(this).val())
+		$("#minSTDT").change(function(){
+			$("#maxSTDT").attr("min", $(this).val())
 		})
 		
-		$("#maxDT").change(function(){
-			$("#minDT").attr("max", $(this).val())
+		$("#minEDDT").change(function(){
+			$("#maxEDDT").attr("min", $(this).val())
+		})
+		
+		$("#maxSTDT").change(function(){
+			$("#minSTDT").attr("max", $(this).val())
+		})
+		
+		$("#maxEDDT").change(function(){
+			$("#minEDDT").attr("max", $(this).val())
 		})
 		
 		$("#checkAll").change(function(){
 			if($(this).is(":checked") == true){
-				$(".usrSeq").each(function(){
+				$(".prjSeq").each(function(){
 					$(this).prop('checked',true)
 				})
 			} else {
-				$(".usrSeq").each(function(){
+				$(".prjSeq").each(function(){
 					$(this).prop('checked',false)
 				})
 			}
 		})
 	})
 	
-	function getUserList(pageNum){
-		var usrSeq = $("#usrSeq").val()
-		var usrNm = $("#usrNm").val()
-		var grCD = $("#grCD").val()
-		var stCD = $("#stCD").val()
-		var minDT = $("#minDT").val()
-		var maxDT = $("#maxDT").val()
+	function getProjectList(pageNum){
+		var prjSeq = $("#prjSeq").val()
+		var prjNm = $("#prjNm").val()
+		var cusCD = $("#cusCD").val()
+		var minSTDT = $("#minSTDT").val()
+		var maxSTDT = $("#maxSTDT").val()
+		var minEDDT = $("#minEDDT").val()
+		var maxEDDT = $("#maxEDDT").val()
 		var skills = new Array()
 		
-		if(usrSeq == ""){
-			usrSeq = 0
+		if(prjSeq == ""){
+			prjSeq = 0
 		}
 		
 		$(".skill").each(function(){
@@ -62,12 +71,13 @@
 		    }
 		})
 		
-		var param = "usrSeq="+usrSeq
-		param += "&usrNm="+usrNm
-		param += "&grCD="+grCD
-		param += "&stCD="+stCD
-		param += "&minDT="+minDT
-		param += "&maxDT="+maxDT
+		var param = "prjSeq="+prjSeq
+		param += "&prjNm="+prjNm
+		param += "&cusCD="+cusCD
+		param += "&minSTDT="+minSTDT
+		param += "&maxSTDT="+maxSTDT
+		param += "&minEDDT="+minEDDT
+		param += "&maxEDDT="+maxEDDT
 		param += "&skills="
 		
 		for(var i = 0; i<skills.length; i++){
@@ -82,14 +92,14 @@
 		console.log("param = " + param)
 		
 		$.ajax({
-	        url: "getUserList", 
+	        url: "getProjectList", 
 	        type:"post",
 	        data: param,
 	        success: function(data) {
 	        	var str = ""
 	        	var page = ""
-	        	var add = "<a id='add' href='goAddUserPage'>추가</a>"
-	        	var del = "<button id='del' onclick='delUser()'>삭제</button>"
+	        	var add = "<a id='add' href='goAddProjectPage'>추가</a>"
+	        	var del = "<button id='del' onclick='delProject()'>삭제</button>"
 	        	
 	        	
 	        	/* model 에서 toString() 으로 받아온 문자열을 배열로 파싱 */
@@ -111,24 +121,16 @@
 		        $(".resultPage").empty()
 		        $(".resultButton").empty()
 		        
-		        if(data.userList.length >= 1){
-		        	$.each(data.userList, function(i){
-		        		var rank
-		        		var grade
-		        		var status
+		        if(data.projectList.length >= 1){
+		        	$.each(data.projectList, function(i){
+		        		var customer
 		        		var skills = ""
 		        		
-		        		var skillArr = data.userList[i].skills.split(",")
+		        		var skillArr = data.projectList[i].skills.split(",")
 		        		
 		        		for(var j = 0; j<codeList.length; j++){
-		        			if(codeList[j].indexOf("mstCD=RA01") != -1 && codeList[j].indexOf("dtCD=" + data.userList[i].raCD + ",") != -1){
-		        				rank = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
-		        			}
-		        			if(codeList[j].indexOf("mstCD=GR01") != -1 && codeList[j].indexOf("dtCD=" + data.userList[i].grCD + ",") != -1){
-		        				grade = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
-		        			}
-		        			if(codeList[j].indexOf("mstCD=ST01") != -1 && codeList[j].indexOf("dtCD=" + data.userList[i].stCD + ",") != -1){
-		        				status = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
+		        			if(codeList[j].indexOf("mstCD=CU01") != -1 && codeList[j].indexOf("dtCD=" + data.projectList[i].cusCD + ",") != -1){
+		        				customer = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
 		        			}
 		        			
 		        			for(var k = 0; k<skillArr.length; k++){
@@ -142,21 +144,20 @@
 		        		}
 		        		
 	                	str += "<tr>"
-	                	str += "<td class='checkRow'><input type='checkbox' class='usrSeq' value=" + data.userList[i].usrSeq + " onclick='checkOne()'></td>"
-	               		str += "<td class='numberRow'>" + data.userList[i].usrSeq + "</td>"
-	               		str += "<td>" + data.userList[i].usrINDT + "</td>"
-	               		str += "<td>" + rank + "</td>"
-	               		str += "<td class='nameRow'>" + data.userList[i].usrNm + "</td>"
-	               		str += "<td>" + grade + "</td>"
+	                	str += "<td class='checkRow'><input type='checkbox' class='prjSeq' value=" + data.projectList[i].prjSeq + " onclick='checkOne()'></td>"
+	               		str += "<td class='numberRow'>" + data.projectList[i].prjSeq + "</td>"
+	               		str += "<td class='nameRow'>" + data.projectList[i].prjNm + "</td>"
+	               		str += "<td class='customerRow'>" + customer + "</td>"
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
-	               		str += "<td>" + status + "</td>"
-	               		str += "<td class='editRow'><a id='edit' href='getUserDetail?usrSeq=" + data.userList[i].usrSeq + "'>상세/수정</a></td>"
-	              		str += '<td><input id="project" type="button" value="프로젝트 관리"></td>'
+	               		str += "<td class='startRow'>" + data.projectList[i].prjSTDT + "</td>"
+	               		str += "<td class='endRow'>" + data.projectList[i].prjEDDT + "</td>"
+	               		str += "<td class='editRow'><a id='edit' href='getProjectDetail?prjSeq=" + data.projectList[i].prjSeq + "'>상세/수정</a></td>"
+	              		str += "<td class='userRow'><input id='user' type='button' value='인원 관리'></td>"
 	              		str += "</tr>"
 	                })
 	                
 		        	if(data.beginPaging != 1){
-		        		page += "<a href=getUserList?pageNum=" + (data.beginPaging - 1) + ">이전</a>"
+		        		page += "<a href=getProjectList?pageNum=" + (data.beginPaging - 1) + ">이전</a>"
 		        	}
 		        	
 		        	for(var i = data.beginPaging; i <= data.endPaging; i++){
@@ -168,12 +169,12 @@
 		        	}
 		        	
 		        	if(data.endPaging != data.totalPaging){
-		        		page += "<a href=getUserList?pageNum=" + (data.endPaging + 1) + ">다음</a>"
+		        		page += "<a href=getProjectList?pageNum=" + (data.endPaging + 1) + ">다음</a>"
 		        	}
 		        	
 		        } else {
 		        	str += "<tr>"
-		        	str += '<td colspan="10"><h3>검색결과가 없습니다.</h3></td>'
+		        	str += '<td colspan="9"><h3>검색결과가 없습니다.</h3></td>'
 		        	str += "</tr>"
 		        }
 	        	
@@ -188,7 +189,7 @@
 	    })
 	}
 	
-	function delUser(){
+	function delProject(){
 		var usrSeqList = new Array()
 		
 		$(".usrSeq").each(function(){
@@ -229,13 +230,13 @@
 	function checkOne(){
 		var count = 0
 		
-		$(".usrSeq").each(function(){
+		$(".prjSeq").each(function(){
 			 if( $(this).is(":checked") == true ){
 				 count += 1
 			 }
 		})
 		
-		if(count == $(".usrSeq").length){
+		if(count == $(".prjSeq").length){
 			$("#checkAll").prop('checked',true)
 		} else {
 			$("#checkAll").prop('checked',false)
@@ -371,6 +372,11 @@ input[type=text], select {
 	margin-bottom: 10px;
 }
 
+.filterSection_2 {
+	display: flex;
+	justify-content: space-between;
+}
+
 .filterSection_3 {
 	display: flex;
 	justify-content: space-between;
@@ -487,7 +493,7 @@ table td, table th{
   	padding-left: 5px;
 	padding-right: 5px;
 	
-	min-width: 100px;
+	min-width: max-content;
 	
 	text-align: center;
 		
@@ -504,17 +510,29 @@ table .checkRow {
 	text-align: center;
 }
 
+table .startRow, table .endRow {
+	min-width: 100px;
+	text-align: center;
+}
+
 table .skillsRow {
 	min-width: 400px;
 	text-align: left;
 }
 
 table .nameRow {
+	min-width: 200px;
 	text-align: left;
 }
 
 table .numberRow {
+	min-width: 120px;
 	text-align: right;
+}
+
+table .customerRow {
+	min-width: 120px;
+	text-align: left;
 }
 
 .resultPage {
@@ -532,8 +550,16 @@ table .numberRow {
 	justify-content: center;
 }
 
-.editRow {
-	text-align:center;
+.filterWrap {
+	display: flex;
+	justify-content: space-between;
+	width: 200px;
+}
+
+.dateWrap {
+	display: flex;
+	justify-content: space-between;
+	width: 400px;
 }
 </style>
 </head>
@@ -541,7 +567,7 @@ table .numberRow {
 <jsp:include page="header.jsp"/>
 <main>
 	<div class="wrap">
-		<div class="pageTitle"><h1>사원 관리</h1></div>
+		<div class="pageTitle"><h1>프로젝트 관리</h1></div>
 		<div class="middle">
 			<jsp:include page="aside.jsp"/>
 			<section>
@@ -549,34 +575,36 @@ table .numberRow {
 					<div class="filterTitle"><h1>검색 조건</h1></div>
 					<div class="filterDetail">
 						<div class="filterSection_1">
-							<small>사원번호</small>
-							<input name="usrSeq" id="usrSeq" type="text">
-							<small>사원명</small>
-							<input name="usrNm" id="usrNm" type="text">
-							<small>기술등급</small>
-							<select name="grCD" id="grCD">
-								<option value="0">선택</option>
-								<c:forEach var="item" items="${codeList}" varStatus="i">
-									<c:if test = "${item.mstCD == 'GR01'}">
-										<option value="${item.dtCD}">${item.dtCDNM}</option>
-									</c:if>
-								</c:forEach>
-							</select>
-							<small>재직상태</small>
-							<select name="stCD" id="stCD">
-								<option value="0">선택</option>
-								<c:forEach var="item" items="${codeList}" varStatus="i">
-									<c:if test = "${item.mstCD == 'ST01'}">
-										<option value="${item.dtCD}">${item.dtCDNM}</option>
-									</c:if>
-								</c:forEach>
-							</select>
+							<div class="filterWrap">
+								<small>프로젝트 번호</small>
+								<input name="prjSeq" id="prjSeq" type="text">
+							</div>
+							<div class="filterWrap">
+								<small>프로젝트명</small>
+								<input name="prjNm" id="prjNm" type="text">
+							</div>
+							<div class="filterWrap">
+								<small>고객사명</small>
+								<select name="cusCD" id="cusCD">
+									<option value="0">선택</option>
+									<c:forEach var="item" items="${codeList}" varStatus="i">
+										<c:if test = "${item.mstCD == 'CU01'}">
+											<option value="${item.dtCD}">${item.dtCDNM}</option>
+										</c:if>
+									</c:forEach>
+								</select>
+							</div>
 						</div>
 						<div class="filterSection_2">
-							<small class="inDT">입사일</small> <input id="minDT" type="date"> ~ <input id="maxDT" type="date">
+							<div class="dateWrap">
+								<small>시작일</small> <input id="minSTDT" type="date"> ~ <input id="maxSTDT" type="date">
+							</div>
+							<div class="dateWrap">
+								<small>종료일</small> <input id="minEDDT" type="date"> ~ <input id="maxEDDT" type="date">
+							</div>
 						</div>
 						<div class="filterSection_3">
-							<small class="skillText">보유기술</small> 
+							<small class="skillText">필요기술</small> 
 							<c:forEach var="item" items="${codeList}" varStatus="i">
 								<c:if test = "${item.mstCD == 'SK01'}">
 									<input type="checkbox" class="skill" id="${item.dtCD}" value="${item.dtCD}">
@@ -590,26 +618,25 @@ table .numberRow {
 					</div>
 				</div>
 				<div class="result">
-					<div class="resultTitle"><h1>사원 리스트</h1></div>
+					<div class="resultTitle"><h1>프로젝트 리스트</h1></div>
 					<div class="resultDetail">
 						<table>
 							<thead>
 								<tr>
 									<th><input type="checkbox" id="checkAll"></th>
-									<th>사원번호</th>
-									<th>입사일</th>
-									<th>직급</th>
-									<th>사원명</th>
-									<th>기술등급</th>
-									<th>보유기술</th>
-									<th>재직상태</th>
+									<th>프로젝트 번호</th>
+									<th>프로젝트명</th>
+									<th>고객사명</th>
+									<th>필요기술</th>
+									<th>시작일</th>
+									<th>종료일</th>
 									<th>상세/수정</th>
-									<th>프로젝트관리</th>
+									<th>인원 관리</th>
 								</tr>
 							</thead>
 							<tbody id="tbody">
 								<tr>
-									<td colspan="10"><h3>데이터가 없습니다.</h3></td>
+									<td colspan="9"><h3>데이터가 없습니다.</h3></td>
 								</tr>
 							</tbody>
 						</table>

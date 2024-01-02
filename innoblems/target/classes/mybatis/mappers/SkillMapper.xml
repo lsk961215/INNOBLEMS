@@ -23,4 +23,23 @@
 			USR_SEQ = #{usrSeq}
 	</delete>
 	
+	<delete id="delProjectSkill" parameterType="com.spring.innoblems.dto.SkillDTO">
+		DELETE FROM
+			PROJECT_SKILL_TABLE
+		WHERE
+			PRJ_SEQ = #{prjSeq}
+	</delete>
+	
+	<insert id="addProjectSkill" parameterType="com.spring.innoblems.dto.SkillDTO">
+			INSERT INTO 
+				PROJECT_SKILL_TABLE (
+					PRJ_SEQ, 
+					SK_CD
+					)
+			VALUES	(
+				#{prjSeq}, 
+				#{skill}
+				)
+	</insert>
+	
 </mapper>

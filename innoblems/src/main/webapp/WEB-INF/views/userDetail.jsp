@@ -688,7 +688,7 @@ table td{
 				</div>
 				<div class="buttonSection">
 					<button id="save" onclick="save()">저장</button>
-					<a id="cancel" href="/innoblems">취소</a>
+					<a id="cancel" href="goUserListPage">취소</a>
 				</div>
 				
 			</section>

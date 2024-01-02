@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="project">
+
+	<resultMap id="projectMap" type="com.spring.innoblems.dto.ProjectDTO">
+	  <result column="PRJ_SEQ" property="prjSeq"/>
+	  <result column="CUS_CD" property="cusCD"/>
+	  <result column="PRJ_NM" property="prjNm"/>
+	  <result column="PRJ_ST_DT" property="prjSTDT"/>
+	  <result column="PRJ_ED_DT" property="prjEDDT"/>
+	  <result column="SKILLS" property="skills"/>
+	</resultMap>
+	
+	<select id="getProjectList" parameterType="java.util.HashMap" resultMap="projectMap">
+	    SELECT *
+	    FROM (
+	    SELECT ROWNUM as rnum, b.*
+		FROM (
+		SELECT a.PRJ_SEQ
+		FROM PROJECT_INFO a
+		RIGHT OUTER JOIN (SELECT PRJ_SEQ
+		, LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+		FROM (
+		SELECT *
+		FROM PROJECT_SKILL_TABLE
+        <if test="projectDTO.skills != ''">
+			WHERE SK_CD IN <foreach item="item" collection="skills" open="(" separator="," close=")"> #{item} </foreach>
+		</if>
+		)
+		GROUP BY PRJ_SEQ) b
+		ON a.PRJ_SEQ = b.PRJ_SEQ
+		WHERE 1=1
+        <if test="projectDTO.skills != ''">
+			AND SKILLS = #{projectDTO.skills}
+		</if>
+		<if test="projectDTO.prjSeq != 0">
+			AND a.PRJ_SEQ = #{projectDTO.prjSeq}
+		</if>
+		<if test="projectDTO.prjNm != '' and projectDTO.prjNm != null">
+			AND a.PRJ_NM like '%' || #{projectDTO.prjNm} || '%'
+		</if>
+		<if test="projectDTO.cusCD != 0">
+			AND a.CUS_CD = #{projectDTO.cusCD}
+		</if>
+		<if test="projectDTO.minSTDT != '' and projectDTO.maxSTDT != ''">
+			AND a.PRJ_ST_DT BETWEEN #{projectDTO.minSTDT} AND #{projectDTO.maxSTDT}
+		</if>
+		<if test="projectDTO.minSTDT == '' and projectDTO.maxSTDT != ''">
+			AND a.PRJ_ST_DT <![CDATA[ <= ]]> #{projectDTO.maxSTDT}
+		</if>
+		<if test="projectDTO.minSTDT != '' and projectDTO.maxSTDT == ''">
+			AND a.PRJ_ST_DT <![CDATA[ >= ]]> #{projectDTO.minSTDT}
+		</if>
+		<if test="projectDTO.minEDDT != '' and projectDTO.maxEDDT != ''">
+			AND a.PRJ_ED_DT BETWEEN #{projectDTO.minEDDT} AND #{projectDTO.maxEDDT}
+		</if>
+		<if test="projectDTO.minEDDT == '' and projectDTO.maxEDDT != ''">
+			AND a.PRJ_ED_DT <![CDATA[ <= ]]> #{projectDTO.maxEDDT}
+		</if>
+		<if test="projectDTO.minEDDT != '' and projectDTO.maxEDDT == ''">
+			AND a.PRJ_ED_DT <![CDATA[ >= ]]> #{projectDTO.minEDDT}
+		</if>
+		) a
+			
+		LEFT OUTER JOIN 
+			
+		(
+		SELECT a.*, b.SKILLS
+		FROM PROJECT_INFO a
+		LEFT OUTER JOIN (SELECT PRJ_SEQ
+		     , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+		FROM PROJECT_SKILL_TABLE
+		GROUP BY PRJ_SEQ
+		) b
+		ON a.PRJ_SEQ = b.PRJ_SEQ
+		) b
+		ON a.PRJ_SEQ = b.PRJ_SEQ
+		ORDER BY a.PRJ_SEQ
+		)
+		WHERE RNUM <![CDATA[>=]]> #{startNum} and RNUM <![CDATA[<=]]> #{endNum}
+	</select>
+	
+	<select id="getProjectTotal" parameterType="java.util.HashMap" resultType="int">
+	    SELECT COUNT(*)
+		FROM (
+	    SELECT *
+		FROM (
+		SELECT a.PRJ_SEQ
+		FROM PROJECT_INFO a
+		RIGHT OUTER JOIN (SELECT PRJ_SEQ
+		, LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+		FROM (
+		SELECT *
+		FROM PROJECT_SKILL_TABLE
+        <if test="projectDTO.skills != ''">
+			WHERE SK_CD IN <foreach item="item" collection="skills" open="(" separator="," close=")"> #{item} </foreach>
+		</if>
+		)
+		GROUP BY PRJ_SEQ) b
+		ON a.PRJ_SEQ = b.PRJ_SEQ
+		WHERE 1=1
+        <if test="projectDTO.skills != ''">
+			AND SKILLS = #{projectDTO.skills}
+		</if>
+		<if test="projectDTO.prjSeq != 0">
+			AND a.PRJ_SEQ = #{projectDTO.prjSeq}
+		</if>
+		<if test="projectDTO.prjNm != '' and projectDTO.prjNm != null">
+			AND a.PRJ_NM like '%' || #{projectDTO.prjNm} || '%'
+		</if>
+		<if test="projectDTO.cusCD != 0">
+			AND a.CUS_CD = #{projectDTO.cusCD}
+		</if>
+		<if test="projectDTO.minSTDT != '' and projectDTO.maxSTDT != ''">
+			AND a.PRJ_ST_DT BETWEEN #{projectDTO.minSTDT} AND #{projectDTO.maxSTDT}
+		</if>
+		<if test="projectDTO.minSTDT == '' and projectDTO.maxSTDT != ''">
+			AND a.PRJ_ST_DT <![CDATA[ <= ]]> #{projectDTO.maxSTDT}
+		</if>
+		<if test="projectDTO.minSTDT != '' and projectDTO.maxSTDT == ''">
+			AND a.PRJ_ST_DT <![CDATA[ >= ]]> #{projectDTO.minSTDT}
+		</if>
+		<if test="projectDTO.minEDDT != '' and projectDTO.maxEDDT != ''">
+			AND a.PRJ_ED_DT BETWEEN #{projectDTO.minEDDT} AND #{projectDTO.maxEDDT}
+		</if>
+		<if test="projectDTO.minEDDT == '' and projectDTO.maxEDDT != ''">
+			AND a.PRJ_ED_DT <![CDATA[ <= ]]> #{projectDTO.maxEDDT}
+		</if>
+		<if test="projectDTO.minEDDT != '' and projectDTO.maxEDDT == ''">
+			AND a.PRJ_ED_DT <![CDATA[ >= ]]> #{projectDTO.minEDDT}
+		</if>
+		) a
+			
+		LEFT OUTER JOIN 
+			
+		(
+		SELECT a.*, b.SKILLS
+		FROM PROJECT_INFO a
+		LEFT OUTER JOIN (SELECT PRJ_SEQ
+		     , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+		FROM PROJECT_SKILL_TABLE
+		GROUP BY PRJ_SEQ
+		) b
+		ON a.PRJ_SEQ = b.PRJ_SEQ
+		) b
+		ON a.PRJ_SEQ = b.PRJ_SEQ
+		ORDER BY a.PRJ_SEQ
+		)
+	</select>
+	
+	<insert id="addProject" parameterType="com.spring.innoblems.dto.ProjectDTO">
+		 INSERT INTO
+		 	PROJECT_INFO (
+		 		PRJ_SEQ,
+		 		CUS_CD,
+		 		PRJ_NM,
+		 		PRJ_ST_DT,
+		 		PRJ_ED_DT,
+		 		PRJ_NOTE
+		 		)
+		 VALUES (
+		 	PRJ_SEQ.NEXTVAL,
+		 	#{cusCD},
+		 	#{prjNm},
+		 	#{prjSTDT},
+		 	#{prjEDDT},
+		 	#{prjNote}
+		 )
+		<selectKey resultType="int" keyProperty="prjSeq" order="AFTER">
+	        SELECT PRJ_SEQ FROM PROJECT_INFO WHERE PRJ_NM = #{prjNm} AND CUS_CD = #{cusCD}
+	    </selectKey>
+	</insert>
+	
+</mapper>

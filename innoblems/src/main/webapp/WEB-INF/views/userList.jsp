@@ -144,14 +144,14 @@
 	                	str += "<tr>"
 	                	str += "<td class='checkRow'><input type='checkbox' class='usrSeq' value=" + data.userList[i].usrSeq + " onclick='checkOne()'></td>"
 	               		str += "<td class='numberRow'>" + data.userList[i].usrSeq + "</td>"
-	               		str += "<td>" + data.userList[i].usrINDT + "</td>"
-	               		str += "<td>" + rank + "</td>"
+	               		str += "<td class='inDateRow'>" + data.userList[i].usrINDT + "</td>"
+	               		str += "<td class='rankRow'>" + rank + "</td>"
 	               		str += "<td class='nameRow'>" + data.userList[i].usrNm + "</td>"
-	               		str += "<td>" + grade + "</td>"
+	               		str += "<td class='gradeRow'>" + grade + "</td>"
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
-	               		str += "<td>" + status + "</td>"
+	               		str += "<td class='statusRow'>" + status + "</td>"
 	               		str += "<td class='editRow'><a id='edit' href='getUserDetail?usrSeq=" + data.userList[i].usrSeq + "'>상세/수정</a></td>"
-	              		str += '<td><input id="project" type="button" value="프로젝트 관리"></td>'
+	              		str += "<td class='projectRow'><input id='project' type='button' value='프로젝트 관리'></td>"
 	              		str += "</tr>"
 	                })
 	                
@@ -487,7 +487,7 @@ table td, table th{
   	padding-left: 5px;
 	padding-right: 5px;
 	
-	min-width: 100px;
+	min-width: max-content;
 	
 	text-align: center;
 		
@@ -504,18 +504,34 @@ table .checkRow {
 	text-align: center;
 }
 
+table .numberRow {
+	min-width: 100px;
+	text-align: right;
+}
+
+table .inDateRow, table .rankRow, table .gradeRow, table .statusRow {
+	min-width: 100px;
+	text-align: center;
+}
+
+table .nameRow {
+	min-width: 150px;
+	text-align: left;
+}
+
+
+table .checkRow {
+	min-width: 50px;
+	text-align: center;
+}
+
 table .skillsRow {
 	min-width: 400px;
 	text-align: left;
 }
 
-table .nameRow {
-	text-align: left;
-}
 
-table .numberRow {
-	text-align: right;
-}
+
 
 .resultPage {
 	display: flex;
@@ -541,7 +557,7 @@ table .numberRow {
 <jsp:include page="header.jsp"/>
 <main>
 	<div class="wrap">
-		<div class="pageTitle"><h1>프로젝트 관리</h1></div>
+		<div class="pageTitle"><h1>사원 관리</h1></div>
 		<div class="middle">
 			<jsp:include page="aside.jsp"/>
 			<section>
@@ -590,7 +606,7 @@ table .numberRow {
 					</div>
 				</div>
 				<div class="result">
-					<div class="resultTitle"><h1>프로젝트 리스트</h1></div>
+					<div class="resultTitle"><h1>사원 리스트</h1></div>
 					<div class="resultDetail">
 						<table>
 							<thead>

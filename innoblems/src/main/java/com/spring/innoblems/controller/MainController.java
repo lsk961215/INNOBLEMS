@@ -42,7 +42,26 @@ public class MainController {
 		
 		model.addAttribute("codeList", codeList);
 		
-		return "main";
+		return "userList";
+	}
+	
+	@RequestMapping("/goUserListPage")
+	public String goUserListPage(Model model) {
+		List codeList = mainService.getCodeList();
+		
+		model.addAttribute("codeList", codeList);
+		
+		return "userList";
+	}
+	
+	@RequestMapping("/goProjectListPage")
+	public String goProjectListPage(Model model) {
+		
+		List codeList = mainService.getCodeList();
+		
+		model.addAttribute("codeList", codeList);
+		
+		return "projectList";
 	}
 	
 	@RequestMapping("/goAddUserPage")
@@ -52,16 +71,18 @@ public class MainController {
 		
 		model.addAttribute("codeList", codeList);
 		
-		return "user";
+		return "addUser";
 	}
 	
-	@RequestMapping("/goProjectPage")
-	public String goProjectPage(Model model) {
+	@RequestMapping("/goAddProjectPage")
+	public String goAddProjectPage(Model model) {
 		
 		List codeList = mainService.getCodeList();
 		
 		model.addAttribute("codeList", codeList);
 		
-		return "project";
+		return "addProject";
 	}
+	
+	
 }

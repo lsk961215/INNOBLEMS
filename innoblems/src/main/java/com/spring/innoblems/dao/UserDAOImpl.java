@@ -25,7 +25,7 @@ public class UserDAOImpl implements UserDAO {
 	
 	@Override
 	public void delUserSkill(SkillDTO skillDTO) {
-		sqlSession.insert("skill.delUserSkill", skillDTO);
+		sqlSession.delete("skill.delUserSkill", skillDTO);
 	}
 	
 	@Override
