@@ -145,7 +145,7 @@
 		        		
 	                	str += "<tr>"
 	                	str += "<td class='checkRow'><input type='checkbox' class='prjSeq' value=" + data.projectList[i].prjSeq + " onclick='checkOne()'></td>"
-	               		str += "<td class='numberRow'>" + data.projectList[i].prjSeq + "</td>"
+	               		str += "<td class='numberRow'><a href='getProjectDetail?prjSeq=" + data.projectList[i].prjSeq +"'>" + data.projectList[i].prjSeq + "</a></td>"
 	               		str += "<td class='nameRow'>" + data.projectList[i].prjNm + "</td>"
 	               		str += "<td class='customerRow'>" + customer + "</td>"
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
@@ -164,7 +164,7 @@
 		        		if(i == data.pageNum){
 		        			page += "<button style='font-size:2em' class='page' value=" + i +">" + i + "</button>"
 		        		} else {
-		        			page += "<button class='page' value=" + i +" onclick='getUserList(" + i + ")'>" + i + "</button>"
+		        			page += "<button class='page' value=" + i +" onclick='getProjectList(" + i + ")'>" + i + "</button>"
 		        		}
 		        	}
 		        	
@@ -190,19 +190,18 @@
 	}
 	
 	function delProject(){
-		var usrSeqList = new Array()
-		
-		$(".usrSeq").each(function(){
+		var prjSeqList = new Array()
+		$(".prjSeq").each(function(){
 			if($(this).is(":checked")==true){
-				usrSeqList.push($(this).val())
+				prjSeqList.push($(this).val())
 		    }
 		})
 		
-		var param = "&usrSeqList="
+		var param = "&prjSeqList="
 		
-		for(var i = 0; i<usrSeqList.length; i++){
-			param += usrSeqList[i]
-			if(i != usrSeqList.length - 1){
+		for(var i = 0; i<prjSeqList.length; i++){
+			param += prjSeqList[i]
+			if(i != prjSeqList.length - 1){
 				param += ","
 			}
 		}
@@ -210,7 +209,7 @@
 		console.log("param : " + param)
 		
 		$.ajax({
-	        url: "delUser", 
+	        url: "delProject", 
 	        type:"post",
 	        data: param,
 	        success: function(data) {
@@ -218,7 +217,7 @@
 	        		alert("삭제 되었습니다.")
 	        		getUserList(1)
 	        	} else {
-	        		alert("해당 사원은 현재 소속되어있는 프로젝트가 있습니다.")
+	        		alert("해당 프로젝트는 현재 소속되어있는 인원이 있습니다.")
 	        	}
 	        },
 	        error: function() {
@@ -469,7 +468,7 @@ input[type=text], select {
 	text-decoration: none;
 }
 
-#project {
+#user {
 	border: none;
 	background-color: #0C70F2;
 	color: white;
@@ -477,7 +476,7 @@ input[type=text], select {
 	font-weight: bold;
 	font-size: 80%;
 	
-	width: 100px;
+	width: 80px;
 	height: 20px;
 	
 	cursor: pointer;
@@ -618,7 +617,7 @@ table .customerRow {
 					</div>
 				</div>
 				<div class="result">
-					<div class="resultTitle"><h1>프로젝트 리스트</h1></div>
+					<div class="resultTitle"><h1>검색 결과</h1></div>
 					<div class="resultDetail">
 						<table>
 							<thead>

@@ -43,5 +43,22 @@ public class ProjectDAOImpl implements ProjectDAO {
 		sqlSession.insert("skill.addProjectSkill", skillDTO);
 	}
 
+	@Override
+	public ProjectDTO getProjectDetail(ProjectDTO projectDTO) {
+		return sqlSession.selectOne("project.getProjectDetail", projectDTO);
+	}
+
+	@Override
+	public void saveProject(ProjectDTO projectDTO) {
+		sqlSession.update("project.saveProject", projectDTO);
+		return;
+	}
+
+	@Override
+	public void delProject(List list) {
+		sqlSession.delete("project.delProject", list);
+		return;
+	}
+
 
 }

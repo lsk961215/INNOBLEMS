@@ -36,15 +36,23 @@ public class FileController {
             String originFilename = multi.getOriginalFilename();
             String extName = originFilename.substring(originFilename.lastIndexOf("."),originFilename.length());
             long size = multi.getSize();
-            String saveFileName = genSaveFileName(extName);
             
-            if(!multi.isEmpty())
-            {
-                File file = new File(uploadpath, saveFileName);
-                multi.transferTo(file);
+            System.out.println("size = " + size);
+            
+            if(size <= 41943040) {
+            	String saveFileName = genSaveFileName(extName);
                 
-                return saveFileName;
+                if(!multi.isEmpty())
+                {
+                    File file = new File(uploadpath, saveFileName);
+                    multi.transferTo(file);
+                    
+                    return saveFileName;
+                }
+            } else {
+            	return "-1";
             }
+            
         }catch(Exception e)
         {
             System.out.println(e);

@@ -76,6 +76,23 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 	}
 
+	@Override
+	public ProjectDTO getProjectDetail(ProjectDTO projectDTO) {
+		return projectDAO.getProjectDetail(projectDTO);
+	}
+
+	@Override
+	public void saveProject(ProjectDTO projectDTO) {
+		projectDAO.saveProject(projectDTO);
+		return;
+	}
+
+	@Override
+	public void delProject(List list) {
+		projectDAO.delProject(list);
+		return;
+	}
+
 	
 	
 	

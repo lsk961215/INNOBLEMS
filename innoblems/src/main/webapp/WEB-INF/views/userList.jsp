@@ -143,7 +143,7 @@
 		        		
 	                	str += "<tr>"
 	                	str += "<td class='checkRow'><input type='checkbox' class='usrSeq' value=" + data.userList[i].usrSeq + " onclick='checkOne()'></td>"
-	               		str += "<td class='numberRow'>" + data.userList[i].usrSeq + "</td>"
+	               		str += "<td class='numberRow'><a href='getUserDetail?usrSeq=" + data.userList[i].usrSeq +"'>" + data.userList[i].usrSeq + "</a></td>"
 	               		str += "<td class='inDateRow'>" + data.userList[i].usrINDT + "</td>"
 	               		str += "<td class='rankRow'>" + rank + "</td>"
 	               		str += "<td class='nameRow'>" + data.userList[i].usrNm + "</td>"
@@ -487,8 +487,6 @@ table td, table th{
   	padding-left: 5px;
 	padding-right: 5px;
 	
-	min-width: max-content;
-	
 	text-align: center;
 		
 	border: 2px solid lightgrey;
@@ -503,13 +501,27 @@ table .checkRow {
 	min-width: 50px;
 	text-align: center;
 }
+table .checkHead {
+	min-width: 50px;
+	text-align: center;
+}
 
 table .numberRow {
 	min-width: 100px;
 	text-align: right;
 }
 
+table .numberHead {
+	min-width: 100px;
+	text-align: center;
+}
+
 table .inDateRow, table .rankRow, table .gradeRow, table .statusRow {
+	min-width: 100px;
+	text-align: center;
+}
+
+table .inDateHead, table .rankHead, table .gradeHead, table .statusHead {
 	min-width: 100px;
 	text-align: center;
 }
@@ -519,15 +531,39 @@ table .nameRow {
 	text-align: left;
 }
 
-
-table .checkRow {
-	min-width: 50px;
+table .nameHead {
+	min-width: 150px;
 	text-align: center;
 }
 
 table .skillsRow {
 	min-width: 400px;
 	text-align: left;
+}
+
+table .skillsHead {
+	min-width: 400px;
+	text-align: center;
+}
+
+table .editRow {
+	min-width: 100px;
+	text-align: center;
+}
+
+table .editHead {
+	min-width: 100px;
+	text-align: center;
+}
+
+table .projectRow {
+	min-width: 100px;
+	text-align: center;
+}
+
+table .projectHead {
+	min-width: 100px;
+	text-align: center;
 }
 
 
@@ -546,10 +582,6 @@ table .skillsRow {
 .resultButton {
 	display:flex;
 	justify-content: center;
-}
-
-.editRow {
-	text-align:center;
 }
 </style>
 </head>
@@ -606,21 +638,21 @@ table .skillsRow {
 					</div>
 				</div>
 				<div class="result">
-					<div class="resultTitle"><h1>사원 리스트</h1></div>
+					<div class="resultTitle"><h1>검색 결과</h1></div>
 					<div class="resultDetail">
 						<table>
 							<thead>
 								<tr>
-									<th><input type="checkbox" id="checkAll"></th>
-									<th>사원번호</th>
-									<th>입사일</th>
-									<th>직급</th>
-									<th>사원명</th>
-									<th>기술등급</th>
-									<th>보유기술</th>
-									<th>재직상태</th>
-									<th>상세/수정</th>
-									<th>프로젝트관리</th>
+									<th class="checkHead"><input type="checkbox" id="checkAll"></th>
+									<th class="numberHead">사원번호</th>
+									<th class="inDateHead">입사일</th>
+									<th class="rankHead">직급</th>
+									<th class="nameHead">사원명</th>
+									<th class="gradeHead">기술등급</th>
+									<th class="skillsHead">보유기술</th>
+									<th class="statusHead">재직상태</th>
+									<th class="editHead">상세/수정</th>
+									<th class="projectHead">프로젝트관리</th>
 								</tr>
 							</thead>
 							<tbody id="tbody">

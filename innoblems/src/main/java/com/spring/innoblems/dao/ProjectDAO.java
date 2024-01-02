@@ -13,4 +13,7 @@ public interface ProjectDAO {
 	int addProject(ProjectDTO projectDTO);
 	void delProjectSkill(SkillDTO skillDTO);
 	void addProjectSkill(SkillDTO skillDTO);
+	ProjectDTO getProjectDetail(ProjectDTO projectDTO);
+	void saveProject(ProjectDTO projectDTO);
+	void delProject(List list);
 }

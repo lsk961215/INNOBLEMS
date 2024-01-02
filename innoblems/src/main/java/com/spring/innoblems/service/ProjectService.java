@@ -11,4 +11,7 @@ public interface ProjectService {
 	Map getProjectList(Map selectMap);
 	int addProject(ProjectDTO projectDTO);
 	void addProjectSkill(List<SkillDTO> skillList);
+	ProjectDTO getProjectDetail(ProjectDTO projectDTO);
+	void saveProject(ProjectDTO projectDTO);
+	void delProject(List list);
 }

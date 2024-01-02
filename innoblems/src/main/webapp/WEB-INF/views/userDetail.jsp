@@ -161,49 +161,53 @@
 		           , contentType : false
 		           , data : form
 		           , success:function(response) {
-		               alert("성공하였습니다.");
 		               
-		               usrImg = response;
+		        	   if(response != -1){
+		        		   usrImg = response;
+			               
+			               console.log("usrImg = " + usrImg)
+			               
+			              	var param = "usrId="+usrId
+				       		param += "&usrSeq="+usrSeq
+				       		param += "&usrPw="+usrPw
+				       		param += "&usrNm="+usrNm
+				       		param += "&usrImg="+usrImg
+				       		param += "&usrBDT="+usrBDT
+				       		param += "&usrINDT="+usrINDT
+				       		param += "&usrPn="+usrPn
+				       		param += "&usrEm="+usrEm
+				       		param += "&usrAd="+usrAd
+				       		param += "&stCD="+stCD
+				       		param += "&raCD="+raCD
+				       		param += "&gdCD="+gdCD
+				       		param += "&grCD="+grCD
+				       		param += "&dvCD="+dvCD
+				       		param += "&skills="
+				       		
+				       		for(var i = 0; i<skills.length; i++){
+				       			param += skills[i]
+				       			if(i != skills.length - 1){
+				       				param += ","
+				       			}
+				       		}
+			               
+			               console.log("param" + param)
+			               
+			               $.ajax({
+						        url: "saveUser", 
+						        type:"post",
+						        data: param,
+						        success: function(data) {
+						        	alert("등록되었습니다.")
+						        },
+						        error: function() {
+						            alert("통신실패")
+						        }
+						    }) 
+		        	   } else {
+		        		   alert("이미지는 5MB 이하의 파일만 가능합니다.")
+		        	   }
 		               
-		               console.log("usrImg = " + usrImg)
-		               
-		              	var param = "usrId="+usrId
-			       		param += "&usrSeq="+usrSeq
-			       		param += "&usrPw="+usrPw
-			       		param += "&usrNm="+usrNm
-			       		param += "&usrImg="+usrImg
-			       		param += "&usrBDT="+usrBDT
-			       		param += "&usrINDT="+usrINDT
-			       		param += "&usrPn="+usrPn
-			       		param += "&usrEm="+usrEm
-			       		param += "&usrAd="+usrAd
-			       		param += "&stCD="+stCD
-			       		param += "&raCD="+raCD
-			       		param += "&gdCD="+gdCD
-			       		param += "&grCD="+grCD
-			       		param += "&dvCD="+dvCD
-			       		param += "&skills="
-			       		
-			       		for(var i = 0; i<skills.length; i++){
-			       			param += skills[i]
-			       			if(i != skills.length - 1){
-			       				param += ","
-			       			}
-			       		}
-		               
-		               console.log("param" + param)
-		               
-		               $.ajax({
-					        url: "saveUser", 
-					        type:"post",
-					        data: param,
-					        success: function(data) {
-					        	alert("등록되었습니다.")
-					        },
-					        error: function() {
-					            alert("통신실패")
-					        }
-					    })
 		           }
 		           ,error: function (jqXHR) 
 		           { 
@@ -343,6 +347,8 @@ select {
 
 table {
 	width: 100%;
+	
+	margin-top: 10px;
 	
 	font-size: 80%;
 }
@@ -516,6 +522,10 @@ table td{
 #roadAddress {
 	background-color: lightgrey;
 }
+
+.star {
+	color: red;
+}
 </style>
 </head>
 <body>
@@ -539,15 +549,16 @@ table td{
 					    <button id="btn_submit" onclick="javascript:fn_submit()">전송</button>    
 					</div>
 					<div class="detailSection">
+						<small class="essential"><a class="star">*</a>는 필수항목</small>
 						<table>
 							<tr>
 								<td>사원번호</td>
 								<td><input type="text" id="usrSeq" value="${userDTO.usrSeq}" readonly></td>
-								<td>입사일</td>
+								<td>입사일<a class="star">*</a></td>
 					    		<td><input type="date" id="usrINDT" value="${userDTO.usrINDT}"></td>
 							</tr>
 					    	<tr>
-					    		<td>사원명</td>
+					    		<td>사원명<a class="star">*</a></td>
 					    		<td><input type="text" id="usrNm" value="${userDTO.usrNm}" maxlength="10"></td>
 					    		<td>재직상태</td>
 					    		<td>
@@ -587,7 +598,7 @@ table td{
 					    		</td>
 					    	</tr> 
 					    	<tr>
-					    		<td>비밀번호</td>
+					    		<td>비밀번호<a class="star">*</a></td>
 					    		<td><input type="password" id="usrPw" value="${userDTO.usrPw}" maxlength="16"></td>
 					    		<td>기술등급</td>
 					    		<td>
@@ -607,7 +618,7 @@ table td{
 								</td>
 					    	</tr> 
 					    	<tr>
-					    		<td>비밀번호 확인</td>
+					    		<td>비밀번호 확인<a class="star">*</a></td>
 					    		<td><input type="password" id="usrPwCheck" value="${userDTO.usrPw}" maxlength="16"></td>
 					    		<td>개발분야</td>
 					    		<td>
@@ -631,7 +642,7 @@ table td{
 					    			<div id="checkText">
 					    			</div>
 					    		</td>
-					    		<td>전화번호</td>
+					    		<td>전화번호<a class="star">*</a></td>
 					    		<td><input type="text" id="usrPn" value="${userDTO.usrPn}" placeholder="숫자만 입력해주세요" maxlength="11"></td>
 					    	</tr> 
 					    	<tr>
@@ -669,7 +680,7 @@ table td{
 					    		</td>
 					    	</tr> 
 					    	<tr>
-					    		<td>보유기술</td>
+					    		<td>보유기술<a class="star">*</a></td>
 					    		<td colspan="3">
 						    		<div class="skills">
 						    			<c:forEach var="item" items="${codeList}" varStatus="i">
@@ -688,7 +699,7 @@ table td{
 				</div>
 				<div class="buttonSection">
 					<button id="save" onclick="save()">저장</button>
-					<a id="cancel" href="goUserListPage">취소</a>
+					<a id="cancel" href="goUserListPage">목록</a>
 				</div>
 				
 			</section>

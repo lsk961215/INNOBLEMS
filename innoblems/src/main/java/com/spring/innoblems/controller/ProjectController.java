@@ -117,72 +117,72 @@ public class ProjectController {
 		}
 	}
 	
-//	@ResponseBody
-//	@RequestMapping("/delUser")
-//	public int delUser(HttpServletRequest request, UserDTO userDTO) throws Exception {
-//		String tmp_usrSeqList = request.getParameter("usrSeqList");
-//		
-//		String[] usrSeqArray = tmp_usrSeqList.split(",");
-//		List usrSeqList = new ArrayList();
-//		
-//		for (int i = 0; i<usrSeqArray.length; i++) {
-//			usrSeqList.add(usrSeqArray[i]);
-//		}
-//		
-//		try {
-//			userService.delUser(usrSeqList);
-//			return 0;
-//		}catch(Exception e){
-//			e.printStackTrace();
-//			System.out.println("오류가 발생했습니다.");
-//			return 1;
-//		}
-//	}
-//	
-//	@RequestMapping("/getUserDetail")
-//	public String getUserDetail (HttpServletRequest request, UserDTO userDTO, Model model) {
-//		List codeList = mainService.getCodeList();
-//		
-//		userDTO = userService.getUserDetail(userDTO);
-//		
-//		model.addAttribute("codeList", codeList);
-//		model.addAttribute("userDTO", userDTO);
-//		
-//		return "userDetail";
-//	}
-//	
-//	@ResponseBody
-//	@RequestMapping("/saveUser")
-//	public int saveUser(HttpServletRequest request, UserDTO userDTO) throws Exception {
-//		
-//		try {
-//			userService.saveUser(userDTO);
-//			
-//			List<SkillDTO> skillList = new ArrayList();
-//			
-//			String tmp_skillArray = userDTO.getSkills();
-//			
-//			String[] skillArray = tmp_skillArray.split(",");
-//			
-//			for (int i = 0; i<skillArray.length; i++) {
-//				SkillDTO skillDTO = new SkillDTO();
-//				
-//				skillDTO.setUsrSeq(userDTO.getUsrSeq());
-//				skillDTO.setSkill(skillArray[i]);
-//				
-//				skillList.add(skillDTO);
-//			}
-//			
-//			System.out.println("usrSeq saveUser = " + userDTO.getUsrSeq());
-//			
-//			userService.addUserSkill(skillList);
-//			
-//			return 0;
-//		}catch(Exception e){
-//			e.printStackTrace();
-//			System.out.println("오류가 발생했습니다.");
-//			
-//			return 1;
-//		}
-//	}
+	@ResponseBody
+	@RequestMapping("/delProject")
+	public int delProject(HttpServletRequest request, ProjectDTO projectDTO) throws Exception {
+		String tmp_prjSeqList = request.getParameter("prjSeqList");
+		
+		String[] prjSeqArray = tmp_prjSeqList.split(",");
+		List prjSeqList = new ArrayList();
+		
+		for (int i = 0; i<prjSeqArray.length; i++) {
+			prjSeqList.add(prjSeqArray[i]);
+		}
+		
+		try {
+			projectService.delProject(prjSeqList);
+			return 0;
+		}catch(Exception e){
+			e.printStackTrace();
+			System.out.println("오류가 발생했습니다.");
+			return 1;
+		}
+	}
+	
+	@RequestMapping("/getProjectDetail")
+	public String getProjectDetail (HttpServletRequest request, ProjectDTO projectDTO, Model model) {
+		List codeList = mainService.getCodeList();
+		
+		projectDTO = projectService.getProjectDetail(projectDTO);
+		
+		model.addAttribute("codeList", codeList);
+		model.addAttribute("projectDTO", projectDTO);
+		
+		return "projectDetail";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/saveProject")
+	public int saveProject(HttpServletRequest request, ProjectDTO projectDTO) throws Exception {
+		
+		try {
+			projectService.saveProject(projectDTO);
+			
+			List<SkillDTO> skillList = new ArrayList();
+			
+			String tmp_skillArray = projectDTO.getSkills();
+			
+			String[] skillArray = tmp_skillArray.split(",");
+			
+			for (int i = 0; i<skillArray.length; i++) {
+				SkillDTO skillDTO = new SkillDTO();
+				
+				skillDTO.setPrjSeq(projectDTO.getPrjSeq());
+				skillDTO.setSkill(skillArray[i]);
+				
+				skillList.add(skillDTO);
+			}
+			
+			System.out.println("prjSeq saveProject = " + projectDTO.getPrjSeq());
+			
+			projectService.addProjectSkill(skillList);
+			
+			return 0;
+		}catch(Exception e){
+			e.printStackTrace();
+			System.out.println("오류가 발생했습니다.");
+			
+			return 1;
+		}
+	}
 }

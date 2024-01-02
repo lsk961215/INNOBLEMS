@@ -25,10 +25,13 @@
 		$("#prjEDDT").change(function(){
 			$("#prjSTDT").attr("max", $(this).val())
 		})
+		
+		setSkills()
 	})	
 	
-	function add(){
+	function save(){
         
+		var prjSeq = $("#prjSeq").val()
 		var prjNm = $("#prjNm").val()
 		var prjSTDT = $("#prjSTDT").val()
 		var prjEDDT = $("#prjEDDT").val()
@@ -42,7 +45,8 @@
 		    }
 		})
                
-        var param = "prjNm="+prjNm
+        var param = "prjNm="+prjNm        
+	    param += "&prjSeq="+prjSeq
 	    param += "&prjSTDT="+prjSTDT
 	    param += "&prjEDDT="+prjEDDT
 	    param += "&cusCD="+cusCD
@@ -59,7 +63,7 @@
         console.log("param" + param)
                
         $.ajax({
-			url: "addProject", 
+			url: "saveProject", 
 			type:"post",
 			data: param,
 			success: function(data) {
@@ -69,6 +73,19 @@
 			    alert("통신실패")
 			}
 		})
+	}
+	
+	function setSkills() {
+		var skills = '${projectDTO.skills}'
+		
+		console.log(skills)
+		
+		var skillArr = skills.split(",")
+		
+		for(var i = 0; i<skillArr.length; i++){
+			$("input[id=" + skillArr[i] + "]").prop('checked',true);
+		}
+		
 	}
 </script>
 <style>
@@ -149,7 +166,7 @@ table td{
 	font-size: 150%;
 }
 
-#add {
+#save {
 	border: none;
 	background-color: #0C70F2;
 	color: white;
@@ -278,17 +295,21 @@ table td{
 					<div class="detailSection">
 						<small class="essential"><a class="star">*</a>는 필수항목</small>
 						<table>
+							<tr>
+					    		<td>프로젝트 번호</td>
+					    		<td><input type="text" id="prjSeq" value="${projectDTO.prjSeq}" readonly></td>
+					    	</tr>
 					    	<tr>
 					    		<td>프로젝트명<a class="star">*</a></td>
-					    		<td><input type="text" id="prjNm" maxlength="33"></td>
+					    		<td><input type="text" id="prjNm" value="${projectDTO.prjNm}" maxlength="33"></td>
 					    	</tr> 
 					    	<tr>
 					    		<td>시작일<a class="star">*</a></td>
-					    		<td><input type="date" id="prjSTDT"></td>
+					    		<td><input type="date" id="prjSTDT" value="${projectDTO.prjSTDT}"></td>
 					    	</tr> 
 					    	<tr>
 					    		<td>종료일</td>
-					    		<td><input type="date" id="prjEDDT"></td>
+					    		<td><input type="date" id="prjEDDT" value="${projectDTO.prjEDDT}"></td>
 					    	</tr> 
 					    	<tr>
 					    		<td>고객사명<a class="star">*</a></td>
@@ -297,7 +318,12 @@ table td{
 										<option value="0">선택</option>
 										<c:forEach var="item" items="${codeList}" varStatus="i">
 											<c:if test = "${item.mstCD == 'CU01'}">
-												<option value="${item.dtCD}">${item.dtCDNM}</option>
+												<c:if test = "${item.dtCD == projectDTO.cusCD}">
+													<option value="${item.dtCD}" selected>${item.dtCDNM}</option>
+												</c:if>
+												<c:if test = "${item.dtCD != projectDTO.cusCD}">
+													<option value="${item.dtCD}">${item.dtCDNM}</option>
+												</c:if>
 											</c:if>
 										</c:forEach>
 									</select>
@@ -321,14 +347,14 @@ table td{
 					    	<tr>
 					    		<td>비고</td>
 					    		<td>
-						    		<input id="prjNote" type="text">
+						    		<input id="prjNote" type="text" value="${projectDTO.prjNote}">
 					    		</td>
 					    	</tr>
 						</table>
 					</div>
 				</div>
 				<div class="buttonSection">
-					<button id="add" onclick="add()">등록</button>
+					<button id="save" onclick="save()">저장</button>
 					<a id="cancel" href="goProjectListPage">목록</a>
 				</div>
 				

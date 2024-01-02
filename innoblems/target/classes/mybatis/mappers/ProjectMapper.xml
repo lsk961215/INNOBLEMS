@@ -173,4 +173,38 @@
 	    </selectKey>
 	</insert>
 	
+	<select id="getProjectDetail" parameterType="com.spring.innoblems.dto.ProjectDTO" resultMap="projectMap">
+	   SELECT a.*, b.SKILLS
+		FROM PROJECT_INFO a
+		LEFT OUTER JOIN (SELECT PRJ_SEQ
+		     , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+		FROM PROJECT_SKILL_TABLE
+		GROUP BY PRJ_SEQ) b
+		ON a.PRJ_SEQ = b.PRJ_SEQ
+        WHERE a.PRJ_SEQ = #{prjSeq}
+	</select>
+	
+	<update id="saveProject" parameterType="com.spring.innoblems.dto.ProjectDTO">
+		 UPDATE
+		 	PROJECT_INFO
+		 SET
+		 	PRJ_NM = #{prjNm},
+		 	PRJ_ST_DT = #{prjSTDT},
+		 	PRJ_ED_DT = #{prjEDDT},
+		 	CUS_CD = #{cusCD},
+		 	PRJ_NOTE = #{prjNote}
+		WHERE
+			PRJ_SEQ = #{prjSeq}
+	</update>
+	
+	<delete id="delProject" parameterType="java.util.List">
+		DELETE FROM
+		    PROJECT_INFO
+		WHERE
+		    PRJ_SEQ IN
+		<foreach item="item" collection="list" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
 </mapper>
