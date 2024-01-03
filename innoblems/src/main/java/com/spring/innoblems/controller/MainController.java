@@ -65,11 +65,13 @@ public class MainController {
 	}
 	
 	@RequestMapping("/goAddUserPage")
-	public String goAddUserPage(Model model) {
+	public String goAddUserPage(Model model, HttpServletRequest request, UserDTO userDTO) {
 		
 		List codeList = mainService.getCodeList();
 		
 		model.addAttribute("codeList", codeList);
+		
+//		model.addAttribute("userParam", userDTO);
 		
 		return "addUser";
 	}
@@ -83,6 +85,4 @@ public class MainController {
 		
 		return "addProject";
 	}
-	
-	
 }

@@ -19,7 +19,7 @@ public class UserDTO {
 	private String minDT;
 	private String maxDT;
 	private String skills;
-	
+	private String currentPage;
 	public int getUsrSeq() {
 		return usrSeq;
 	}
@@ -128,12 +128,20 @@ public class UserDTO {
 	public void setSkills(String skills) {
 		this.skills = skills;
 	}
-	
+	public String getCurrentPage() {
+		return currentPage;
+	}
+	public void setCurrentPage(String currentPage) {
+		this.currentPage = currentPage;
+	}
 	@Override
 	public String toString() {
 		return "UserDTO [usrSeq=" + usrSeq + ", usrId=" + usrId + ", usrPw=" + usrPw + ", usrNm=" + usrNm + ", usrBDT="
 				+ usrBDT + ", gdCD=" + gdCD + ", usrINDT=" + usrINDT + ", stCD=" + stCD + ", raCD=" + raCD + ", grCD="
 				+ grCD + ", dvCD=" + dvCD + ", usrImg=" + usrImg + ", usrPn=" + usrPn + ", usrEm=" + usrEm + ", usrAd="
-				+ usrAd + ", minDT=" + minDT + ", maxDT=" + maxDT + ", skills=" + skills + "]";
+				+ usrAd + ", minDT=" + minDT + ", maxDT=" + maxDT + ", skills=" + skills + ", currentPage="
+				+ currentPage + "]";
 	}
+	
+	
 }

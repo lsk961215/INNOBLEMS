@@ -84,6 +84,10 @@
 		
 	}
 	
+	function cancel() {
+		window.history.back();
+	}
+	
 	function save(){
         
         var usrSeq = $("#usrSeq").val()
@@ -699,7 +703,7 @@ table td{
 				</div>
 				<div class="buttonSection">
 					<button id="save" onclick="save()">저장</button>
-					<a id="cancel" href="goUserListPage">목록</a>
+					<button id="cancel" onclick="cancel()">취소</a>
 				</div>
 				
 			</section>

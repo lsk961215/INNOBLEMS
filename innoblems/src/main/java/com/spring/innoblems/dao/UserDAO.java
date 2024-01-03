@@ -15,4 +15,8 @@ public interface UserDAO {
 	void delUser(List list);
 	UserDTO getUserDetail(UserDTO userDTO);
 	void saveUser(UserDTO userDTO);
+	List getUserProjectList(Map map);
+	int getUserProjectTotal(Map map);
+	List getAddUserProjectList(Map map);
+	int getAddUserProjectTotal(Map map);
 }

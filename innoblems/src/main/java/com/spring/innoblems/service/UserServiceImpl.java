@@ -92,4 +92,88 @@ public class UserServiceImpl  implements UserService {
 		userDAO.saveUser(userDTO);
 		return;
 	}
+
+	@Override
+	public Map getUserProjectList(Map selectMap) {
+		Map resultMap = new HashMap();
+		
+		int pageNum = (Integer) selectMap.get("pageNum");
+		int countPerPage = (Integer) selectMap.get("countPerPage");
+		
+		int startNum = 0;
+		int endNum = 0;
+		
+		startNum = (pageNum-1)*countPerPage+1;
+		endNum = pageNum*countPerPage;
+		
+		selectMap.put("startNum", startNum);
+		selectMap.put("endNum", endNum);
+		
+		List userProjectList = userDAO.getUserProjectList(selectMap);
+		
+		int total = userDAO.getUserProjectTotal(selectMap);
+		
+		int groupCount = 5;
+		
+		int totalPaging = (int) Math.ceil((double)total / countPerPage);
+		
+		int position = (int) Math.ceil((double)pageNum / groupCount);
+		
+		int beginPaging = (position-1) * groupCount + 1;
+		int endPaging = position * groupCount;
+		
+		if(endPaging > totalPaging) {
+			endPaging = totalPaging;
+		}
+		
+		resultMap.put("beginPaging", beginPaging);
+		resultMap.put("endPaging", endPaging);
+		resultMap.put("totalPaging", totalPaging);
+		resultMap.put("userProjectList", userProjectList);
+		resultMap.put("pageNum", pageNum);
+		
+		return resultMap;
+	}
+
+	@Override
+	public Map getAddUserProjectList(Map selectMap) {
+		Map resultMap = new HashMap();
+		
+		int pageNum = (Integer) selectMap.get("pageNum");
+		int countPerPage = (Integer) selectMap.get("countPerPage");
+		
+		int startNum = 0;
+		int endNum = 0;
+		
+		startNum = (pageNum-1)*countPerPage+1;
+		endNum = pageNum*countPerPage;
+		
+		selectMap.put("startNum", startNum);
+		selectMap.put("endNum", endNum);
+		
+		List userProjectList = userDAO.getAddUserProjectList(selectMap);
+		
+		int total = userDAO.getAddUserProjectTotal(selectMap);
+		
+		int groupCount = 5;
+		
+		int totalPaging = (int) Math.ceil((double)total / countPerPage);
+		
+		int position = (int) Math.ceil((double)pageNum / groupCount);
+		
+		int beginPaging = (position-1) * groupCount + 1;
+		int endPaging = position * groupCount;
+		
+		if(endPaging > totalPaging) {
+			endPaging = totalPaging;
+		}
+		
+		resultMap.put("beginPaging", beginPaging);
+		resultMap.put("endPaging", endPaging);
+		resultMap.put("totalPaging", totalPaging);
+		resultMap.put("userProjectList", userProjectList);
+		resultMap.put("pageNum", pageNum);
+		
+		return resultMap;
+	}
 }

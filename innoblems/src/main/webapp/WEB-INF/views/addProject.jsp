@@ -70,6 +70,10 @@
 			}
 		})
 	}
+	
+	function cancel() {
+		window.history.back();
+	}
 </script>
 <style>
 main {
@@ -329,7 +333,7 @@ table td{
 				</div>
 				<div class="buttonSection">
 					<button id="add" onclick="add()">등록</button>
-					<a id="cancel" href="goProjectListPage">목록</a>
+					<button id="cancel" onclick="cancel()">취소</button>
 				</div>
 				
 			</section>

@@ -87,6 +87,10 @@
 		}
 		
 	}
+	
+	function cancel() {
+		window.history.back();
+	}
 </script>
 <style>
 main {
@@ -287,7 +291,7 @@ table td{
 <jsp:include page="header.jsp"/>
 <main>
 	<div class="wrap">
-		<div class="pageTitle"><h1>프로젝트 등록</h1></div>
+		<div class="pageTitle"><h1>프로젝트 상세/수정</h1></div>
 		<div class="middle">
 			<jsp:include page="aside.jsp"/>
 			<section>
@@ -355,7 +359,7 @@ table td{
 				</div>
 				<div class="buttonSection">
 					<button id="save" onclick="save()">저장</button>
-					<a id="cancel" href="goProjectListPage">목록</a>
+					<button id="cancel" onclick="cancel()">취소</button>
 				</div>
 				
 			</section>

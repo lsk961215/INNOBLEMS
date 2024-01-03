@@ -126,6 +126,7 @@
    			        data: param,
    			        success: function(data) {
    			        	alert("등록되었습니다.")
+   			        	
    			        },
    			        error: function() {
    			            alert("통신실패")
@@ -142,7 +143,13 @@
            }
        	})
        	
+       	
 		
+	}
+	
+
+    function cancel() {
+		window.history.back();
 	}
 </script>
 <script type="text/javascript">
@@ -564,7 +571,7 @@ table td{
 				</div>
 				<div class="buttonSection">
 					<button id="add" onclick="add()">등록</button>
-					<a id="cancel" href="goUserListPage">목록</a>
+					<button id="cancel" onclick="cancel()">취소</button>
 				</div>
 				
 			</section>

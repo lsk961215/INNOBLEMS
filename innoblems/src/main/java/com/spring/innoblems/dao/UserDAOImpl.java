@@ -59,4 +59,24 @@ public class UserDAOImpl implements UserDAO {
 		sqlSession.update("user.saveUser", userDTO);
 		return;
 	}
+
+	@Override
+	public List getUserProjectList(Map map) {
+		return sqlSession.selectList("userProject.getUserProjectList", map);
+	}
+
+	@Override
+	public int getUserProjectTotal(Map map) {
+		return sqlSession.selectOne("userProject.getUserProjectTotal", map);
+	}
+
+	@Override
+	public List getAddUserProjectList(Map map) {
+		return sqlSession.selectList("userProject.getAddUserProjectList", map);
+	}
+
+	@Override
+	public int getAddUserProjectTotal(Map map) {
+		return sqlSession.selectOne("userProject.getAddUserProjectTotal", map);
+	}
 }

@@ -6,72 +6,27 @@
 <head>
 <meta charset="EUC-KR">
 <title>Insert title here</title>
-<!-- header css -->
-<link rel="stylesheet" href="resources/css/header.css">
-<!-- aside css -->
-<link rel="stylesheet" href="resources/css/aside.css">
-<!-- header script -->
-<script src="resources/js/header.js"></script>
 <script
   src="https://code.jquery.com/jquery-3.7.1.js"
   integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
   crossorigin="anonymous"></script>
 <script>
 	$(function(){
-		$("#search").click(function(){
-			if($("#maxSTDT").val() >= $("#minSTDT").val() && $("#maxEDDT").val() >= $("#minEDDT").val()){
-				getProjectList(1)
-			} else {
-				alert("날짜값이 올바르지 않습니다.")
-			}
-		})
 		
 		$("#minSTDT").change(function(){
 			$("#maxSTDT").attr("min", $(this).val())
-		})
-		
-		$("#minSTDT").focusout(function(){
-			if($(this).val() < $("#maxSTDT").val() || $("#maxSTDT").val() == 0){
-				
-			} else {
-				alert("날짜값이 올바르지 않습니다.")
-			}
-		})
-		
-		$("#minEDDT").change(function(){
-			$("#maxEDDT").attr("min", $(this).val())
-		})
-		
-		$("#minEDDT").focusout(function(){
-			if($(this).val() < $("#maxEDDT").val() || $("#maxEDDT").val() == 0){
-				
-			} else {
-				alert("날짜값이 올바르지 않습니다.")
-			}
 		})
 		
 		$("#maxSTDT").change(function(){
 			$("#minSTDT").attr("max", $(this).val())
 		})
 		
-		$("#maxSTDT").focusout(function(){
-			if($(this).val() < $("#maxSTDT").val() || $("#maxSTDT").val() == 0){
-				
-			} else {
-				alert("날짜값이 올바르지 않습니다.")
-			}
+		$("#minEDDT").change(function(){
+			$("#maxEDDT").attr("min", $(this).val())
 		})
 		
 		$("#maxEDDT").change(function(){
 			$("#minEDDT").attr("max", $(this).val())
-		})
-		
-		$("#maxEDDT").focusout(function(){
-			if($(this).val() < $("#maxEDDT").val() || $("#maxEDDT").val() == 0){
-				
-			} else {
-				alert("날짜값이 올바르지 않습니다.")
-			}
 		})
 		
 		$("#checkAll").change(function(){
@@ -87,7 +42,20 @@
 		})
 	})
 	
-	function getProjectList(pageNum){
+	function search(){
+		if($("#maxSTDT").val() >= $("#minSTDT").val() && $("#maxEDDT").val() >= $("#minEDDT").val()){
+			getAddUserProjectList(1)
+		} else {
+			alert("날짜값이 올바르지 않습니다.")
+		}
+	}
+	
+	function getAddUserProjectList(pageNum){
+		
+		var usrSeq = '${userProjectDTO.usrSeq}'
+		var skills = '${userProjectDTO.skills}'
+		
+		
 		var prjSeq = $("#prjSeq").val()
 		var prjNm = $("#prjNm").val()
 		var cusCD = $("#cusCD").val()
@@ -101,12 +69,6 @@
 			prjSeq = 0
 		}
 		
-		$(".skill").each(function(){
-			if($(this).is(":checked")==true){
-				skills.push($(this).val())
-		    }
-		})
-		
 		var param = "prjSeq="+prjSeq
 		param += "&prjNm="+prjNm
 		param += "&cusCD="+cusCD
@@ -114,28 +76,22 @@
 		param += "&maxSTDT="+maxSTDT
 		param += "&minEDDT="+minEDDT
 		param += "&maxEDDT="+maxEDDT
-		param += "&skills="
+		param += "&skills="+'${userProjectDTO.skills}'
+		param += "&usrSeq="+'${userProjectDTO.usrSeq}'
 		
-		for(var i = 0; i<skills.length; i++){
-			param += skills[i]
-			if(i != skills.length - 1){
-				param += ","
-			}
-		}
 		
 		param += "&pageNum="+pageNum
 		
 		console.log("param = " + param)
 		
 		$.ajax({
-	        url: "getProjectList", 
+	        url: "getAddUserProjectList", 
 	        type:"post",
 	        data: param,
 	        success: function(data) {
 	        	var str = ""
 	        	var page = ""
 	        	var add = "<a id='add' href='goAddProjectPage'>추가</a>"
-	        	var del = "<button id='del' onclick='delProject()'>삭제</button>"
 	        	
 	        	
 	        	/* model 에서 toString() 으로 받아온 문자열을 배열로 파싱 */
@@ -157,15 +113,15 @@
 		        $(".resultPage").empty()
 		        $(".resultButton").empty()
 		        
-		        if(data.projectList.length >= 1){
-		        	$.each(data.projectList, function(i){
+		        if(data.userProjectList.length >= 1){
+		        	$.each(data.userProjectList, function(i){
 		        		var customer
 		        		var skills = ""
 		        		
-		        		var skillArr = data.projectList[i].skills.split(",")
+		        		var skillArr = data.userProjectList[i].skills.split(",")
 		        		
 		        		for(var j = 0; j<codeList.length; j++){
-		        			if(codeList[j].indexOf("mstCD=CU01") != -1 && codeList[j].indexOf("dtCD=" + data.projectList[i].cusCD + ",") != -1){
+		        			if(codeList[j].indexOf("mstCD=CU01") != -1 && codeList[j].indexOf("dtCD=" + data.userProjectList[i].cusCD + ",") != -1){
 		        				customer = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
 		        			}
 		        			
@@ -180,32 +136,30 @@
 		        		}
 		        		
 	                	str += "<tr>"
-	                	str += "<td class='checkRow'><input type='checkbox' class='prjSeq' value=" + data.projectList[i].prjSeq + " onclick='checkOne()'></td>"
-	               		str += "<td class='numberRow'><a href='getProjectDetail?prjSeq=" + data.projectList[i].prjSeq +"'>" + data.projectList[i].prjSeq + "</a></td>"
-	               		str += "<td class='nameRow'>" + data.projectList[i].prjNm + "</td>"
+	                	str += "<td class='checkRow'><input type='checkbox' class='prjSeq' value=" + data.userProjectList[i].prjSeq + " onclick='checkOne()'></td>"
+	               		str += "<td class='numberRow'><a href='getProjectDetail?prjSeq=" + data.userProjectList[i].prjSeq +"'>" + data.userProjectList[i].prjSeq + "</a></td>"
+	               		str += "<td class='nameRow'>" + data.userProjectList[i].prjNm + "</td>"
 	               		str += "<td class='customerRow'>" + customer + "</td>"
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
-	               		str += "<td class='startRow'>" + data.projectList[i].prjSTDT + "</td>"
-	               		str += "<td class='endRow'>" + data.projectList[i].prjEDDT + "</td>"
-	               		str += "<td class='editRow'><a id='edit' href='getProjectDetail?prjSeq=" + data.projectList[i].prjSeq + "'>상세/수정</a></td>"
-	              		str += "<td class='userRow'><input id='user' type='button' value='인원 관리'></td>"
+	               		str += "<td class='startRow'>" + data.userProjectList[i].prjSTDT + "</td>"
+	               		str += "<td class='endRow'>" + data.userProjectList[i].prjEDDT + "</td>"
 	              		str += "</tr>"
 	                })
 	                
 		        	if(data.beginPaging != 1){
-		        		page += "<a href=getProjectList?pageNum=" + (data.beginPaging - 1) + ">이전</a>"
+		        		page += "<a href=getAddUserProjectList?pageNum=" + (data.beginPaging - 1) + ">이전</a>"
 		        	}
 		        	
 		        	for(var i = data.beginPaging; i <= data.endPaging; i++){
 		        		if(i == data.pageNum){
 		        			page += "<button style='font-size:2em' class='page' value=" + i +">" + i + "</button>"
 		        		} else {
-		        			page += "<button class='page' value=" + i +" onclick='getProjectList(" + i + ")'>" + i + "</button>"
+		        			page += "<button class='page' value=" + i +" onclick='getAddUserProjectList(" + i + ")'>" + i + "</button>"
 		        		}
 		        	}
 		        	
 		        	if(data.endPaging != data.totalPaging){
-		        		page += "<a href=getProjectList?pageNum=" + (data.endPaging + 1) + ">다음</a>"
+		        		page += "<a href=getAddUserProjectList?pageNum=" + (data.endPaging + 1) + ">다음</a>"
 		        	}
 		        	
 		        } else {
@@ -217,7 +171,6 @@
 	        	$("#tbody").append(str)
 	        	$(".resultPage").append(page)
 	        	$(".resultButton").append(add)
-	        	$(".resultButton").append(del)
 	        },
 	        error: function() {
 	            alert("통신실패")
@@ -281,13 +234,12 @@
 <style>
 main {
 	display: flex;
-	max-width: 1240px;
-    margin: 0 auto;
+	width: 100%;
 }
 	
 section {
 	background-color: white;
-	width: 75%;
+	width: 100%;
 			
 	display: flex;
 	flex-direction: column;
@@ -639,97 +591,77 @@ table .userHead {
 </style>
 </head>
 <body>
-<jsp:include page="header.jsp"/>
 <main>
-	<div class="wrap">
-		<div class="pageTitle"><h1>프로젝트 관리</h1></div>
-		<div class="middle">
-			<jsp:include page="aside.jsp"/>
-			<section>
-				<div class="filter"> 
-					<div class="filterTitle"><h1>검색 조건</h1></div>
-					<div class="filterDetail">
-						<div class="filterSection_1">
-							<div class="filterWrap">
-								<small>프로젝트 번호</small>
-								<input name="prjSeq" id="prjSeq" type="text">
-							</div>
-							<div class="filterWrap">
-								<small>프로젝트명</small>
-								<input name="prjNm" id="prjNm" type="text">
-							</div>
-							<div class="filterWrap">
-								<small>고객사명</small>
-								<select name="cusCD" id="cusCD">
-									<option value="0">선택</option>
-									<c:forEach var="item" items="${codeList}" varStatus="i">
-										<c:if test = "${item.mstCD == 'CU01'}">
-											<option value="${item.dtCD}">${item.dtCDNM}</option>
-										</c:if>
-									</c:forEach>
-								</select>
-							</div>
-						</div>
-						<div class="filterSection_2">
-							<div class="dateWrap">
-								<small>시작일</small> <input id="minSTDT" type="date" max="9999-12-31"> ~ <input id="maxSTDT" type="date" max="9999-12-31">
-							</div>
-							<div class="dateWrap">
-								<small>종료일</small> <input id="minEDDT" type="date" max="9999-12-31"> ~ <input id="maxEDDT" type="date" max="9999-12-31">
-							</div>
-						</div>
-						<div class="filterSection_3">
-							<small class="skillText">필요기술</small> 
-							<c:forEach var="item" items="${codeList}" varStatus="i">
-								<c:if test = "${item.mstCD == 'SK01'}">
-									<input type="checkbox" class="skill" id="${item.dtCD}" value="${item.dtCD}">
-									<label for="${item.dtCD}">${item.dtCDNM} </label>
-								</c:if>
-							</c:forEach>
-						</div>
-						<div class="filterSection_4">
-							<button id="search">조회</button>
-						</div>
-					</div>
+<section>
+	<div class="filter"> 
+		<div class="filterTitle"><h1>검색 조건</h1></div>
+		<div class="filterDetail">
+			<div class="filterSection_1">
+				<div class="filterWrap">
+					<small>프로젝트 번호</small>
+					<input name="prjSeq" id="prjSeq" type="text">
 				</div>
-				<div class="result">
-					<div class="resultTitle"><h1>검색 결과</h1></div>
-					<div class="resultDetail">
-						<table>
-							<thead>
-								<tr>
-									<th class="checkHead"><input type="checkbox" id="checkAll"></th>
-									<th class="numberHead">프로젝트 번호</th>
-									<th class="nameHead">프로젝트명</th>
-									<th class="customerHead">고객사명</th>
-									<th class="skillsHead">필요기술</th>
-									<th class="startHead">시작일</th>
-									<th class="endHead">종료일</th>
-									<th class="editHead">상세/수정</th>
-									<th class="userHead">인원 관리</th>
-								</tr>
-							</thead>
-							<tbody id="tbody">
-								<tr>
-									<td colspan="9"><h3>조회가 필요합니다.</h3></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="resultPage">
-						
-					</div>
-					<div class="resultButtonWrap">
-						<div class="resultButton">
-					
-						</div>
-					</div>
+				<div class="filterWrap">
+					<small>프로젝트명</small>
+					<input name="prjNm" id="prjNm" type="text">
 				</div>
-			</section>
+				<div class="filterWrap">
+					<small>고객사명</small>
+					<select name="cusCD" id="cusCD">
+						<option value="0">선택</option>
+						<c:forEach var="item" items="${codeList}" varStatus="i">
+							<c:if test = "${item.mstCD == 'CU01'}">
+								<option value="${item.dtCD}">${item.dtCDNM}</option>
+							</c:if>
+						</c:forEach>
+					</select>
+				</div>
+			</div>
+			<div class="filterSection_2">
+				<div class="dateWrap">
+					<small>시작일</small> <input id="minSTDT" type="date" max="9999-12-31"> ~ <input id="maxSTDT" type="date" max="9999-12-31">
+				</div>
+				<div class="dateWrap">
+					<small>종료일</small> <input id="minEDDT" type="date" max="9999-12-31"> ~ <input id="maxEDDT" type="date" max="9999-12-31">
+				</div>
+			</div>
+			<div class="filterSection_4">
+				<button id="search" onclick="search()">조회</button>
+			</div>
 		</div>
-		
 	</div>
-	
+	<div class="result">
+		<div class="resultTitle"><h1>검색 결과</h1></div>
+		<div class="resultDetail">
+			<table>
+				<thead>
+					<tr>
+						<th class="checkHead"><input type="checkbox" id="checkAll"></th>
+						<th class="numberHead">프로젝트 번호</th>
+						<th class="nameHead">프로젝트명</th>
+						<th class="customerHead">고객사명</th>
+						<th class="skillsHead">필요기술</th>
+						<th class="startHead">시작일</th>
+						<th class="endHead">종료일</th>
+					</tr>
+				</thead>
+				<tbody id="tbody">
+					<tr>
+						<td colspan="9"><h3>조회가 필요합니다.</h3></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="resultPage">
+						
+		</div>
+		<div class="resultButtonWrap">
+			<div class="resultButton">
+					
+			</div>
+		</div>
+	</div>
+</section>
 </main>
 </body>
 </html>
