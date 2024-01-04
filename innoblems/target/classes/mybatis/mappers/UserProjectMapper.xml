@@ -95,7 +95,7 @@
 				AND b.PRJ_NM like '%' || #{userProjectDTO.prjNm} || '%'
 			</if>
 			<if test="userProjectDTO.prjSeq != 0">
-				AND a.PRJ_SEQ = #{userProjectDTO.prjSeq}
+				AND b.PRJ_SEQ = #{userProjectDTO.prjSeq}
 			</if>
 			<if test="userProjectDTO.cusCD != 0">
 				AND b.CUS_CD = #{userProjectDTO.cusCD}
@@ -119,19 +119,35 @@
 				AND b.PRJ_ED_DT <![CDATA[ >= ]]> #{userProjectDTO.minEDDT}
 			</if>
 		) c
-		LEFT OUTER JOIN
+		RIGHT OUTER JOIN
 		(
-		    SELECT PRJ_SEQ
-		     , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
-		     FROM
+		    SELECT f.PRJ_SEQ, f.SKILLS
+		    FROM 
 		    (
-		        SELECT *
-		        FROM PROJECT_SKILL_TABLE
-		        WHERE SK_CD IN <foreach item="item" collection="skills" open="(" separator="," close=")"> #{item} </foreach>
-		    )
-		    GROUP BY PRJ_SEQ
+		        SELECT PRJ_SEQ
+		         , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+		         FROM
+		        (
+		            SELECT *
+		            FROM PROJECT_SKILL_TABLE
+		        	WHERE SK_CD IN <foreach item="item" collection="skills" open="(" separator="," close=")"> #{item} </foreach>
+		    	)
+		    	GROUP BY PRJ_SEQ
+		    ) e
+		    
+		    LEFT OUTER JOIN
+		        
+		    (
+		        SELECT PRJ_SEQ
+		        , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+		        FROM
+		            PROJECT_SKILL_TABLE
+		        GROUP BY PRJ_SEQ
+		    ) f
+		    ON e.PRJ_SEQ = f.PRJ_SEQ
 		) d
 		ON c.PRJ_SEQ = d.PRJ_SEQ
+		WHERE c.PRJ_SEQ IS NOT NULL
 	</select>
 	
 	<select id="getAddUserProjectTotal" parameterType="java.util.HashMap" resultType="int">
@@ -157,7 +173,7 @@
 					AND b.PRJ_NM like '%' || #{userProjectDTO.prjNm} || '%'
 				</if>
 				<if test="userProjectDTO.prjSeq != 0">
-					AND a.PRJ_SEQ = #{userProjectDTO.prjSeq}
+					AND b.PRJ_SEQ = #{userProjectDTO.prjSeq}
 				</if>
 				<if test="userProjectDTO.cusCD != 0">
 					AND b.CUS_CD = #{userProjectDTO.cusCD}
@@ -181,19 +197,73 @@
 					AND b.PRJ_ED_DT <![CDATA[ >= ]]> #{userProjectDTO.minEDDT}
 				</if>
 			) c
-			LEFT OUTER JOIN
+			RIGHT OUTER JOIN
 			(
-			    SELECT PRJ_SEQ
-			     , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
-			     FROM
+			    SELECT f.PRJ_SEQ, f.SKILLS
+			    FROM 
 			    (
-			        SELECT *
-			        FROM PROJECT_SKILL_TABLE
-			        WHERE SK_CD IN <foreach item="item" collection="skills" open="(" separator="," close=")"> #{item} </foreach>
-			    )
-			    GROUP BY PRJ_SEQ
+			        SELECT PRJ_SEQ
+			         , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+			         FROM
+			        (
+			            SELECT *
+			            FROM PROJECT_SKILL_TABLE
+			        	WHERE SK_CD IN <foreach item="item" collection="skills" open="(" separator="," close=")"> #{item} </foreach>
+			    	)
+			    	GROUP BY PRJ_SEQ
+			    ) e
+			    
+			    LEFT OUTER JOIN
+			        
+			    (
+			        SELECT PRJ_SEQ
+			        , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+			        FROM
+			            PROJECT_SKILL_TABLE
+			        GROUP BY PRJ_SEQ
+			    ) f
+			    ON e.PRJ_SEQ = f.PRJ_SEQ
 			) d
 			ON c.PRJ_SEQ = d.PRJ_SEQ
+			WHERE c.PRJ_SEQ IS NOT NULL
 		)
 	</select>
+	
+	<insert id="addUserProject" parameterType="com.spring.innoblems.dto.UserProjectDTO">
+		INSERT INTO
+			USER_PROJECT_TABLE (
+				USR_SEQ,
+				PRJ_SEQ
+			)
+		VALUES (
+			#{usrSeq},
+			#{prjSeq}
+		)
+	</insert>
+	
+	<delete id="delUserProject" parameterType="java.util.HashMap">
+		DELETE FROM
+		    USER_PROJECT_TABLE
+		WHERE
+			USR_SEQ = #{userProjectDTO.usrSeq}
+		AND
+		    PRJ_SEQ IN
+		<foreach item="item" collection="prjSeqList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<update id="saveUserProject" parameterType="com.spring.innoblems.dto.UserProjectDTO">
+		UPDATE
+			USER_PROJECT_TABLE
+		<set>
+				USR_PRJ_IN_DT = #{usrPrjINDT},
+				USR_PRJ_OT_DT = #{usrPrjOTDT},
+				RL_CD = #{rlCD},
+		</set>
+		WHERE
+			USR_SEQ = #{usrSeq}
+		AND
+			PRJ_SEQ = #{prjSeq}
+	</update>
 </mapper>

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.spring.innoblems.dto.SkillDTO;
 import com.spring.innoblems.dto.UserDTO;
+import com.spring.innoblems.dto.UserProjectDTO;
 
 public interface UserDAO {
 	List getUserList(Map map);
@@ -19,4 +20,7 @@ public interface UserDAO {
 	int getUserProjectTotal(Map map);
 	List getAddUserProjectList(Map map);
 	int getAddUserProjectTotal(Map map);
+	void addUserProject(UserProjectDTO userProjectDTO);
+	void delUserProject(Map deleteMap);
+	void saveUserProject(UserProjectDTO userProjectDTO);
 }

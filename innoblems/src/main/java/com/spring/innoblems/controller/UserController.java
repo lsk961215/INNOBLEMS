@@ -249,7 +249,7 @@ public class UserController {
 		return userProjectMap;
 	}
 	
-	@RequestMapping("/addUserProject")
+	@RequestMapping("/goAddUserProject")
 	public String addUserProject(Model model, UserProjectDTO userProjectDTO) {
 		
 		List codeList = mainService.getCodeList();
@@ -315,5 +315,103 @@ public class UserController {
 		}
 		
 		return addUserProjectMap;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/addUserProject")
+	public int addUserProject(HttpServletRequest request, Model model, UserProjectDTO userProjectDTO) {
+		Map insertMap = new HashMap();
+		
+		String tmp_prjSeqList = request.getParameter("prjSeqList");
+			
+		String[] prjSeqArray = tmp_prjSeqList.split(",");
+		List prjSeqList = new ArrayList();
+			
+		for (int i = 0; i<prjSeqArray.length; i++) {
+			prjSeqList.add(prjSeqArray[i]);
+		}
+		
+		insertMap.put("userProjectDTO", userProjectDTO);
+		insertMap.put("prjSeqList", prjSeqList);
+		
+		try {
+			userService.addUserProject(insertMap);
+			return 0;
+		} catch(Exception e){
+			e.printStackTrace();
+			System.out.println("오류가 발생했습니다.");
+			return 1;
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping("/delUserProject")
+	public int delUserProject(HttpServletRequest request, Model model, UserProjectDTO userProjectDTO) {
+		Map deleteMap = new HashMap();
+		
+		String tmp_prjSeqList = request.getParameter("prjSeqList");
+			
+		String[] prjSeqArray = tmp_prjSeqList.split(",");
+		List prjSeqList = new ArrayList();
+			
+		for (int i = 0; i<prjSeqArray.length; i++) {
+			prjSeqList.add(prjSeqArray[i]);
+		}
+		
+		deleteMap.put("userProjectDTO", userProjectDTO);
+		deleteMap.put("prjSeqList", prjSeqList);
+		
+		
+		try {
+			userService.delUserProject(deleteMap);
+			return 0;
+		} catch(Exception e){
+			e.printStackTrace();
+			System.out.println("오류가 발생했습니다.");
+			return 1;
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping("/saveUserProject")
+	public int saveUserProject(HttpServletRequest request, Model model, UserProjectDTO userProjectDTO) {
+		String tmp_prjSeqList = request.getParameter("prjSeqList");
+		String tmp_usrPrjINDTList = request.getParameter("usrPrjINDTList");
+		String tmp_usrPrjOTDTList = request.getParameter("usrPrjOTDTList");
+		String tmp_rlCDList = request.getParameter("rlCDList");
+			
+		String[] prjSeqArray = tmp_prjSeqList.split(",");
+		String[] usrPrjINDTArray = tmp_usrPrjINDTList.split(",");
+		String[] usrPrjOTDTArray = tmp_usrPrjOTDTList.split(",");
+		String[] rlCDArray = tmp_rlCDList.split(",");
+			
+		List updateList= new ArrayList();
+		
+		for (int i = 0; i<prjSeqArray.length; i++) {
+			UserProjectDTO tmp_userProjectDTO = new UserProjectDTO();
+			
+			int usrSeq = userProjectDTO.getUsrSeq();
+			int prjSeq = Integer.parseInt(prjSeqArray[i]);
+			String usrPrjINDT = usrPrjINDTArray[i];
+			String usrPrjOTDT = usrPrjOTDTArray[i];
+			String rlCD = rlCDArray[i];
+			
+			tmp_userProjectDTO.setUsrSeq(usrSeq);
+			tmp_userProjectDTO.setPrjSeq(prjSeq);
+			tmp_userProjectDTO.setUsrPrjINDT(usrPrjINDT);
+			tmp_userProjectDTO.setUsrPrjOTDT(usrPrjOTDT);
+			tmp_userProjectDTO.setRlCD(rlCD);
+			
+			updateList.add(tmp_userProjectDTO);
+		}
+		
+		try {
+			userService.saveUserProject(updateList);
+			return 0;
+		} catch(Exception e){
+			e.printStackTrace();
+			System.out.println("오류가 발생했습니다.");
+			return 1;
+		}
 	}
 }

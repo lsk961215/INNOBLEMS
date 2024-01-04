@@ -272,10 +272,10 @@
 		var param = "&usrSeqList="
 		
 		for(var i = 0; i<usrSeqList.length; i++){
-			param += usrSeqList[i]
-			if(i != usrSeqList.length - 1){
+			if(i != 0){
 				param += ","
 			}
+			param += usrSeqList[i]
 		}
 		
 		console.log("param : " + param)

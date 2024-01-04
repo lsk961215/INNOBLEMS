@@ -15,4 +15,7 @@ public interface UserService {
 	void saveUser(UserDTO userDTO);
 	Map getUserProjectList(Map selectMap);
 	Map getAddUserProjectList(Map selectMap);
+	void addUserProject(Map insertMap);
+	void delUserProject(Map deleteMap);
+	void saveUserProject(List updateList);
 }

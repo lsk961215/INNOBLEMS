@@ -27,11 +27,11 @@
 		
 		$("#checkAll").change(function(){
 			if($(this).is(":checked") == true){
-				$(".usrSeq").each(function(){
+				$(".prjSeq").each(function(){
 					$(this).prop('checked',true)
 				})
 			} else {
-				$(".usrSeq").each(function(){
+				$(".prjSeq").each(function(){
 					$(this).prop('checked',false)
 				})
 			}
@@ -49,8 +49,6 @@
 		
 		param += "&pageNum="+pageNum
 		
-		console.log("param = " + param)
-		
 		$.ajax({
 	        url: "getUserProjectList", 
 	        type:"post",
@@ -60,7 +58,7 @@
 	        	var page = ""
 	        	var save = "<button id='save' onclick='save()'>저장</button>"
 	        	var add = "<button id='add' onclick='add()'>추가</button>"
-	        	var del = "<button id='del' onclick='delUser()'>삭제</button>"
+	        	var del = "<button id='del' onclick='del()'>삭제</button>"
 	        	var cancel = "<button id='cancel' onclick='cancel()'>취소</button>"
 	        	
 	        	
@@ -91,10 +89,10 @@
 		        		
 		        		for(var j = 0; j<codeList.length; j++){
 		        			if(codeList[j].indexOf("mstCD=CU01") != -1 && codeList[j].indexOf("dtCD=" + data.userProjectList[i].cusCD + ",") != -1){
-		        				customer = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
+		        				customer = codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7)
 		        			}
 		        			if(codeList[j].indexOf("mstCD=RL01") != -1 && codeList[j].indexOf("dtCD=" + data.userProjectList[i].rlCD + ",") != -1){
-		        				role = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
+		        				role = codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7)
 		        			}
 		        			
 		        			for(var k = 0; k<skillArr.length; k++){
@@ -102,7 +100,7 @@
 		        					if(k != 0){
 			        					skills += ", "
 			        				}
-		        					skills += codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
+		        					skills += codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7)
 			        			}
 		        			}
 		        		}
@@ -115,19 +113,22 @@
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
 	               		str += "<td class='prjSTDTRow'>" + data.userProjectList[i].prjSTDT + "</td>"
 	               		str += "<td class='prjEDDTRow'>" + data.userProjectList[i].prjEDDT + "</td>"
-	               		str += "<td class='usrPrjINDTRow'><input type='date' value='" + data.userProjectList[i].usrPrjINDT + "'></td>"
-	               		str += "<td class='usrPrjOTDTRow'><input type='date' value='" + data.userProjectList[i].usrPrjOTDT + "'></td>"
+	               		str += "<td class='usrPrjINDTRow'><input type='date' id='usrPrjINDT' value='" + data.userProjectList[i].usrPrjINDT + "'></td>"
+	               		str += "<td class='usrPrjOTDTRow'><input type='date' id='usrPrjOTDT' value='" + data.userProjectList[i].usrPrjOTDT + "'></td>"
 	               		str += "<td class='roleRow'>"
 	               		str += "<select name='rlCD' id='rlCD'>"
 	               		str += "<option value='0'>선택</option>"
+	               		
+	               			console.log(codeList[0])
+	               		
 	               		for(var j = 0; j<codeList.length; j++){
 	               			if(codeList[j].indexOf("mstCD=RL01") != -1){
 	               				if(codeList[j].indexOf("dtCD=" + data.userProjectList[i].rlCD + ",") != -1){
-	    		        			str += "<option value='" + codeList[j].substr(codeList[j].indexOf("dtCD=")+7)+"' selected>" + codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7) + "</option>"
+	    		        			str += "<option value='" + codeList[j].substring(codeList[j].indexOf("dtCD=")+5, codeList[j].indexOf(", dtCDNM"))+"' selected>" + codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7) + "</option>"
 	    		        		} else {
-	    		        			str += "<option value='" + codeList[j].substr(codeList[j].indexOf("dtCD=")+7)+"' >" + codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7) + "</option>"
+	    		        			str += "<option value='" + codeList[j].substring(codeList[j].indexOf("dtCD=")+5, codeList[j].indexOf(", dtCDNM"))+"' >" + codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7) + "</option>"
 	    		        		}
-			        			role = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
+			        			role = codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7)
 			        		}
 	               		}
 	               		str += "</select>"
@@ -222,36 +223,69 @@
 		newForm.submit();
 	}
 	
-	function delUser(){
-		var usrSeqList = new Array()
+	function save(){
+		var usrSeq = $("#usrSeq").val()
+		var prjSeqs = ""
+		var usrPrjINDTs = ""
+		var usrPrjOTDTs = ""
+		var rlCDs = ""
+		var index = 0
 		
-		$(".usrSeq").each(function(){
+		$(".prjSeq").each(function(){
 			if($(this).is(":checked")==true){
-				usrSeqList.push($(this).val())
-		    }
-		})
-		
-		var param = "&usrSeqList="
-		
-		for(var i = 0; i<usrSeqList.length; i++){
-			param += usrSeqList[i]
-			if(i != usrSeqList.length - 1){
-				param += ","
+				var usrPrjINDT = $(this).parent().parent().find("#usrPrjINDT").val()
+				var usrPrjOTDT = $(this).parent().parent().find("#usrPrjOTDT").val()
+				var rlCD = $(this).parent().parent().find("#rlCD").val()
+				
+				if(usrPrjINDT == ""){
+					usrPrjINDT = "none"
+				}
+				
+				if(usrPrjOTDT == ""){
+					usrPrjOTDT = "none"
+				}
+				
+				if(index != 0){
+					prjSeqs += ","
+					usrPrjINDTs += ","
+					usrPrjOTDTs += ","
+					rlCDs += ","
+				}
+				
+				prjSeqs += $(this).val()
+				
+				usrPrjINDTs += usrPrjINDT
+				
+				usrPrjOTDTs += usrPrjOTDT
+
+				rlCDs += rlCD
+				
+				index += 1
 			}
-		}
+		})
+			
+		var param = "&prjSeqList=" + prjSeqs
+		
+		param += "&usrPrjINDTList=" + usrPrjINDTs
+		
+		param += "&usrPrjOTDTList=" + usrPrjOTDTs
+		
+		param += "&rlCDList=" + rlCDs
+		
+		param += "&usrSeq=" + usrSeq
 		
 		console.log("param : " + param)
 		
 		$.ajax({
-	        url: "delUser", 
+	        url: "saveUserProject", 
 	        type:"post",
 	        data: param,
 	        success: function(data) {
 	        	if(data == 0){
-	        		alert("삭제 되었습니다.")
-	        		getUserList(1)
+	        		alert("저장 되었습니다.")
+	        		getUserProjectList(1)
 	        	} else {
-	        		alert("해당 사원은 현재 소속되어있는 프로젝트가 있습니다.")
+	        		alert("저장할 수 없습니다.")
 	        	}
 	        },
 	        error: function() {
@@ -260,45 +294,12 @@
 	    })
 	}
 	
-	function checkOne(){
-		var count = 0
-		
-		$(".usrSeq").each(function(){
-			 if( $(this).is(":checked") == true ){
-				 count += 1
-			 }
-		})
-		
-		if(count == $(".usrSeq").length){
-			$("#checkAll").prop('checked',true)
-		} else {
-			$("#checkAll").prop('checked',false)
-		}
-	}
-	
-	function setSkills() {
-		var skills = '${userDTO.skills}'
-		
-		console.log(skills)
-		
-		var skillArr = skills.split(",")
-		
-		for(var i = 0; i<skillArr.length; i++){
-			$("input[id=" + skillArr[i] + "]").prop('checked',true);
-		}
-		
-	}
-	
-	function cancel() {
-		window.history.back();
-	}
-	
 	function add(){
 		
 		var usrSeq = $("#usrSeq").val()
 		var skills = '${userDTO.skills}'
 		
-    	var url = "addUserProject";
+    	var url = "goAddUserProject";
     	
         window.open("", "openForm", "width=1000px height=600px");
         
@@ -313,6 +314,79 @@
         $form.appendTo('body'); // body태그에 추가
         $form.submit(); // 전송
     }
+	
+	function del(){
+		var usrSeq = $("#usrSeq").val()
+	
+		var prjSeqList = new Array()
+		
+		$(".prjSeq").each(function(){
+			if($(this).is(":checked")==true){
+				prjSeqList.push($(this).val())
+			}
+		})
+			
+		var param = "&prjSeqList="
+			
+		for(var i = 0; i<prjSeqList.length; i++){
+			if(i != 0){
+				param += ","
+			}
+			param += prjSeqList[i]
+		}
+		
+		param += "&usrSeq=" + usrSeq
+		
+		$.ajax({
+	        url: "delUserProject", 
+	        type:"post",
+	        data: param,
+	        success: function(data) {
+	        	if(data == 0){
+	        		alert("삭제 되었습니다.")
+	        		getUserProjectList(1)
+	        	} else {
+	        		alert("사원이 소속된 프로젝트를 삭제할 수 없습니다.")
+	        	}
+	        },
+	        error: function() {
+	            alert("통신실패")
+	        }
+	    })
+	}
+	
+	function checkOne(){
+		var count = 0
+		
+		$(".prjSeq").each(function(){
+			 if( $(this).is(":checked") == true ){
+				 count += 1
+			 }
+		})
+		
+		if(count == $(".prjSeq").length){
+			$("#checkAll").prop('checked',true)
+		} else {
+			$("#checkAll").prop('checked',false)
+		}
+	}
+	
+	function setSkills() {
+		var skills = '${userDTO.skills}'
+		
+		var skillArr = skills.split(",")
+		
+		for(var i = 0; i<skillArr.length; i++){
+			$("input[id=" + skillArr[i] + "]").prop('checked',true);
+		}
+		
+	}
+	
+	function cancel() {
+		window.history.back();
+	}
+	
+	
 </script>
 <style>
 main {
@@ -732,7 +806,7 @@ table .roleHead {
 							<small>직급</small>
 							<input type="text" name="raCD" id="raCD" 
 								<c:forEach var="item" items="${codeList}" varStatus="i">
-									<c:if test = "${item.mstCD == 'RA01'}">
+									<c:if test = "${item.mstCD == 'RA01' && item.dtCD == userDTO.raCD}">
 										value="${item.dtCDNM}"
 									</c:if>
 								</c:forEach>
@@ -740,7 +814,7 @@ table .roleHead {
 							<small>기술등급</small>
 							<input type="text" name="grCD" id="grCD"
 								<c:forEach var="item" items="${codeList}" varStatus="i">
-									<c:if test = "${item.mstCD == 'GR01'}">
+									<c:if test = "${item.mstCD == 'GR01' && item.dtCD == userDTO.grCD}">
 										value="${item.dtCDNM}"
 									</c:if>
 								</c:forEach>
@@ -748,7 +822,7 @@ table .roleHead {
 							<small>재직상태</small>
 							<input type="text" name="stCD" id="stCD"
 								<c:forEach var="item" items="${codeList}" varStatus="i">
-									<c:if test = "${item.mstCD == 'ST01'}">
+									<c:if test = "${item.mstCD == 'ST01' && item.dtCD == userDTO.stCD}">
 										value="${item.dtCDNM}"
 									</c:if>
 								</c:forEach>

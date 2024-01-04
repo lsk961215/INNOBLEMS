@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.spring.innoblems.dto.SkillDTO;
 import com.spring.innoblems.dto.UserDTO;
+import com.spring.innoblems.dto.UserProjectDTO;
 
 @Repository
 public class UserDAOImpl implements UserDAO {
@@ -78,5 +79,22 @@ public class UserDAOImpl implements UserDAO {
 	@Override
 	public int getAddUserProjectTotal(Map map) {
 		return sqlSession.selectOne("userProject.getAddUserProjectTotal", map);
+	}
+
+	@Override
+	public void addUserProject(UserProjectDTO userProjectDTO) {
+		sqlSession.insert("userProject.addUserProject", userProjectDTO);
+	}
+
+	@Override
+	public void delUserProject(Map deleteMap) {
+		sqlSession.delete("userProject.delUserProject", deleteMap);
+		return;
+	}
+
+	@Override
+	public void saveUserProject(UserProjectDTO userProjectDTO) {
+		sqlSession.update("userProject.saveUserProject", userProjectDTO);
+		return;
 	}
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.spring.innoblems.dao.UserDAO;
 import com.spring.innoblems.dto.SkillDTO;
 import com.spring.innoblems.dto.UserDTO;
+import com.spring.innoblems.dto.UserProjectDTO;
 
 @Service
 public class UserServiceImpl  implements UserService {
@@ -175,5 +176,33 @@ public class UserServiceImpl  implements UserService {
 		resultMap.put("pageNum", pageNum);
 		
 		return resultMap;
+	}
+
+	@Override
+	public void addUserProject(Map insertMap) {
+		UserProjectDTO userProjectDTO = (UserProjectDTO) insertMap.get("userProjectDTO");
+		List prjSeqList = (List) insertMap.get("prjSeqList");
+		
+		for(int i = 0; i<prjSeqList.size(); i++) {
+			String tmp_prjSeq = (String) prjSeqList.get(i);
+			int prjSeq = Integer.parseInt(tmp_prjSeq);
+			
+			userProjectDTO.setPrjSeq(prjSeq);
+			
+			userDAO.addUserProject(userProjectDTO);
+		}
+	}
+
+	@Override
+	public void delUserProject(Map deleteMap) {
+		userDAO.delUserProject(deleteMap);
+	}
+
+	@Override
+	public void saveUserProject(List updateList) {
+		for(int i = 0; i<updateList.size(); i++) {
+			UserProjectDTO userProjectDTO = (UserProjectDTO) updateList.get(i);
+			userDAO.saveUserProject(userProjectDTO);
+		}
 	}
 }

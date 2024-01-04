@@ -50,6 +50,47 @@
 		}
 	}
 	
+	function add(){
+		var usrSeq = '${userProjectDTO.usrSeq}'
+		
+		var prjSeqList = new Array()
+		
+		$(".prjSeq").each(function(){
+			if($(this).is(":checked")==true){
+				prjSeqList.push($(this).val())
+			}
+		})
+			
+		var param = "&prjSeqList="
+			
+		for(var i = 0; i<prjSeqList.length; i++){
+			if(i != 0){
+				param += ","
+			}
+			param += prjSeqList[i]
+		}
+		
+		param += "&usrSeq=" + usrSeq
+		
+		$.ajax({
+	        url: "addUserProject", 
+	        type:"post",
+	        data: param,
+	        success: function(data) {
+	        	if(data == 0){
+		        	alert("추가 되었습니다.")
+		        	getAddUserProjectList(1)
+		        	opener.getUserProjectList(1)
+	        	} else {
+	        		alert("오류가 발생하였습니다.")
+	        	}
+	        },
+	        error: function() {
+	            alert("통신실패")
+	        }
+	    })
+	}
+	
 	function getAddUserProjectList(pageNum){
 		
 		var usrSeq = '${userProjectDTO.usrSeq}'
@@ -91,7 +132,7 @@
 	        success: function(data) {
 	        	var str = ""
 	        	var page = ""
-	        	var add = "<a id='add' href='goAddProjectPage'>추가</a>"
+	        	var add = "<button id='add' onclick='add()'>추가</button>"
 	        	
 	        	
 	        	/* model 에서 toString() 으로 받아온 문자열을 배열로 파싱 */
@@ -417,8 +458,6 @@ input[type=text], select {
 	
 	cursor: pointer;
 	
-	margin-right: 50px;
-	
 	text-decoration: none;
 }
 
@@ -575,6 +614,8 @@ table .userHead {
 .resultButton {
 	display:flex;
 	justify-content: center;
+	
+	margin-top: 30px;
 }
 
 .filterWrap {
