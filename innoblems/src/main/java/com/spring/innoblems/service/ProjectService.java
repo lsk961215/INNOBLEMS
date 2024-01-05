@@ -14,4 +14,6 @@ public interface ProjectService {
 	ProjectDTO getProjectDetail(ProjectDTO projectDTO);
 	void saveProject(ProjectDTO projectDTO);
 	void delProject(List list);
+	Map getProjectUserList(Map selectMap);
+	Map getAddProjectUserList(Map selectMap);
 }

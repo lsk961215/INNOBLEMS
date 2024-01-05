@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.spring.innoblems.dto.ProjectDTO;
 import com.spring.innoblems.dto.SkillDTO;
 import com.spring.innoblems.dto.UserDTO;
+import com.spring.innoblems.dto.UserProjectDTO;
 import com.spring.innoblems.service.MainService;
 import com.spring.innoblems.service.ProjectService;
 
@@ -82,6 +83,16 @@ public class ProjectController {
 		}
 		
 		return projectMap;
+	}
+	
+	@RequestMapping("/goAddProject")
+	public String goAddProject(Model model) {
+		
+		List codeList = mainService.getCodeList();
+		
+		model.addAttribute("codeList", codeList);
+		
+		return "addProject";
 	}
 	
 	@ResponseBody
@@ -184,5 +195,136 @@ public class ProjectController {
 			
 			return 1;
 		}
+	}
+	
+	@RequestMapping("/getProjectUser")
+	public String getProjectUser (HttpServletRequest request, ProjectDTO projectDTO, Model model) {
+		List codeList = mainService.getCodeList();
+		
+		projectDTO = projectService.getProjectDetail(projectDTO);
+		
+		model.addAttribute("codeList", codeList);
+		
+		model.addAttribute("projectDTO", projectDTO);
+		
+		return "projectUser";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/getProjectUserList")
+	public Map getProjectUserList (HttpServletRequest request, UserProjectDTO userProjectDTO, Model model) {
+		List codeList = mainService.getCodeList();
+		
+		model.addAttribute("codeList", codeList);
+		
+		Map selectMap = new HashMap();
+		
+		int pageNum = 1;
+		int countPerPage = 5;
+		
+		String tmp_pageNum = request.getParameter("pageNum");
+		
+		if(tmp_pageNum != null) {
+			try { 
+				pageNum = Integer.parseInt(tmp_pageNum);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		String tmp_countPerPage = request.getParameter("countPerPage");
+		
+		if(tmp_countPerPage != null) {
+			try { 
+				countPerPage = Integer.parseInt(tmp_countPerPage);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		selectMap.put("userProjectDTO", userProjectDTO);
+		selectMap.put("pageNum", pageNum);
+		selectMap.put("countPerPage", countPerPage);
+		
+		Map projectUserMap = new HashMap();
+		
+		try {
+			projectUserMap = projectService.getProjectUserList(selectMap);
+		}catch(Exception e){
+			e.printStackTrace();
+			System.out.println("오류가 발생했습니다.");
+		}
+		
+		return projectUserMap;
+	}
+	
+	@RequestMapping("/goAddProjectUser")
+	public String goAddProjectUser(Model model, UserProjectDTO userProjectDTO) {
+		
+		List codeList = mainService.getCodeList();
+		
+		model.addAttribute("codeList", codeList);
+		
+		model.addAttribute("userProjectDTO", userProjectDTO);
+		
+		return "addProjectUser";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/getAddProjectUserList")
+	public Map getAddProjectUserList(HttpServletRequest request, Model model, UserProjectDTO userProjectDTO) {
+		
+		Map selectMap = new HashMap();
+		
+		int pageNum = 1;
+		int countPerPage = 5;
+		
+		String str = userProjectDTO.getSkills();
+		String[] skillArray = str.split(",");
+		List skills = new ArrayList();
+		
+		for (int i = 0; i<skillArray.length; i++) {
+			skills.add(skillArray[i]);
+		}
+		
+		String tmp_pageNum = request.getParameter("pageNum");
+		
+		if(tmp_pageNum != null) {
+			try { 
+				pageNum = Integer.parseInt(tmp_pageNum);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		String tmp_countPerPage = request.getParameter("countPerPage");
+		
+		if(tmp_countPerPage != null) {
+			try { 
+				countPerPage = Integer.parseInt(tmp_countPerPage);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		selectMap.put("skills", skills);
+		selectMap.put("userProjectDTO", userProjectDTO);
+		selectMap.put("pageNum", pageNum);
+		selectMap.put("countPerPage", countPerPage);
+		
+		Map addProjectUserMap = new HashMap();
+		
+		try {
+			addProjectUserMap = projectService.getAddProjectUserList(selectMap);
+		}catch(Exception e){
+			e.printStackTrace();
+			System.out.println("오류가 발생했습니다.");
+		}
+		
+		return addProjectUserMap;
 	}
 }

@@ -85,7 +85,7 @@
 	}
 	
 	function cancel() {
-		window.history.back();
+		window.close();
 	}
 	
 	function save(){
@@ -149,7 +149,8 @@
 			        type:"post",
 			        data: param,
 			        success: function(data) {
-			        	alert("등록되었습니다.")
+			        	alert("저장되었습니다.")
+			        	opener.getUserList(1)
 			        },
 			        error: function() {
 			            alert("통신실패")
@@ -202,7 +203,8 @@
 						        type:"post",
 						        data: param,
 						        success: function(data) {
-						        	alert("등록되었습니다.")
+						        	alert("저장되었습니다.")
+						        	opener.getUserList(1)
 						        },
 						        error: function() {
 						            alert("통신실패")
@@ -306,8 +308,6 @@ function fn_submit(){
                 // 우편번호와 주소 정보를 해당 필드에 넣는다.
                 document.getElementById('postcode').value = data.zonecode;
                 document.getElementById("roadAddress").value = roadAddr;
-                document.getElementById("jibunAddress").value = data.jibunAddress;
-                
             }
         }).open();
     }
@@ -315,8 +315,7 @@ function fn_submit(){
 <style>
 main {
 	display: flex;
-	max-width: 1240px;
-    margin: 0 auto;
+	width: 100%;
 }
 	
 section {
@@ -326,13 +325,13 @@ section {
 	display: flex;
 	flex-direction: column;
 	
-	margin-top: 50px;
-	margin-bottom: 50px;
-	margin-right: 50px;
-	
 	border: 2px solid lightgrey;
 	
-	padding: 50px;
+	margin-top: 25px;
+	
+	padding-right: 50px;
+	padding-left: 50px;
+	padding-bottom: 50px;
 }
 
 button {
@@ -382,8 +381,8 @@ table td{
 	height: 50px;
 		
 	position: relative;
-	top: 25px;
-	left: 20px;
+	top: -25px;
+	left: -30px;
 	
 	width: max-content;
 	
@@ -533,13 +532,9 @@ table td{
 </style>
 </head>
 <body>
-<jsp:include page="header.jsp"/>
 <main>
-	<div class="wrap">
-		<div class="pageTitle"><h1>사원 상세/수정</h1></div>
-		<div class="middle">
-			<jsp:include page="aside.jsp"/>
 			<section>
+			<div class="pageTitle"><h1>사원 상세/수정</h1></div>
 				<div class="sectionMain">
 					<div class=imgSection>
 						<c:if test = "${userDTO.usrImg == null}">
@@ -707,10 +702,6 @@ table td{
 				</div>
 				
 			</section>
-		</div>
-		
-	</div>
-	
 </main>
 </body>
 </html>

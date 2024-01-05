@@ -126,7 +126,7 @@
    			        data: param,
    			        success: function(data) {
    			        	alert("등록되었습니다.")
-   			        	
+   			        	opener.getUserList(1)
    			        },
    			        error: function() {
    			            alert("통신실패")
@@ -147,9 +147,8 @@
 		
 	}
 	
-
-    function cancel() {
-		window.history.back();
+	function cancel(){
+		window.close()
 	}
 </script>
 <script type="text/javascript">
@@ -244,8 +243,7 @@ function fn_submit(){
 <style>
 main {
 	display: flex;
-	max-width: 1240px;
-    margin: 0 auto;
+	width: 100%;
 }
 	
 section {
@@ -255,13 +253,13 @@ section {
 	display: flex;
 	flex-direction: column;
 	
-	margin-top: 50px;
-	margin-bottom: 50px;
-	margin-right: 50px;
-	
 	border: 2px solid lightgrey;
 	
-	padding: 50px;
+	margin-top: 25px;
+	
+	padding-right: 50px;
+	padding-left: 50px;
+	padding-bottom: 50px;
 }
 
 button {
@@ -310,8 +308,9 @@ table td{
 	height: 50px;
 		
 	position: relative;
-	top: 25px;
-	left: 20px;
+	top: -25px;
+	left: 10px;
+
 	
 	width: max-content;
 	
@@ -433,8 +432,12 @@ table td{
 
 #postcode {
 	width: 100px;
+	background-color: lightgrey;
 }
 
+#roadAddress {
+	background-color: lightgrey;
+}
 #checkText {
 	display: none;
 }
@@ -446,139 +449,130 @@ table td{
 </style>
 </head>
 <body>
-<jsp:include page="header.jsp"/>
 <main>
-	<div class="wrap">
-		<div class="pageTitle"><h1>사원 등록</h1></div>
-		<div class="middle">
-			<jsp:include page="aside.jsp"/>
-			<section>
-				<div class="sectionMain">
-					<div class=imgSection>
-						<img id="img" src="resources/userImages/default.png">
-					    <label for="file1" class="imgLabel">파일 선택</label> 
-					    <input type="file" id="file1" name="file1"> 
-					    <button id="btn_submit" onclick="javascript:fn_submit()">전송</button>    
-					</div>
-					<div class="detailSection">
-						<small class="essential"><a class="star">*</a>는 필수항목</small>
-						<table>
-					    	<tr>
-					    		<td>사원명<a class="star">*</a></td>
-					    		<td><input type="text" id="usrNm" maxlength="10"></td>
-					    		<td>입사일<a class="star">*</a></td>
-					    		<td><input type="date" id="usrINDT"></td>
-					    	</tr> 
-					    	<tr>
-					    		<td>아이디<a class="star">*</a></td>
-					    		<td><input type="text" id="usrId" maxlength="20"></td>
-					    		<td>직급</td>
-					    		<td>
-						    		<select name="raCD" id="raCD">
-										<option value="0">선택</option>
-										<c:forEach var="item" items="${codeList}" varStatus="i">
-											<c:if test = "${item.mstCD == 'RA01'}">
-												<option value="${item.dtCD}">${item.dtCDNM}</option>
-											</c:if>
-										</c:forEach>
-									</select>
-					    		</td>
-					    	</tr> 
-					    	<tr>
-					    		<td>비밀번호<a class="star">*</a></td>
-					    		<td><input type="password" id="usrPw" maxlength="16"></td>
-					    		<td>기술등급</td>
-					    		<td>
-					    			<select name="grCD" id="grCD">
-										<option value="0">선택</option>
-										<c:forEach var="item" items="${codeList}" varStatus="i">
-											<c:if test = "${item.mstCD == 'GR01'}">
-												<option value="${item.dtCD}">${item.dtCDNM}</option>
-											</c:if>
-										</c:forEach>
-									</select>
-								</td>
-					    	</tr> 
-					    	<tr>
-					    		<td>비밀번호 확인<a class="star">*</a></td>
-					    		<td><input type="password" id="usrPwCheck" maxlength="16"></td>
-					    		<td>개발분야</td>
-					    		<td>
-						    		<select name="dvCD" id="dvCD">
-										<option value="0">선택</option>
-										<c:forEach var="item" items="${codeList}" varStatus="i">
-											<c:if test = "${item.mstCD == 'DV01'}">
-												<option value="${item.dtCD}">${item.dtCDNM}</option>
-											</c:if>
-										</c:forEach>
-									</select>
-					    		</td>
-					    	</tr> 
-					    	<tr>
-					    		<td colspan="2">
-					    			<div id="checkText">
-					    			</div>
-					    		</td>
-					    		<td>전화번호<a class="star">*</a></td>
-					    		<td><input type="text" id="usrPn" placeholder="숫자만 입력해주세요" maxlength="11"></td>
-					    	</tr> 
-					    	<tr>
-					    		<td>생년월일</td>
-					    		<td><input type="date" id="usrBDT"></td>
-					    		<td>이메일</td>
-					    		<td><input type="text" id="usrEm" placeholder="~@~ 형식으로 입력해주세요"></td>
-					    	</tr> 
-					    	<tr>
-					    		<td>성별</td>
-					    		<td>
-					    			<select name="gdCD" id="gdCD">
-										<option value="0">선택</option>
-										<c:forEach var="item" items="${codeList}" varStatus="i">
-											<c:if test = "${item.mstCD == 'GD01'}">
-												<option value="${item.dtCD}">${item.dtCDNM}</option>
-											</c:if>
-										</c:forEach>
-									</select>
-					    		</td>
-					    		<td colspan="2"></td>
-					    	</tr> 
-					    	<tr>
-					    		<td>주소</td>
-					    		<td colspan="3">				    			
-					    			<input type="text" id="postcode" placeholder="우편번호" readonly>
-									<input type="button" id="search" onclick="sample4_execDaumPostcode()" value="주소 검색"><br>
-									<input type="text" id="roadAddress" placeholder="도로명주소" readonly>
-									<input type="text" id="detailAddress" placeholder="상세주소" maxlength="100">
-					    		</td>
-					    	</tr> 
-					    	<tr>
-					    		<td>보유기술<a class="star">*</a></td>
-					    		<td colspan="3">
-						    		<div class="skills">
-						    			<c:forEach var="item" items="${codeList}" varStatus="i">
-											<c:if test = "${item.mstCD == 'SK01'}">
-												<div>
-													<input type="checkbox" class="skill" id="${item.dtCD}" value="${item.dtCD}">
-													<label for="${item.dtCD}">${item.dtCDNM} </label>
-												</div>
-											</c:if>
-										</c:forEach>
-						    		</div>
-					    		</td>
-					    	</tr>
-						</table>
-					</div>
-				</div>
-				<div class="buttonSection">
-					<button id="add" onclick="add()">등록</button>
-					<button id="cancel" onclick="cancel()">취소</button>
-				</div>
-				
-			</section>
+	<section>
+	<div class="pageTitle"><h1>사원 등록</h1></div>
+		<div class="sectionMain">
+			<div class=imgSection>
+				<img id="img" src="resources/userImages/default.png">
+					<label for="file1" class="imgLabel">파일 선택</label> 
+					<input type="file" id="file1" name="file1"> 
+					<button id="btn_submit" onclick="javascript:fn_submit()">전송</button>    
+			</div>
+			<div class="detailSection">
+				<small class="essential"><a class="star">*</a>는 필수항목</small>
+				<table>
+					<tr>
+						<td>사원명<a class="star">*</a></td>
+					    <td><input type="text" id="usrNm" maxlength="10"></td>
+					    <td>입사일<a class="star">*</a></td>
+					    <td><input type="date" id="usrINDT"></td>
+					</tr> 
+					<tr>
+					    <td>아이디<a class="star">*</a></td>
+					    <td><input type="text" id="usrId" maxlength="20"></td>
+					    <td>직급</td>
+					    <td>
+						    <select name="raCD" id="raCD">
+								<option value="0">선택</option>
+								<c:forEach var="item" items="${codeList}" varStatus="i">
+									<c:if test = "${item.mstCD == 'RA01'}">
+										<option value="${item.dtCD}">${item.dtCDNM}</option>
+									</c:if>
+								</c:forEach>
+							</select>
+					    </td>
+					</tr> 
+					<tr>
+					    <td>비밀번호<a class="star">*</a></td>
+					    <td><input type="password" id="usrPw" maxlength="16"></td>
+					    <td>기술등급</td>
+					    <td>
+					    	<select name="grCD" id="grCD">
+								<option value="0">선택</option>
+								<c:forEach var="item" items="${codeList}" varStatus="i">
+									<c:if test = "${item.mstCD == 'GR01'}">
+										<option value="${item.dtCD}">${item.dtCDNM}</option>
+									</c:if>
+								</c:forEach>
+							</select>
+						</td>
+					</tr> 
+					<tr>
+					    <td>비밀번호 확인<a class="star">*</a></td>
+					    <td><input type="password" id="usrPwCheck" maxlength="16"></td>
+					    <td>개발분야</td>
+					    <td>
+						    <select name="dvCD" id="dvCD">
+								<option value="0">선택</option>
+								<c:forEach var="item" items="${codeList}" varStatus="i">
+									<c:if test = "${item.mstCD == 'DV01'}">
+										<option value="${item.dtCD}">${item.dtCDNM}</option>
+									</c:if>
+								</c:forEach>
+							</select>
+					   </td>
+					   </tr> 
+					   <tr>
+					   <td colspan="2">
+					    	<div id="checkText">
+					    	</div>
+					   </td>
+					   <td>전화번호<a class="star">*</a></td>
+					   <td><input type="text" id="usrPn" placeholder="숫자만 입력해주세요" maxlength="11"></td>
+					   </tr> 
+					   <tr>
+					   <td>생년월일</td>
+					   <td><input type="date" id="usrBDT"></td>
+					   <td>이메일</td>
+					   <td><input type="text" id="usrEm" placeholder="~@~ 형식으로 입력해주세요"></td>
+					   </tr> 
+					   <tr>
+					   <td>성별</td>
+					   <td>
+					    	<select name="gdCD" id="gdCD">
+								<option value="0">선택</option>
+								<c:forEach var="item" items="${codeList}" varStatus="i">
+									<c:if test = "${item.mstCD == 'GD01'}">
+										<option value="${item.dtCD}">${item.dtCDNM}</option>
+									</c:if>
+								</c:forEach>
+							</select>
+					   </td>
+					   <td colspan="2"></td>
+					   </tr> 
+					   <tr>
+					   <td>주소</td>
+					   <td colspan="3">				    			
+					    	<input type="text" id="postcode" placeholder="우편번호" readonly>
+							<input type="button" id="search" onclick="sample4_execDaumPostcode()" value="주소 검색"><br>
+							<input type="text" id="roadAddress" placeholder="도로명주소" readonly>
+							<input type="text" id="detailAddress" placeholder="상세주소" maxlength="100">
+					   </td>
+					   </tr> 
+					   <tr>
+					    <td>보유기술<a class="star">*</a></td>
+					    <td colspan="3">
+						    <div class="skills">
+						    	<c:forEach var="item" items="${codeList}" varStatus="i">
+									<c:if test = "${item.mstCD == 'SK01'}">
+										<div>
+											<input type="checkbox" class="skill" id="${item.dtCD}" value="${item.dtCD}">
+											<label for="${item.dtCD}">${item.dtCDNM} </label>
+										</div>
+									</c:if>
+								</c:forEach>
+						    </div>
+					    </td>
+					   </tr>
+				</table>
+			</div>
 		</div>
-		
-	</div>
-	
+		<div class="buttonSection">
+			<button id="add" onclick="add()">등록</button>
+			<button id="cancel" onclick="cancel()">취소</button>
+		</div>
+	</section>
 </main>
 </body>
 </html>

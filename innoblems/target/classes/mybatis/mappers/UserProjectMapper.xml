@@ -5,16 +5,20 @@
 <mapper namespace="userProject">
 
 	<resultMap id="userProjectMap" type="com.spring.innoblems.dto.UserProjectDTO">
-	  <result column="USR_SEQ" property="usrSeq"/>
-	  <result column="PRJ_SEQ" property="prjSeq"/>
-	  <result column="PRJ_NM" property="prjNm"/>
-	  <result column="USR_PRJ_IN_DT" property="usrPrjINDT"/>
-	  <result column="USR_PRJ_OT_DT" property="usrPrjOTDT"/>
-	  <result column="CUS_CD" property="cusCD"/>
-	  <result column="RL_CD" property="rlCD"/>
-	  <result column="PRJ_ST_DT" property="prjSTDT"/>	  
-	  <result column="PRJ_ED_DT" property="prjEDDT"/>	  
-	  <result column="SKILLS" property="skills"/>
+		<result column="USR_NM" property="usrNm"/>
+		<result column="ST_CD" property="stCD"/>
+		<result column="RA_CD" property="raCD"/>
+		<result column="GR_CD" property="grCD"/>
+		<result column="USR_SEQ" property="usrSeq"/>
+		<result column="PRJ_SEQ" property="prjSeq"/>
+		<result column="PRJ_NM" property="prjNm"/>
+		<result column="USR_PRJ_IN_DT" property="usrPrjINDT"/>
+		<result column="USR_PRJ_OT_DT" property="usrPrjOTDT"/>
+		<result column="CUS_CD" property="cusCD"/>
+		<result column="RL_CD" property="rlCD"/>
+		<result column="PRJ_ST_DT" property="prjSTDT"/>	  
+		<result column="PRJ_ED_DT" property="prjEDDT"/>	  
+		<result column="SKILLS" property="skills"/>
 	</resultMap>
 	
 	<select id="getUserProjectList" parameterType="java.util.HashMap" resultMap="userProjectMap">

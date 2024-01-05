@@ -60,5 +60,25 @@ public class ProjectDAOImpl implements ProjectDAO {
 		return;
 	}
 
+	@Override
+	public List getProjectUserList(Map map) {
+		return sqlSession.selectList("projectUser.getProjectUserList", map);
+	}
+
+	@Override
+	public int getProjectUserTotal(Map map) {
+		return sqlSession.selectOne("projectUser.getProjectUserTotal", map);
+	}
+
+	@Override
+	public List getAddProjectUserList(Map map) {
+		return sqlSession.selectList("projectUser.getAddProjectUserList", map);
+	}
+
+	@Override
+	public int getAddProjectUserTotal(Map map) {
+		return sqlSession.selectOne("projectUser.getAddProjectUserTotal", map);
+	}
+
 
 }

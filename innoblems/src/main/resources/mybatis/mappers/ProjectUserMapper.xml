@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="projectUser">
+
+	<resultMap id="userProjectMap" type="com.spring.innoblems.dto.UserProjectDTO">
+	  	<result column="USR_NM" property="usrNm"/>
+		<result column="ST_CD" property="stCD"/>
+		<result column="RA_CD" property="raCD"/>
+		<result column="GR_CD" property="grCD"/>
+		<result column="USR_SEQ" property="usrSeq"/>
+		<result column="PRJ_SEQ" property="prjSeq"/>
+		<result column="PRJ_NM" property="prjNm"/>
+		<result column="USR_PRJ_IN_DT" property="usrPrjINDT"/>
+		<result column="USR_PRJ_OT_DT" property="usrPrjOTDT"/>
+		<result column="CUS_CD" property="cusCD"/>
+		<result column="RL_CD" property="rlCD"/>
+		<result column="PRJ_ST_DT" property="prjSTDT"/>	  
+		<result column="PRJ_ED_DT" property="prjEDDT"/>	  
+		<result column="SKILLS" property="skills"/>
+	</resultMap>
+	
+	<select id="getProjectUserList" parameterType="java.util.HashMap" resultMap="userProjectMap">
+		SELECT 
+            d.USR_SEQ, d.USR_NM, d.RA_CD, d.GR_CD, d.SKILLS, c.USR_PRJ_IN_DT, c.USR_PRJ_OT_DT, c.RL_CD
+		FROM
+			USER_PROJECT_TABLE c
+		LEFT OUTER JOIN
+        (
+            SELECT 
+				a.*, b.SKILLS
+			FROM 
+				USER_INFO a
+			LEFT OUTER JOIN 
+			(
+                SELECT 
+                    USR_SEQ, LISTAGG(SK_CD, ',') 
+                WITHIN GROUP
+                    (ORDER BY SK_CD) AS SKILLS
+                FROM 
+                    USER_SKILL_TABLE
+                GROUP BY 
+                    USR_SEQ
+            ) b
+            ON 
+                a.USR_SEQ = b.USR_SEQ
+        ) d
+        ON 
+       		c.USR_SEQ = d.USR_SEQ
+        WHERE 
+			PRJ_SEQ = #{userProjectDTO.prjSeq}
+	</select>
+	
+	<select id="getProjectUserTotal" parameterType="java.util.HashMap" resultType="int">
+	    SELECT COUNT(*)
+		FROM (
+		    SELECT 
+            	d.USR_SEQ, d.USR_NM, d.RA_CD, d.GR_CD, d.SKILLS, c.USR_PRJ_IN_DT, c.USR_PRJ_OT_DT, c.RL_CD
+			FROM
+				USER_PROJECT_TABLE c
+			LEFT OUTER JOIN
+	        (
+	            SELECT 
+					a.*, b.SKILLS
+				FROM 
+					USER_INFO a
+				LEFT OUTER JOIN 
+				(
+	                SELECT 
+	                    USR_SEQ, LISTAGG(SK_CD, ',') 
+	                WITHIN GROUP
+	                    (ORDER BY SK_CD) AS SKILLS
+	                FROM 
+	                    USER_SKILL_TABLE
+	                GROUP BY 
+	                    USR_SEQ
+	            ) b
+	            ON 
+	                a.USR_SEQ = b.USR_SEQ
+	        ) d
+	        ON 
+	       		c.USR_SEQ = d.USR_SEQ
+	        WHERE 
+				PRJ_SEQ = #{userProjectDTO.prjSeq}
+		)
+	</select>
+	
+	<select id="getAddProjectUserList" parameterType="java.util.HashMap" resultMap="userProjectMap">
+		SELECT c.USR_SEQ, c.USR_NM, c.RA_CD, c.GR_CD, c.ST_CD, d.SKILLS
+		FROM (
+		    SELECT a.PRJ_SEQ, b.USR_SEQ, b.USR_NM, b.RA_CD, b.GR_CD, b.ST_CD
+		    FROM
+		    (
+		        SELECT *
+		        FROM USER_PROJECT_TABLE
+		        WHERE USR_SEQ = #{userProjectDTO.usrSeq}
+		    ) a
+		    RIGHT OUTER JOIN
+		    (
+		        SELECT *
+		        FROM USER_INFO
+		    ) b
+		    ON a.USR_SEQ = b.USR_SEQ
+		    WHERE PRJ_SEQ IS NULL
+		) c
+		RIGHT OUTER JOIN
+		(
+		    SELECT f.USR_SEQ, f.SKILLS
+		    FROM 
+		    (
+		        SELECT USR_SEQ
+		         , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+		         FROM
+		        (
+		            SELECT *
+		            FROM USER_SKILL_TABLE
+		        	WHERE SK_CD IN (1)
+		    	)
+		    	GROUP BY USR_SEQ
+		    ) e
+		    
+		    LEFT OUTER JOIN
+		        
+		    (
+		        SELECT USR_SEQ
+		        , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+		        FROM
+		            USER_SKILL_TABLE
+		        GROUP BY USR_SEQ
+		    ) f
+		    ON e.USR_SEQ = f.USR_SEQ
+		) d
+		ON c.USR_SEQ = d.USR_SEQ
+		WHERE c.USR_SEQ IS NOT NULL
+		<if test="userProjectDTO.usrSeq != 0">
+			AND c.USR_SEQ = #{userProjectDTO.usrSeq}
+		</if>
+		<if test="userProjectDTO.usrNm != '' and userProjectDTO.usrNm != null">
+			AND c.USR_NM like '%' || #{userProjectDTO.usrNm} || '%'
+		</if>
+		<if test="userProjectDTO.raCD != 0">
+			AND c.RA_CD = #{userProjectDTO.raCD}
+		</if>
+		<if test="userProjectDTO.stCD != 0">
+			AND c.ST_CD = #{userProjectDTO.stCD}
+		</if>
+	</select>
+	
+	<select id="getAddProjectUserTotal" parameterType="java.util.HashMap" resultType="int">
+	    SELECT COUNT(*)
+		FROM (
+		    SELECT c.USR_SEQ, c.USR_NM, c.RA_CD, c.GR_CD, c.ST_CD, d.SKILLS
+			FROM (
+			    SELECT a.PRJ_SEQ, b.USR_SEQ, b.USR_NM, b.RA_CD, b.GR_CD, b.ST_CD
+			    FROM
+			    (
+			        SELECT *
+			        FROM USER_PROJECT_TABLE
+			        WHERE USR_SEQ = #{userProjectDTO.usrSeq}
+			    ) a
+			    RIGHT OUTER JOIN
+			    (
+			        SELECT *
+			        FROM USER_INFO
+			    ) b
+			    ON a.USR_SEQ = b.USR_SEQ
+			    WHERE PRJ_SEQ IS NULL
+			) c
+			RIGHT OUTER JOIN
+			(
+			    SELECT f.USR_SEQ, f.SKILLS
+			    FROM 
+			    (
+			        SELECT USR_SEQ
+			         , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+			         FROM
+			        (
+			            SELECT *
+			            FROM USER_SKILL_TABLE
+			        	WHERE SK_CD IN (1)
+			    	)
+			    	GROUP BY USR_SEQ
+			    ) e
+			    
+			    LEFT OUTER JOIN
+			        
+			    (
+			        SELECT USR_SEQ
+			        , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+			        FROM
+			            USER_SKILL_TABLE
+			        GROUP BY USR_SEQ
+			    ) f
+			    ON e.USR_SEQ = f.USR_SEQ
+			) d
+			ON c.USR_SEQ = d.USR_SEQ
+			WHERE c.USR_SEQ IS NOT NULL
+			<if test="userProjectDTO.usrSeq != 0">
+				AND c.USR_SEQ = #{userProjectDTO.usrSeq}
+			</if>
+			<if test="userProjectDTO.usrNm != '' and userProjectDTO.usrNm != null">
+				AND c.USR_NM like '%' || #{userProjectDTO.usrNm} || '%'
+			</if>
+			<if test="userProjectDTO.raCD != 0">
+				AND c.RA_CD = #{userProjectDTO.raCD}
+			</if>
+			<if test="userProjectDTO.stCD != 0">
+				AND c.ST_CD = #{userProjectDTO.stCD}
+			</if>
+		)
+	</select>
+
+</mapper>

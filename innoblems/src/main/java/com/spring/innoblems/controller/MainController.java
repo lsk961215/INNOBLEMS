@@ -63,26 +63,4 @@ public class MainController {
 		
 		return "projectList";
 	}
-	
-	@RequestMapping("/goAddUserPage")
-	public String goAddUserPage(Model model, HttpServletRequest request, UserDTO userDTO) {
-		
-		List codeList = mainService.getCodeList();
-		
-		model.addAttribute("codeList", codeList);
-		
-//		model.addAttribute("userParam", userDTO);
-		
-		return "addUser";
-	}
-	
-	@RequestMapping("/goAddProjectPage")
-	public String goAddProjectPage(Model model) {
-		
-		List codeList = mainService.getCodeList();
-		
-		model.addAttribute("codeList", codeList);
-		
-		return "addProject";
-	}
 }

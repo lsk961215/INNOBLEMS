@@ -12,30 +12,14 @@
   crossorigin="anonymous"></script>
 <script>
 	$(function(){
-		
-		$("#minSTDT").change(function(){
-			$("#maxSTDT").attr("min", $(this).val())
-		})
-		
-		$("#maxSTDT").change(function(){
-			$("#minSTDT").attr("max", $(this).val())
-		})
-		
-		$("#minEDDT").change(function(){
-			$("#maxEDDT").attr("min", $(this).val())
-		})
-		
-		$("#maxEDDT").change(function(){
-			$("#minEDDT").attr("max", $(this).val())
-		})
-		
+
 		$("#checkAll").change(function(){
 			if($(this).is(":checked") == true){
-				$(".prjSeq").each(function(){
+				$(".usrSeq").each(function(){
 					$(this).prop('checked',true)
 				})
 			} else {
-				$(".prjSeq").each(function(){
+				$(".usrSeq").each(function(){
 					$(this).prop('checked',false)
 				})
 			}
@@ -43,11 +27,7 @@
 	})
 	
 	function search(){
-		if($("#maxSTDT").val() >= $("#minSTDT").val() && $("#maxEDDT").val() >= $("#minEDDT").val()){
-			getAddUserProjectList(1)
-		} else {
-			alert("날짜값이 올바르지 않습니다.")
-		}
+		getAddProjectUserList(1)
 	}
 	
 	function add(){
@@ -100,34 +80,28 @@
 		window.close()
 	}
 	
-	function getAddUserProjectList(pageNum){
+	function getAddProjectUserList(pageNum){
 		
 		var usrSeq = '${userProjectDTO.usrSeq}'
 		var skills = '${userProjectDTO.skills}'
 		
 		
-		var prjSeq = $("#prjSeq").val()
-		var prjNm = $("#prjNm").val()
-		var cusCD = $("#cusCD").val()
-		var minSTDT = $("#minSTDT").val()
-		var maxSTDT = $("#maxSTDT").val()
-		var minEDDT = $("#minEDDT").val()
-		var maxEDDT = $("#maxEDDT").val()
+		var usrSeq = $("#usrSeq").val()
+		var usrNm = $("#usrNm").val()
+		var grCD = $("#grCD").val()
+		var stCD = $("#stCD").val()
 		var skills = new Array()
 		
-		if(prjSeq == ""){
-			prjSeq = 0
+		if(usrSeq == ""){
+			usrSeq = 0
 		}
 		
-		var param = "prjSeq="+prjSeq
-		param += "&prjNm="+prjNm
-		param += "&cusCD="+cusCD
-		param += "&minSTDT="+minSTDT
-		param += "&maxSTDT="+maxSTDT
-		param += "&minEDDT="+minEDDT
-		param += "&maxEDDT="+maxEDDT
+		var param = "usrSeq="+usrSeq
+		param += "&usrNm="+usrNm
+		param += "&grCD="+grCD
+		param += "&stCD="+stCD
 		param += "&skills="+'${userProjectDTO.skills}'
-		param += "&usrSeq="+'${userProjectDTO.usrSeq}'
+		param += "&prjSeq="+'${userProjectDTO.prjSeq}'
 		
 		
 		param += "&pageNum="+pageNum
@@ -135,7 +109,7 @@
 		console.log("param = " + param)
 		
 		$.ajax({
-	        url: "getAddUserProjectList", 
+	        url: "getAddProjectUserList", 
 	        type:"post",
 	        data: param,
 	        success: function(data) {
@@ -164,16 +138,26 @@
 		        $(".resultPage").empty()
 		        $(".resultButton").empty()
 		        
-		        if(data.userProjectList.length >= 1){
-		        	$.each(data.userProjectList, function(i){
-		        		var customer
+		        if(data.projectUserList.length >= 1){
+		        	$.each(data.projectUserList, function(i){
+		        		var rank
+		        		var grade
+		        		var status
 		        		var skills = ""
 		        		
-		        		var skillArr = data.userProjectList[i].skills.split(",")
+		        		var skillArr = data.projectUserList[i].skills.split(",")
 		        		
 		        		for(var j = 0; j<codeList.length; j++){
-		        			if(codeList[j].indexOf("mstCD=CU01") != -1 && codeList[j].indexOf("dtCD=" + data.userProjectList[i].cusCD + ",") != -1){
-		        				customer = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
+		        			if(codeList[j].indexOf("mstCD=RA01") != -1 && codeList[j].indexOf("dtCD=" + data.projectUserList[i].raCD + ",") != -1){
+		        				rank = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
+		        			}
+		        			
+		        			if(codeList[j].indexOf("mstCD=GR01") != -1 && codeList[j].indexOf("dtCD=" + data.projectUserList[i].grCD + ",") != -1){
+		        				grade = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
+		        			}
+		        			
+		        			if(codeList[j].indexOf("mstCD=ST01") != -1 && codeList[j].indexOf("dtCD=" + data.projectUserList[i].stCD + ",") != -1){
+		        				status = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
 		        			}
 		        			
 		        			for(var k = 0; k<skillArr.length; k++){
@@ -187,30 +171,30 @@
 		        		}
 		        		
 	                	str += "<tr>"
-	                	str += "<td class='checkRow'><input type='checkbox' class='prjSeq' value=" + data.userProjectList[i].prjSeq + " onclick='checkOne()'></td>"
-	               		str += "<td class='numberRow'><a href='getProjectDetail?prjSeq=" + data.userProjectList[i].prjSeq +"'>" + data.userProjectList[i].prjSeq + "</a></td>"
-	               		str += "<td class='nameRow'>" + data.userProjectList[i].prjNm + "</td>"
-	               		str += "<td class='customerRow'>" + customer + "</td>"
+	                	str += "<td class='checkRow'><input type='checkbox' class='usrSeq' value=" + data.projectUserList[i].usrSeq + " onclick='checkOne()'></td>"
+	               		str += "<td class='numberRow'><a href='getUserDetail?usrSeq=" + data.projectUserList[i].usrSeq +"'>" + data.projectUserList[i].usrSeq + "</a></td>"
+	               		str += "<td class='nameRow'>" + data.projectUserList[i].usrNm + "</td>"
+	               		str += "<td class='rankRow'>" + rank + "</td>"
+	               		str += "<td class='gradeRow'>" + grade + "</td>"
+	               		str += "<td class='statusRow'>" + status + "</td>"
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
-	               		str += "<td class='startRow'>" + data.userProjectList[i].prjSTDT + "</td>"
-	               		str += "<td class='endRow'>" + data.userProjectList[i].prjEDDT + "</td>"
 	              		str += "</tr>"
 	                })
 	                
 		        	if(data.beginPaging != 1){
-		        		page += "<a href=getAddUserProjectList?pageNum=" + (data.beginPaging - 1) + ">이전</a>"
+		        		page += "<a href=getAddProjectUserList?pageNum=" + (data.beginPaging - 1) + ">이전</a>"
 		        	}
 		        	
 		        	for(var i = data.beginPaging; i <= data.endPaging; i++){
 		        		if(i == data.pageNum){
 		        			page += "<button style='font-size:2em' class='page' value=" + i +">" + i + "</button>"
 		        		} else {
-		        			page += "<button class='page' value=" + i +" onclick='getAddUserProjectList(" + i + ")'>" + i + "</button>"
+		        			page += "<button class='page' value=" + i +" onclick='getAddProjectUserList(" + i + ")'>" + i + "</button>"
 		        		}
 		        	}
 		        	
 		        	if(data.endPaging != data.totalPaging){
-		        		page += "<a href=getAddUserProjectList?pageNum=" + (data.endPaging + 1) + ">다음</a>"
+		        		page += "<a href=getAddProjectUserList?pageNum=" + (data.endPaging + 1) + ">다음</a>"
 		        	}
 		        	
 		        } else {
@@ -577,12 +561,12 @@ table .checkHead {
 	text-align: center;
 }
 
-table .startRow, table .endRow {
+table .statusRow, table .rankRow, table .gradeRow{
 	min-width: 100px;
 	text-align: center;
 }
 
-table .startHead, table .endHead {
+table .statusHead, table .rankHead, table .gradeHead {
 	min-width: 100px;
 	text-align: center;
 }
@@ -613,16 +597,6 @@ table .numberRow {
 }
 
 table .numberHead {
-	min-width: 120px;
-	text-align: center;
-}
-
-table .customerRow {
-	min-width: 120px;
-	text-align: left;
-}
-
-table .customerHead {
 	min-width: 120px;
 	text-align: center;
 }
@@ -675,31 +649,34 @@ table .userHead {
 		<div class="filterDetail">
 			<div class="filterSection_1">
 				<div class="filterWrap">
-					<small>프로젝트 번호</small>
-					<input name="prjSeq" id="prjSeq" type="text">
+					<small>사원번호</small>
+					<input name="usrSeq" id="usrSeq" type="text">
 				</div>
 				<div class="filterWrap">
-					<small>프로젝트명</small>
-					<input name="prjNm" id="prjNm" type="text">
+					<small>사원명</small>
+					<input name="usrNm" id="usrNm" type="text">
 				</div>
 				<div class="filterWrap">
-					<small>고객사명</small>
-					<select name="cusCD" id="cusCD">
+					<small>기술등급</small>
+					<select name="grCD" id="grCD">
 						<option value="0">선택</option>
 						<c:forEach var="item" items="${codeList}" varStatus="i">
-							<c:if test = "${item.mstCD == 'CU01'}">
+							<c:if test = "${item.mstCD == 'GR01'}">
 								<option value="${item.dtCD}">${item.dtCDNM}</option>
 							</c:if>
 						</c:forEach>
 					</select>
 				</div>
-			</div>
-			<div class="filterSection_2">
-				<div class="dateWrap">
-					<small>시작일</small> <input id="minSTDT" type="date" max="9999-12-31"> ~ <input id="maxSTDT" type="date" max="9999-12-31">
-				</div>
-				<div class="dateWrap">
-					<small>종료일</small> <input id="minEDDT" type="date" max="9999-12-31"> ~ <input id="maxEDDT" type="date" max="9999-12-31">
+				<div class="filterWrap">
+					<small>재직상태</small>
+					<select name="stCD" id="stCD">
+						<option value="0">선택</option>
+						<c:forEach var="item" items="${codeList}" varStatus="i">
+							<c:if test = "${item.mstCD == 'ST01'}">
+								<option value="${item.dtCD}">${item.dtCDNM}</option>
+							</c:if>
+						</c:forEach>
+					</select>
 				</div>
 			</div>
 			<div class="filterSection_4">
@@ -714,12 +691,12 @@ table .userHead {
 				<thead>
 					<tr>
 						<th class="checkHead"><input type="checkbox" id="checkAll"></th>
-						<th class="numberHead">프로젝트 번호</th>
-						<th class="nameHead">프로젝트명</th>
-						<th class="customerHead">고객사명</th>
-						<th class="skillsHead">필요기술</th>
-						<th class="startHead">시작일</th>
-						<th class="endHead">종료일</th>
+						<th class="numberHead">사원번호</th>
+						<th class="nameHead">사원명</th>
+						<th class="rankHead">직급</th>
+						<th class="gradeHead">기술등급</th>
+						<th class="statusHead">재직상태</th>
+						<th class="skillsHead">보유기술</th>
 					</tr>
 				</thead>
 				<tbody id="tbody">

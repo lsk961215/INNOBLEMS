@@ -67,7 +67,7 @@
 			type:"post",
 			data: param,
 			success: function(data) {
-				alert("등록되었습니다.")
+				alert("저장되었습니다.")
 			},
 			error: function() {
 			    alert("통신실패")
@@ -89,14 +89,13 @@
 	}
 	
 	function cancel() {
-		window.history.back();
+		window.close();
 	}
 </script>
 <style>
 main {
 	display: flex;
-	max-width: 1240px;
-    margin: 0 auto;
+	width: 100%;
 }
 	
 section {
@@ -106,13 +105,13 @@ section {
 	display: flex;
 	flex-direction: column;
 	
-	margin-top: 50px;
-	margin-bottom: 50px;
-	margin-right: 50px;
-	
 	border: 2px solid lightgrey;
 	
-	padding: 50px;
+	margin-top: 25px;
+	
+	padding-right: 50px;
+	padding-left: 50px;
+	padding-bottom: 50px;
 }
 
 button {
@@ -162,8 +161,7 @@ table td{
 	height: 50px;
 		
 	position: relative;
-	top: 25px;
-	left: 20px;
+	top: -25px;
 	
 	width: max-content;
 	
@@ -271,8 +269,6 @@ table td{
 .detailSection {
 	border: 2px solid lightgrey;
 	
-	margin-left: 50px;
-	
 	width: 100%;
 	
 	padding: 30px;
@@ -288,13 +284,9 @@ table td{
 </style>
 </head>
 <body>
-<jsp:include page="header.jsp"/>
 <main>
-	<div class="wrap">
-		<div class="pageTitle"><h1>프로젝트 상세/수정</h1></div>
-		<div class="middle">
-			<jsp:include page="aside.jsp"/>
 			<section>
+			<div class="pageTitle"><h1>프로젝트 상세/수정</h1></div>
 				<div class="sectionMain">
 					<div class="detailSection">
 						<small class="essential"><a class="star">*</a>는 필수항목</small>
@@ -363,10 +355,6 @@ table td{
 				</div>
 				
 			</section>
-		</div>
-		
-	</div>
-	
 </main>
 </body>
 </html>

@@ -4,6 +4,10 @@ public class UserProjectDTO {
 	private int usrSeq;
 	private int prjSeq;
 	private String prjNm;
+	private String usrNm;
+	private String stCD;
+	private String grCD;
+	private String raCD;
 	private String cusCD;
 	private String skills;
 	private String prjSTDT;
@@ -15,7 +19,6 @@ public class UserProjectDTO {
 	private String usrPrjINDT;
 	private String usrPrjOTDT;
 	private String rlCD;
-	
 	public int getUsrSeq() {
 		return usrSeq;
 	}
@@ -33,6 +36,30 @@ public class UserProjectDTO {
 	}
 	public void setPrjNm(String prjNm) {
 		this.prjNm = prjNm;
+	}
+	public String getUsrNm() {
+		return usrNm;
+	}
+	public void setUsrNm(String usrNm) {
+		this.usrNm = usrNm;
+	}
+	public String getStCD() {
+		return stCD;
+	}
+	public void setStCD(String stCD) {
+		this.stCD = stCD;
+	}
+	public String getGrCD() {
+		return grCD;
+	}
+	public void setGrCD(String grCD) {
+		this.grCD = grCD;
+	}
+	public String getRaCD() {
+		return raCD;
+	}
+	public void setRaCD(String raCD) {
+		this.raCD = raCD;
 	}
 	public String getCusCD() {
 		return cusCD;
@@ -100,13 +127,14 @@ public class UserProjectDTO {
 	public void setRlCD(String rlCD) {
 		this.rlCD = rlCD;
 	}
-	
 	@Override
 	public String toString() {
-		return "UserProjectDTO [usrSeq=" + usrSeq + ", prjSeq=" + prjSeq + ", prjNm=" + prjNm + ", cusCD=" + cusCD
-				+ ", skills=" + skills + ", prjSTDT=" + prjSTDT + ", prjEDDT=" + prjEDDT + ", minSTDT=" + minSTDT
-				+ ", maxSTDT=" + maxSTDT + ", minEDDT=" + minEDDT + ", maxEDDT=" + maxEDDT + ", usrPrjINDT="
-				+ usrPrjINDT + ", usrPrjOTDT=" + usrPrjOTDT + ", rlCD=" + rlCD + "]";
+		return "UserProjectDTO [usrSeq=" + usrSeq + ", prjSeq=" + prjSeq + ", prjNm=" + prjNm + ", usrNm=" + usrNm
+				+ ", stCD=" + stCD + ", grCD=" + grCD + ", raCD=" + raCD + ", cusCD=" + cusCD + ", skills=" + skills
+				+ ", prjSTDT=" + prjSTDT + ", prjEDDT=" + prjEDDT + ", minSTDT=" + minSTDT + ", maxSTDT=" + maxSTDT
+				+ ", minEDDT=" + minEDDT + ", maxEDDT=" + maxEDDT + ", usrPrjINDT=" + usrPrjINDT + ", usrPrjOTDT="
+				+ usrPrjOTDT + ", rlCD=" + rlCD + "]";
 	}
+	
 	
 }

@@ -134,8 +134,8 @@
 	        success: function(data) {
 	        	var str = ""
 	        	var page = ""
-	        	var add = "<a id='add' href='goAddProjectPage'>추가</a>"
-	        	var del = "<button id='del' onclick='delProject()'>삭제</button>"
+	        	var add = "<button id='add' onclick='add()'>추가</a>"
+	        	var del = "<button id='del' onclick='del()'>삭제</button>"
 	        	
 	        	
 	        	/* model 에서 toString() 으로 받아온 문자열을 배열로 파싱 */
@@ -187,8 +187,8 @@
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
 	               		str += "<td class='startRow'>" + data.projectList[i].prjSTDT + "</td>"
 	               		str += "<td class='endRow'>" + data.projectList[i].prjEDDT + "</td>"
-	               		str += "<td class='editRow'><a id='edit' href='getProjectDetail?prjSeq=" + data.projectList[i].prjSeq + "'>상세/수정</a></td>"
-	              		str += "<td class='userRow'><input id='user' type='button' value='인원 관리'></td>"
+	               		str += "<td class='editRow'><button id='edit' onclick='edit(this)' name='" + data.projectList[i].prjSeq + "'>상세/수정</button></td>"
+	              		str += "<td class='userRow'><a id='user' href='getProjectUser?prjSeq=" + data.projectList[i].prjSeq + "'>인원 관리</a></td>"
 	              		str += "</tr>"
 	                })
 	                
@@ -214,6 +214,7 @@
 		        	str += "</tr>"
 		        }
 	        	
+	        	$("#checkAll").prop('checked',false)
 	        	$("#tbody").append(str)
 	        	$(".resultPage").append(page)
 	        	$(".resultButton").append(add)
@@ -225,7 +226,38 @@
 	    })
 	}
 	
-	function delProject(){
+	function edit(e){
+    	var url = "getProjectDetail"
+    	var prjSeq = e.name
+    	
+        window.open("", "openForm", "width=1000px height=480px");
+       
+        let $form = $('<form></form>'); // 폼 태그 생성
+        $form.attr('action', url); 		// 폼 속성 설정
+        $form.attr("target", "openForm");
+        $form.attr('method', 'post');
+        
+    	$form.append('<input type="hidden" name="prjSeq" value="' + prjSeq + '"/>')
+        
+        $form.appendTo('body'); // body태그에 추가
+        $form.submit(); // 전송
+	}
+	
+	function add(){
+    	var url = "goAddProject";
+    	
+    	window.open("", "openForm", "width=1000px height=455px");
+        
+        let $form = $('<form></form>'); // 폼 태그 생성
+        $form.attr('action', url); 		// 폼 속성 설정
+        $form.attr("target", "openForm");
+        $form.attr('method', 'post');
+        
+        $form.appendTo('body'); // body태그에 추가
+        $form.submit(); // 전송
+	}
+	
+	function del(){
 		var prjSeqList = new Array()
 		$(".prjSeq").each(function(){
 			if($(this).is(":checked")==true){
@@ -496,7 +528,7 @@ input[type=text], select {
 	font-weight: bold;
 	font-size: 80%;
 	
-	width: 80px;
+	width: 100%;
 	height: 18px;
 	
 	cursor: pointer;
@@ -505,6 +537,10 @@ input[type=text], select {
 }
 
 #user {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
 	border: none;
 	background-color: #0C70F2;
 	color: white;
@@ -512,10 +548,12 @@ input[type=text], select {
 	font-weight: bold;
 	font-size: 80%;
 	
-	width: 80px;
-	height: 20px;
+	width: 100%;
+	height: 18px;
 	
 	cursor: pointer;
+	
+	text-decoration: none;
 }
 
 table {
@@ -606,7 +644,7 @@ table .editHead {
 }
 
 table .userHead {
-	min-width: 120px;
+	min-width: 100px;
 	text-align: center;
 }
 

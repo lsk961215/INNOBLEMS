@@ -109,8 +109,8 @@
 	        success: function(data) {
 	        	var str = ""
 	        	var page = ""
-	        	var add = "<button id='add' onclick='goAddUserPage()'>추가</button>"
-	        	var del = "<button id='del' onclick='delUser()'>삭제</button>"
+	        	var add = "<button id='add' onclick='add()'>추가</button>"
+	        	var del = "<button id='del' onclick='del()'>삭제</button>"
 	        	
 	        	
 	        	/* model 에서 toString() 으로 받아온 문자열을 배열로 파싱 */
@@ -171,7 +171,7 @@
 	               		str += "<td class='gradeRow'>" + grade + "</td>"
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
 	               		str += "<td class='statusRow'>" + status + "</td>"
-	               		str += "<td class='editRow'><a id='edit' href='getUserDetail?usrSeq=" + data.userList[i].usrSeq + "'>상세/수정</a></td>"
+	               		str += "<td class='editRow'><button id='edit' onclick='edit(this)' name='" + data.userList[i].usrSeq + "'>상세/수정</button></td>"
 	              		str += "<td class='projectRow'><a id='project' href='getUserProject?usrSeq=" + data.userList[i].usrSeq + "'>프로젝트 관리</a></td>"
 	              		str += "</tr>"
 	                })
@@ -198,6 +198,7 @@
 		        	str += "</tr>"
 		        }
 	        	
+	        	$("#checkAll").prop('checked',false)
 	        	$("#tbody").append(str)
 	        	$(".resultPage").append(page)
 	        	$(".resultButton").append(add)
@@ -209,93 +210,79 @@
 	    })
 	}
 	
-	function goAddUserPage(){
-		
-		var usrSeq = $("#usrSeq").val()
-		var usrNm = $("#usrNm").val()
-		var grCD = $("#grCD").val()
-		var stCD = $("#stCD").val()
-		var minDT = $("#minDT").val()
-		var maxDT = $("#maxDT").val()
-		var currentPage = $("#currentPage").val()
-		var skillArr = new Array()
-		
-		if(usrSeq == ""){
-			usrSeq = 0
-		}
-		
-		$(".skill").each(function(){
-			if($(this).is(":checked")==true){
-				skillArr.push($(this).val())
-		    }
-		})
-		
-		var skills
-		
-		for(var i = 0; i<skillArr.length; i++){
-			if(k != 0){
-				skills += ", "
-			}
-			skills += skillArr[i]
-		}
-		
-		var newForm = $('<form></form>');
-		
-		newForm.attr("name","newForm");
-		newForm.attr("method","post");
-		newForm.attr("action","goAddUserPage");
-		newForm.attr("target","_blank");
-
-		newForm.append($('<input/>', {type: 'hidden', name: 'usrSeq', value:usrSeq }));
-		newForm.append($('<input/>', {type: 'hidden', name: 'usrNm', value:usrNm }));
-		newForm.append($('<input/>', {type: 'hidden', name: 'grCD', value:grCD }));
-		newForm.append($('<input/>', {type: 'hidden', name: 'stCD', value:stCD }));
-		newForm.append($('<input/>', {type: 'hidden', name: 'minDT', value:minDT }));
-		newForm.append($('<input/>', {type: 'hidden', name: 'maxDT', value:maxDT }));
-		newForm.append($('<input/>', {type: 'hidden', name: 'currentPage', value:currentPage }));
-		newForm.append($('<input/>', {type: 'hidden', name: 'skills', value:maxDT }));
-
-		newForm.appendTo('body');
-
-		newForm.submit();
+	function edit(e){
+    	var url = "getUserDetail"
+    	var usrSeq = e.name
+    	
+        window.open("", "openForm", "width=1000px height=620px");
+       
+        let $form = $('<form></form>'); // 폼 태그 생성
+        $form.attr('action', url); 		// 폼 속성 설정
+        $form.attr("target", "openForm");
+        $form.attr('method', 'post');
+        
+    	$form.append('<input type="hidden" name="usrSeq" value="' + usrSeq + '"/>')
+        
+        $form.appendTo('body'); // body태그에 추가
+        $form.submit(); // 전송
 	}
 	
-	function delUser(){
+	function add(){
+    	var url = "goAddUser";
+    	
+        window.open("", "openForm", "width=1000px height=600px");
+        
+        let $form = $('<form></form>'); // 폼 태그 생성
+        $form.attr('action', url); 		// 폼 속성 설정
+        $form.attr("target", "openForm");
+        $form.attr('method', 'post');
+        
+        $form.appendTo('body'); // body태그에 추가
+        $form.submit(); // 전송
+	}
+	
+	function del(){
 		var usrSeqList = new Array()
 		
-		$(".usrSeq").each(function(){
-			if($(this).is(":checked")==true){
-				usrSeqList.push($(this).val())
-		    }
-		})
 		
-		var param = "&usrSeqList="
-		
-		for(var i = 0; i<usrSeqList.length; i++){
-			if(i != 0){
-				param += ","
+		if($(".usrSeq:checked").length > 0){
+			$(".usrSeq").each(function(){
+				if($(this).is(":checked")==true){
+					usrSeqList.push($(this).val())
+			    }
+			})
+			
+			var param = "&usrSeqList="
+			
+			for(var i = 0; i<usrSeqList.length; i++){
+				if(i != 0){
+					param += ","
+				}
+				param += usrSeqList[i]
 			}
-			param += usrSeqList[i]
+			
+			console.log("param : " + param)
+			
+			$.ajax({
+		        url: "delUser", 
+		        type:"post",
+		        data: param,
+		        success: function(data) {
+		        	if(data == 0){
+		        		alert("삭제 되었습니다.")
+		        		getUserList(1)
+		        	} else {
+		        		alert("해당 사원은 현재 소속되어있는 프로젝트가 있습니다.")
+		        	}
+		        },
+		        error: function() {
+		            alert("통신실패")
+		        }
+		    })
+		} else {
+			alert("한개 이상의 항목을 선택해주세요")
 		}
 		
-		console.log("param : " + param)
-		
-		$.ajax({
-	        url: "delUser", 
-	        type:"post",
-	        data: param,
-	        success: function(data) {
-	        	if(data == 0){
-	        		alert("삭제 되었습니다.")
-	        		getUserList(1)
-	        	} else {
-	        		alert("해당 사원은 현재 소속되어있는 프로젝트가 있습니다.")
-	        	}
-	        },
-	        error: function() {
-	            alert("통신실패")
-	        }
-	    })
 	}
 	
 	function checkOne(){

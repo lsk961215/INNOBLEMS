@@ -16,4 +16,8 @@ public interface ProjectDAO {
 	ProjectDTO getProjectDetail(ProjectDTO projectDTO);
 	void saveProject(ProjectDTO projectDTO);
 	void delProject(List list);
+	List getProjectUserList(Map map);
+	int getProjectUserTotal(Map map);
+	List getAddProjectUserList(Map map);
+	int getAddProjectUserTotal(Map map);
 }

@@ -84,6 +84,16 @@ public class UserController {
 		return userMap;
 	}
 	
+	@RequestMapping("/goAddUser")
+	public String goAddUser(Model model, HttpServletRequest request, UserDTO userDTO) {
+		
+		List codeList = mainService.getCodeList();
+		
+		model.addAttribute("codeList", codeList);
+		
+		return "addUser";
+	}
+	
 	@ResponseBody
 	@RequestMapping("/addUser")
 	public int addUser(HttpServletRequest request, UserDTO userDTO) throws Exception {

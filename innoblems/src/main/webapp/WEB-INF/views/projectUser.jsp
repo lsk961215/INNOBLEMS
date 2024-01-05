@@ -22,35 +22,35 @@
 		setSkills()
 		
 		$("#search").click(function(){
-			getUserProjectList(1)
+			getProjectUserList(1)
 		})
 		
 		$("#checkAll").change(function(){
 			if($(this).is(":checked") == true){
-				$(".prjSeq").each(function(){
+				$(".usrSeq").each(function(){
 					$(this).prop('checked',true)
 				})
 			} else {
-				$(".prjSeq").each(function(){
+				$(".usrSeq").each(function(){
 					$(this).prop('checked',false)
 				})
 			}
 		})
 	})
 	
-	function getUserProjectList(pageNum){
-		var usrSeq = $("#usrSeq").val()
+	function getProjectUserList(pageNum){
+		var prjSeq = $("#prjSeq").val()
 		
-		if(usrSeq == ""){
-			usrSeq = 0
+		if(prjSeq == ""){
+			prjSeq = 0
 		}
 		
-		var param = "usrSeq="+usrSeq
+		var param = "prjSeq="+prjSeq
 		
 		param += "&pageNum="+pageNum
 		
 		$.ajax({
-	        url: "getUserProjectList", 
+	        url: "getProjectUserList", 
 	        type:"post",
 	        data: param,
 	        success: function(data) {
@@ -79,19 +79,23 @@
 		        $(".resultPage").empty()
 		        $(".resultButton").empty()
 		        
-		        if(data.userProjectList.length >= 1){
-		        	$.each(data.userProjectList, function(i){
-		        		var customer
+		        if(data.projectUserList.length >= 1){
+		        	$.each(data.projectUserList, function(i){
+		        		var rank
+		        		var grade
 		        		var role
 		        		var skills = ""
 		        		
-		        		var skillArr = data.userProjectList[i].skills.split(",")
+		        		var skillArr = data.projectUserList[i].skills.split(",")
 		        		
 		        		for(var j = 0; j<codeList.length; j++){
-		        			if(codeList[j].indexOf("mstCD=CU01") != -1 && codeList[j].indexOf("dtCD=" + data.userProjectList[i].cusCD + ",") != -1){
-		        				customer = codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7)
+		        			if(codeList[j].indexOf("mstCD=RA01") != -1 && codeList[j].indexOf("dtCD=" + data.projectUserList[i].raCD + ",") != -1){
+		        				rank = codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7)
 		        			}
-		        			if(codeList[j].indexOf("mstCD=RL01") != -1 && codeList[j].indexOf("dtCD=" + data.userProjectList[i].rlCD + ",") != -1){
+		        			if(codeList[j].indexOf("mstCD=GR01") != -1 && codeList[j].indexOf("dtCD=" + data.projectUserList[i].grCD + ",") != -1){
+		        				grade = codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7)
+		        			}
+		        			if(codeList[j].indexOf("mstCD=RL01") != -1 && codeList[j].indexOf("dtCD=" + data.projectUserList[i].rlCD + ",") != -1){
 		        				role = codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7)
 		        			}
 		        			
@@ -106,56 +110,52 @@
 		        		}
 		        		
 	                	str += "<tr>"
-	                	str += "<td class='checkRow'><input type='checkbox' class='prjSeq' value=" + data.userProjectList[i].prjSeq + " onclick='checkOne()'></td>"
-	               		str += "<td class='numberRow'><a href='getProjectDetail?prjSeq=" + data.userProjectList[i].prjSeq +"'>" + data.userProjectList[i].prjSeq + "</a></td>"
-	               		str += "<td class='nameRow'>" + data.userProjectList[i].prjNm + "</td>"
-	               		str += "<td class='customerRow'>" + customer + "</td>"
+	                	str += "<td class='checkRow'><input type='checkbox' class='usrSeq' value=" + data.projectUserList[i].usrSeq + " onclick='checkOne()'></td>"
+	               		str += "<td class='numberRow'><a href='getUserDetail?usrSeq=" + data.projectUserList[i].usrSeq +"'>" + data.projectUserList[i].usrSeq + "</a></td>"
+	               		str += "<td class='nameRow'>" + data.projectUserList[i].usrNm + "</td>"
+	               		str += "<td class='rankRow'>" + rank + "</td>"
+	               		str += "<td class='gradeRow'>" + grade + "</td>"
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
-	               		str += "<td class='prjSTDTRow'>" + data.userProjectList[i].prjSTDT + "</td>"
-	               		str += "<td class='prjEDDTRow'>" + data.userProjectList[i].prjEDDT + "</td>"
-	               		str += "<td class='usrPrjINDTRow'><input type='date' id='usrPrjINDT' value='" + data.userProjectList[i].usrPrjINDT + "'></td>"
-	               		str += "<td class='usrPrjOTDTRow'><input type='date' id='usrPrjOTDT' value='" + data.userProjectList[i].usrPrjOTDT + "'></td>"
+	               		str += "<td class='prjUsrINDTRow'><input type='date' id='prjUsrINDT' value='" + data.projectUserList[i].usrPrjINDT + "'></td>"
+	               		str += "<td class='prjUsrOTDTRow'><input type='date' id='prjUsrOTDT' value='" + data.projectUserList[i].usrPrjOTDT + "'></td>"
 	               		str += "<td class='roleRow'>"
 	               		str += "<select name='rlCD' id='rlCD'>"
 	               		str += "<option value='0'>선택</option>"
-	               		
-	               			console.log(codeList[0])
-	               		
-	               		for(var j = 0; j<codeList.length; j++){
-	               			if(codeList[j].indexOf("mstCD=RL01") != -1){
-	               				if(codeList[j].indexOf("dtCD=" + data.userProjectList[i].rlCD + ",") != -1){
-	    		        			str += "<option value='" + codeList[j].substring(codeList[j].indexOf("dtCD=")+5, codeList[j].indexOf(", dtCDNM"))+"' selected>" + codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7) + "</option>"
-	    		        		} else {
-	    		        			str += "<option value='" + codeList[j].substring(codeList[j].indexOf("dtCD=")+5, codeList[j].indexOf(", dtCDNM"))+"' >" + codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7) + "</option>"
-	    		        		}
-			        			role = codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7)
-			        		}
-	               		}
+		               		for(var j = 0; j<codeList.length; j++){
+		               			if(codeList[j].indexOf("mstCD=RL01") != -1){
+		               				if(codeList[j].indexOf("dtCD=" + data.projectUserList[i].rlCD + ",") != -1){
+		    		        			str += "<option value='" + codeList[j].substring(codeList[j].indexOf("dtCD=")+5, codeList[j].indexOf(", dtCDNM"))+"' selected>" + codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7) + "</option>"
+		    		        		} else {
+		    		        			str += "<option value='" + codeList[j].substring(codeList[j].indexOf("dtCD=")+5, codeList[j].indexOf(", dtCDNM"))+"' >" + codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7) + "</option>"
+		    		        		}
+				        			role = codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7)
+				        		}
+		               		}
 	               		str += "</select>"
 	               		str += "</td>"
-	               		str += "<td class='editRow'><button id='edit' onclick='edit(this)' name='" + data.userProjectList[i].prjSeq + "'>상세/수정</button></td>"
+	               		str += "<td class='editRow'><button id='edit' onclick='edit(this)' name='" + data.projectUserList[i].usrSeq + "'>상세/수정</button></td>"
 	              		str += "</tr>"
 	                })
 	                
 		        	if(data.beginPaging != 1){
-		        		page += "<a href=getUserProjectList?pageNum=" + (data.beginPaging - 1) + ">이전</a>"
+		        		page += "<a href=getProjectUserList?pageNum=" + (data.beginPaging - 1) + ">이전</a>"
 		        	}
 		        	
 		        	for(var i = data.beginPaging; i <= data.endPaging; i++){
 		        		if(i == data.pageNum){
 		        			page += "<button style='font-size:2em' id='currentPage' class='page' value=" + i +">" + i + "</button>"
 		        		} else {
-		        			page += "<button class='page' value=" + i +" onclick='getUserProjectList(" + i + ")'>" + i + "</button>"
+		        			page += "<button class='page' value=" + i +" onclick='getProjectUserList(" + i + ")'>" + i + "</button>"
 		        		}
 		        	}
 		        	
 		        	if(data.endPaging != data.totalPaging){
-		        		page += "<a href=getUserProjectList?pageNum=" + (data.endPaging + 1) + ">다음</a>"
+		        		page += "<a href=getProjectUserList?pageNum=" + (data.endPaging + 1) + ">다음</a>"
 		        	}
 		        	
 		        } else {
 		        	str += "<tr>"
-		        	str += '<td colspan="11"><h3>검색결과가 없습니다.</h3></td>'
+		        	str += '<td colspan="10"><h3>검색결과가 없습니다.</h3></td>'
 		        	str += "</tr>"
 		        }
 	        	
@@ -301,28 +301,28 @@
 	}
 	
 	function edit(e){
-    	var url = "getProjectDetail"
-    	var prjSeq = e.name
-    	
-        window.open("", "openForm", "width=1000px height=480px");
-       
-        let $form = $('<form></form>'); // 폼 태그 생성
-        $form.attr('action', url); 		// 폼 속성 설정
-        $form.attr("target", "openForm");
-        $form.attr('method', 'post');
-        
-    	$form.append('<input type="hidden" name="prjSeq" value="' + prjSeq + '"/>')
-        
-        $form.appendTo('body'); // body태그에 추가
-        $form.submit(); // 전송
+		var url = "getUserDetail"
+	    var usrSeq = e.name
+	    	
+	    window.open("", "openForm", "width=1000px height=620px");
+	       
+	    let $form = $('<form></form>'); // 폼 태그 생성
+	    $form.attr('action', url); 		// 폼 속성 설정
+	    $form.attr("target", "openForm");
+	    $form.attr('method', 'post');
+	        
+	  	$form.append('<input type="hidden" name="usrSeq" value="' + usrSeq + '"/>')
+	        
+	    $form.appendTo('body'); // body태그에 추가
+	    $form.submit(); // 전송
 	}
 	
 	function add(){
 		
-		var usrSeq = $("#usrSeq").val()
-		var skills = '${userDTO.skills}'
+		var prjSeq = $("#prjSeq").val()
+		var skills = '${projectDTO.skills}'
 		
-    	var url = "goAddUserProject";
+    	var url = "goAddProjectUser";
     	
         window.open("", "openForm", "width=1000px height=600px");
         
@@ -331,7 +331,7 @@
         $form.attr("target", "openForm");
         $form.attr('method', 'post');
         
-       	$form.append('<input type="hidden" name="usrSeq" value="' + usrSeq + '"/>')
+       	$form.append('<input type="hidden" name="prjSeq" value="' + prjSeq + '"/>')
        	$form.append('<input type="hidden" name="skills" value="' + skills + '"/>')
         
         $form.appendTo('body'); // body태그에 추가
@@ -400,7 +400,7 @@
 	}
 	
 	function setSkills() {
-		var skills = '${userDTO.skills}'
+		var skills = '${projectDTO.skills}'
 		
 		var skillArr = skills.split(",")
 		
@@ -742,7 +742,7 @@ table .prjSTDTRow, table .prjEDDTRow {
 	text-align: center;
 }
 
-table .usrPrjINDTHead, table .usrPrjOTDTHead {
+table .prjUsrINDTHead, table .prjUsrOTDTHead {
 	min-width: 100px;
 	text-align: center;
 }
@@ -777,12 +777,21 @@ table .numberHead {
 	text-align: center;
 }
 
-table .customerRow {
+table .rankRow {
 	min-width: 120px;
 	text-align: left;
 }
 
-table .customerHead {
+table .rankHead {
+	min-width: 120px;
+	text-align: center;
+}
+table .gradeRow {
+	min-width: 120px;
+	text-align: left;
+}
+
+table .gradeHead {
 	min-width: 120px;
 	text-align: center;
 }
@@ -819,45 +828,33 @@ table .roleHead {
 <jsp:include page="header.jsp"/>
 <main>
 	<div class="wrap">
-		<div class="pageTitle"><h1>개인 프로젝트 관리</h1></div>
+		<div class="pageTitle"><h1>프로젝트 인원 관리</h1></div>
 		<div class="middle">
 			<jsp:include page="aside.jsp"/>
 			<section>
 				<div class="filter"> 
-					<div class="filterTitle"><h1>사원 정보</h1></div>
+					<div class="filterTitle"><h1>프로젝트 정보</h1></div>
 					<div class="filterDetail">
 						<div class="filterSection_1">
-							<small>사원번호</small>
-							<input name="usrSeq" id="usrSeq" type="text" value="${userDTO.usrSeq}" readonly>
+							<small>프로젝트 번호</small>
+							<input name="prjSeq" id="prjSeq" type="text" value="${projectDTO.prjSeq}" readonly>
 							<small>사원명</small>
-							<input name="usrNm" id="usrNm" type="text" value="${userDTO.usrNm}" readonly>
-							<small>직급</small>
-							<input type="text" name="raCD" id="raCD" 
+							<input name="prjNm" id="prjNm" type="text" value="${projectDTO.prjNm}" readonly>
+							<small>고객사명</small>
+							<input type="text" name="cusCD" id="cusCD" 
 								<c:forEach var="item" items="${codeList}" varStatus="i">
-									<c:if test = "${item.mstCD == 'RA01' && item.dtCD == userDTO.raCD}">
+									<c:if test = "${item.mstCD == 'CU01' && item.dtCD == projectDTO.cusCD}">
 										value="${item.dtCDNM}"
 									</c:if>
 								</c:forEach>
 							readonly>
-							<small>기술등급</small>
-							<input type="text" name="grCD" id="grCD"
-								<c:forEach var="item" items="${codeList}" varStatus="i">
-									<c:if test = "${item.mstCD == 'GR01' && item.dtCD == userDTO.grCD}">
-										value="${item.dtCDNM}"
-									</c:if>
-								</c:forEach>
-							readonly>
-							<small>재직상태</small>
-							<input type="text" name="stCD" id="stCD"
-								<c:forEach var="item" items="${codeList}" varStatus="i">
-									<c:if test = "${item.mstCD == 'ST01' && item.dtCD == userDTO.stCD}">
-										value="${item.dtCDNM}"
-									</c:if>
-								</c:forEach>
-							readonly>
+							<small>시작일</small>
+							<input type="date" name="prjSTDT" id="prjSTDT" value="${projectDTO.prjSTDT}" readonly>
+							<small>종료일</small>
+							<input type="date" name="prjEDDT" id="prjEDDT" value="${projectDTO.prjEDDT}" readonly>
 						</div>
 						<div class="filterSection_3">
-							<small class="skillText">보유기술</small> 
+							<small class="skillText">필요기술</small> 
 							<c:forEach var="item" items="${codeList}" varStatus="i">
 								<c:if test = "${item.mstCD == 'SK01'}">
 									<input type="checkbox" class="skill" id="${item.dtCD}" value="${item.dtCD}" onClick="return false;">
@@ -871,27 +868,26 @@ table .roleHead {
 					</div>
 				</div>
 				<div class="result">
-					<div class="resultTitle"><h1>소속 프로젝트</h1></div>
+					<div class="resultTitle"><h1>참여 인원</h1></div>
 					<div class="resultDetail">
 						<table>
 							<thead>
 								<tr>
 									<th class="checkHead"><input type="checkbox" id="checkAll"></th>
-									<th class="numberHead">프로젝트번호</th>
-									<th class="nameHead">프로젝트명</th>
-									<th class="customerHead">고객사명</th>
-									<th class="skillsHead">필요기술</th>
-									<th class="prjSTDTHead">시작일</th>
-									<th class="prjEDDTHead">종료일</th>
-									<th class="usrPrjINDTHead">투입일</th>
-									<th class="usrPrjOTDTHead">철수일</th>
+									<th class="numberHead">사원번호</th>
+									<th class="nameHead">사원명</th>
+									<th class="rankHead">직급</th>
+									<th class="gradeHead">기술등급</th>
+									<th class="skillsHead">보유기술</th>
+									<th class="prjUsrINDTHead">투입일</th>
+									<th class="prjUsrOTDTHead">철수일</th>
 									<th class="roleHead">역할</th>
 									<th class="editHead">상세/수정</th>
 								</tr>
 							</thead>
 							<tbody id="tbody">
 								<tr>
-									<td colspan="11"><h3>조회가 필요합니다.</h3></td>
+									<td colspan="10"><h3>조회가 필요합니다.</h3></td>
 								</tr>
 							</tbody>
 						</table>
