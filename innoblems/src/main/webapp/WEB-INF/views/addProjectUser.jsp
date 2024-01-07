@@ -31,38 +31,38 @@
 	}
 	
 	function add(){
-		var usrSeq = '${userProjectDTO.usrSeq}'
+		var prjSeq = '${userProjectDTO.prjSeq}'
 		
-		var prjSeqList = new Array()
+		var usrSeqList = new Array()
 		
 		
-		if($(".prjSeq:checked").length > 0){
-			$(".prjSeq").each(function(){
+		if($(".usrSeq:checked").length > 0){
+			$(".usrSeq").each(function(){
 				if($(this).is(":checked")==true){
-					prjSeqList.push($(this).val())
+					usrSeqList.push($(this).val())
 				}
 			})
 				
-			var param = "&prjSeqList="
+			var param = "&usrSeqList="
 				
-			for(var i = 0; i<prjSeqList.length; i++){
+			for(var i = 0; i<usrSeqList.length; i++){
 				if(i != 0){
 					param += ","
 				}
-				param += prjSeqList[i]
+				param += usrSeqList[i]
 			}
 			
-			param += "&usrSeq=" + usrSeq
+			param += "&prjSeq=" + prjSeq
 			
 			$.ajax({
-		        url: "addUserProject", 
+		        url: "addProjectUser", 
 		        type:"post",
 		        data: param,
 		        success: function(data) {
 		        	if(data == 0){
 			        	alert("추가 되었습니다.")
-			        	getAddUserProjectList(1)
-			        	opener.getUserProjectList(1)
+			        	getAddProjectUserList(1)
+			        	opener.getProjectUserList(1)
 		        	} else {
 		        		alert("오류가 발생하였습니다.")
 		        	}
@@ -255,13 +255,13 @@
 	function checkOne(){
 		var count = 0
 		
-		$(".prjSeq").each(function(){
+		$(".usrSeq").each(function(){
 			 if( $(this).is(":checked") == true ){
 				 count += 1
 			 }
 		})
 		
-		if(count == $(".prjSeq").length){
+		if(count == $(".usrSeq").length){
 			$("#checkAll").prop('checked',true)
 		} else {
 			$("#checkAll").prop('checked',false)

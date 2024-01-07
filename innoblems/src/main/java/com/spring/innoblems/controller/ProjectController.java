@@ -327,4 +327,102 @@ public class ProjectController {
 		
 		return addProjectUserMap;
 	}
+	
+	@ResponseBody
+	@RequestMapping("/delProjectUser")
+	public int delProjectUser(HttpServletRequest request, Model model, UserProjectDTO userProjectDTO) {
+		Map deleteMap = new HashMap();
+		
+		String tmp_usrSeqList = request.getParameter("usrSeqList");
+			
+		String[] usrSeqArray = tmp_usrSeqList.split(",");
+		List usrSeqList = new ArrayList();
+			
+		for (int i = 0; i<usrSeqArray.length; i++) {
+			usrSeqList.add(usrSeqArray[i]);
+		}
+		
+		deleteMap.put("userProjectDTO", userProjectDTO);
+		deleteMap.put("usrSeqList", usrSeqList);
+		
+		
+		try {
+			projectService.delProjectUser(deleteMap);
+			return 0;
+		} catch(Exception e){
+			e.printStackTrace();
+			System.out.println("오류가 발생했습니다.");
+			return 1;
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping("/addProjectUser")
+	public int addProjectUser(HttpServletRequest request, Model model, UserProjectDTO userProjectDTO) {
+		Map insertMap = new HashMap();
+		
+		String tmp_usrSeqList = request.getParameter("usrSeqList");
+			
+		String[] usrSeqArray = tmp_usrSeqList.split(",");
+		List usrSeqList = new ArrayList();
+			
+		for (int i = 0; i<usrSeqArray.length; i++) {
+			usrSeqList.add(usrSeqArray[i]);
+		}
+		
+		insertMap.put("userProjectDTO", userProjectDTO);
+		insertMap.put("usrSeqList", usrSeqList);
+		
+		try {
+			projectService.addProjectUser(insertMap);
+			return 0;
+		} catch(Exception e){
+			e.printStackTrace();
+			System.out.println("오류가 발생했습니다.");
+			return 1;
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping("/saveProjectUser")
+	public int saveProjectUser(HttpServletRequest request, Model model, UserProjectDTO userProjectDTO) {
+		String tmp_usrSeqList = request.getParameter("usrSeqList");
+		String tmp_usrPrjINDTList = request.getParameter("usrPrjINDTList");
+		String tmp_usrPrjOTDTList = request.getParameter("usrPrjOTDTList");
+		String tmp_rlCDList = request.getParameter("rlCDList");
+			
+		String[] usrSeqArray = tmp_usrSeqList.split(",");
+		String[] usrPrjINDTArray = tmp_usrPrjINDTList.split(",");
+		String[] usrPrjOTDTArray = tmp_usrPrjOTDTList.split(",");
+		String[] rlCDArray = tmp_rlCDList.split(",");
+			
+		List updateList= new ArrayList();
+		
+		for (int i = 0; i<usrSeqArray.length; i++) {
+			UserProjectDTO tmp_userProjectDTO = new UserProjectDTO();
+			
+			int prjSeq = userProjectDTO.getPrjSeq();
+			int usrSeq = Integer.parseInt(usrSeqArray[i]);
+			String usrPrjINDT = usrPrjINDTArray[i];
+			String usrPrjOTDT = usrPrjOTDTArray[i];
+			String rlCD = rlCDArray[i];
+			
+			tmp_userProjectDTO.setUsrSeq(usrSeq);
+			tmp_userProjectDTO.setPrjSeq(prjSeq);
+			tmp_userProjectDTO.setUsrPrjINDT(usrPrjINDT);
+			tmp_userProjectDTO.setUsrPrjOTDT(usrPrjOTDT);
+			tmp_userProjectDTO.setRlCD(rlCD);
+			
+			updateList.add(tmp_userProjectDTO);
+		}
+		
+		try {
+			projectService.saveProjectUser(updateList);
+			return 0;
+		} catch(Exception e){
+			e.printStackTrace();
+			System.out.println("오류가 발생했습니다.");
+			return 1;
+		}
+	}
 }

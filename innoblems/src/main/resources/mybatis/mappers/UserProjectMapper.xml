@@ -261,9 +261,15 @@
 		UPDATE
 			USER_PROJECT_TABLE
 		<set>
+			<if test="usrPrjINDT != 'none'">
 				USR_PRJ_IN_DT = #{usrPrjINDT},
+			</if>
+			<if test="usrPrjINDT != 'none'">
 				USR_PRJ_OT_DT = #{usrPrjOTDT},
+			</if>
+			<if test="rlCD != 0">
 				RL_CD = #{rlCD},
+			</if>
 		</set>
 		WHERE
 			USR_SEQ = #{usrSeq}

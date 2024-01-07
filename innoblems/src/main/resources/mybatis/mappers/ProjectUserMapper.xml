@@ -94,7 +94,7 @@
 		    (
 		        SELECT *
 		        FROM USER_PROJECT_TABLE
-		        WHERE USR_SEQ = #{userProjectDTO.usrSeq}
+		        WHERE PRJ_SEQ = #{userProjectDTO.prjSeq}
 		    ) a
 		    RIGHT OUTER JOIN
 		    (
@@ -115,7 +115,7 @@
 		        (
 		            SELECT *
 		            FROM USER_SKILL_TABLE
-		        	WHERE SK_CD IN (1)
+		        	WHERE SK_CD IN <foreach item="item" collection="skills" open="(" separator="," close=")"> #{item} </foreach>
 		    	)
 		    	GROUP BY USR_SEQ
 		    ) e
@@ -139,8 +139,8 @@
 		<if test="userProjectDTO.usrNm != '' and userProjectDTO.usrNm != null">
 			AND c.USR_NM like '%' || #{userProjectDTO.usrNm} || '%'
 		</if>
-		<if test="userProjectDTO.raCD != 0">
-			AND c.RA_CD = #{userProjectDTO.raCD}
+		<if test="userProjectDTO.grCD != 0">
+			AND c.GR_CD = #{userProjectDTO.grCD}
 		</if>
 		<if test="userProjectDTO.stCD != 0">
 			AND c.ST_CD = #{userProjectDTO.stCD}
@@ -157,7 +157,7 @@
 			    (
 			        SELECT *
 			        FROM USER_PROJECT_TABLE
-			        WHERE USR_SEQ = #{userProjectDTO.usrSeq}
+			        WHERE PRJ_SEQ = #{userProjectDTO.prjSeq}
 			    ) a
 			    RIGHT OUTER JOIN
 			    (
@@ -178,7 +178,7 @@
 			        (
 			            SELECT *
 			            FROM USER_SKILL_TABLE
-			        	WHERE SK_CD IN (1)
+			        	WHERE SK_CD IN <foreach item="item" collection="skills" open="(" separator="," close=")"> #{item} </foreach>
 			    	)
 			    	GROUP BY USR_SEQ
 			    ) e
@@ -202,8 +202,8 @@
 			<if test="userProjectDTO.usrNm != '' and userProjectDTO.usrNm != null">
 				AND c.USR_NM like '%' || #{userProjectDTO.usrNm} || '%'
 			</if>
-			<if test="userProjectDTO.raCD != 0">
-				AND c.RA_CD = #{userProjectDTO.raCD}
+			<if test="userProjectDTO.grCD != 0">
+				AND c.GR_CD = #{userProjectDTO.grCD}
 			</if>
 			<if test="userProjectDTO.stCD != 0">
 				AND c.ST_CD = #{userProjectDTO.stCD}
@@ -211,4 +211,47 @@
 		)
 	</select>
 
+	<delete id="delProjectUser" parameterType="java.util.HashMap">
+		DELETE FROM
+		    USER_PROJECT_TABLE
+		WHERE
+			PRJ_SEQ = #{userProjectDTO.prjSeq}
+		AND
+		    USR_SEQ IN
+		<foreach item="item" collection="usrSeqList" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<insert id="addProjectUser" parameterType="com.spring.innoblems.dto.UserProjectDTO">
+		INSERT INTO
+			USER_PROJECT_TABLE (
+				USR_SEQ,
+				PRJ_SEQ
+			)
+		VALUES (
+			#{usrSeq},
+			#{prjSeq}
+		)
+	</insert>
+	
+	<update id="saveProjectUser" parameterType="com.spring.innoblems.dto.UserProjectDTO">
+		UPDATE
+			USER_PROJECT_TABLE
+		<set>
+			<if test="usrPrjINDT != 'none'">
+				USR_PRJ_IN_DT = #{usrPrjINDT},
+			</if>
+			<if test="usrPrjINDT != 'none'">
+				USR_PRJ_OT_DT = #{usrPrjOTDT},
+			</if>
+			<if test="rlCD != 0">
+				RL_CD = #{rlCD},
+			</if>
+		</set>
+		WHERE
+			USR_SEQ = #{usrSeq}
+		AND
+			PRJ_SEQ = #{prjSeq}
+	</update>
 </mapper>

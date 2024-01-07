@@ -16,4 +16,7 @@ public interface ProjectService {
 	void delProject(List list);
 	Map getProjectUserList(Map selectMap);
 	Map getAddProjectUserList(Map selectMap);
+	void delProjectUser(Map deleteMap);
+	void addProjectUser(Map insertMap);
+	void saveProjectUser(List updateList);
 }

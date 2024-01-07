@@ -116,8 +116,8 @@
 	               		str += "<td class='rankRow'>" + rank + "</td>"
 	               		str += "<td class='gradeRow'>" + grade + "</td>"
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
-	               		str += "<td class='prjUsrINDTRow'><input type='date' id='prjUsrINDT' value='" + data.projectUserList[i].usrPrjINDT + "'></td>"
-	               		str += "<td class='prjUsrOTDTRow'><input type='date' id='prjUsrOTDT' value='" + data.projectUserList[i].usrPrjOTDT + "'></td>"
+	               		str += "<td class='usrPrjINDTRow'><input type='date' id='usrPrjINDT' value='" + data.projectUserList[i].usrPrjINDT + "'></td>"
+	               		str += "<td class='usrPrjOTDTRow'><input type='date' id='usrPrjOTDT' value='" + data.projectUserList[i].usrPrjOTDT + "'></td>"
 	               		str += "<td class='roleRow'>"
 	               		str += "<select name='rlCD' id='rlCD'>"
 	               		str += "<option value='0'>선택</option>"
@@ -225,15 +225,15 @@
 	}
 	
 	function save(){
-		var usrSeq = $("#usrSeq").val()
-		var prjSeqs = ""
+		var prjSeq = $("#prjSeq").val()
+		var usrSeqs = ""
 		var usrPrjINDTs = ""
 		var usrPrjOTDTs = ""
 		var rlCDs = ""
 		var index = 0
 		
-		if($(".prjSeq:checked").length > 0){
-			$(".prjSeq").each(function(){
+		if($(".usrSeq:checked").length > 0){
+			$(".usrSeq").each(function(){
 				if($(this).is(":checked")==true){
 					var usrPrjINDT = $(this).parent().parent().find("#usrPrjINDT").val()
 					var usrPrjOTDT = $(this).parent().parent().find("#usrPrjOTDT").val()
@@ -248,13 +248,13 @@
 					}
 					
 					if(index != 0){
-						prjSeqs += ","
+						usrSeqs += ","
 						usrPrjINDTs += ","
 						usrPrjOTDTs += ","
 						rlCDs += ","
 					}
 					
-					prjSeqs += $(this).val()
+					usrSeqs += $(this).val()
 					
 					usrPrjINDTs += usrPrjINDT
 					
@@ -266,7 +266,7 @@
 				}
 			})
 				
-			var param = "&prjSeqList=" + prjSeqs
+			var param = "&usrSeqList=" + usrSeqs
 			
 			param += "&usrPrjINDTList=" + usrPrjINDTs
 			
@@ -274,18 +274,18 @@
 			
 			param += "&rlCDList=" + rlCDs
 			
-			param += "&usrSeq=" + usrSeq
+			param += "&prjSeq=" + prjSeq
 			
 			console.log("param : " + param)
 			
 			$.ajax({
-		        url: "saveUserProject", 
+		        url: "saveProjectUser", 
 		        type:"post",
 		        data: param,
 		        success: function(data) {
 		        	if(data == 0){
 		        		alert("저장 되었습니다.")
-		        		getUserProjectList(1)
+		        		getProjectUserList(1)
 		        	} else {
 		        		alert("저장할 수 없습니다.")
 		        	}
@@ -339,38 +339,38 @@
     }
 	
 	function del(){
-		var usrSeq = $("#usrSeq").val()
+		var prjSeq = $("#prjSeq").val()
 	
-		var prjSeqList = new Array()
+		var usrSeqList = new Array()
 		
-		if($(".prjSeq:checked").length > 0){
-			$(".prjSeq").each(function(){
+		if($(".usrSeq:checked").length > 0){
+			$(".usrSeq").each(function(){
 				if($(this).is(":checked")==true){
-					prjSeqList.push($(this).val())
+					usrSeqList.push($(this).val())
 				}
 			})
 				
-			var param = "&prjSeqList="
+			var param = "&usrSeqList="
 				
-			for(var i = 0; i<prjSeqList.length; i++){
+			for(var i = 0; i<usrSeqList.length; i++){
 				if(i != 0){
 					param += ","
 				}
-				param += prjSeqList[i]
+				param += usrSeqList[i]
 			}
 			
-			param += "&usrSeq=" + usrSeq
+			param += "&prjSeq=" + prjSeq
 			
 			$.ajax({
-		        url: "delUserProject", 
+		        url: "delProjectUser", 
 		        type:"post",
 		        data: param,
 		        success: function(data) {
 		        	if(data == 0){
 		        		alert("삭제 되었습니다.")
-		        		getUserProjectList(1)
+		        		getProjectUserList(1)
 		        	} else {
-		        		alert("사원이 소속된 프로젝트를 삭제할 수 없습니다.")
+		        		alert("프로젝트에 소속된 사원을 삭제할 수 없습니다.")
 		        	}
 		        },
 		        error: function() {
@@ -386,13 +386,13 @@
 	function checkOne(){
 		var count = 0
 		
-		$(".prjSeq").each(function(){
+		$(".usrSeq").each(function(){
 			 if( $(this).is(":checked") == true ){
 				 count += 1
 			 }
 		})
 		
-		if(count == $(".prjSeq").length){
+		if(count == $(".usrSeq").length){
 			$("#checkAll").prop('checked',true)
 		} else {
 			$("#checkAll").prop('checked',false)
@@ -742,7 +742,7 @@ table .prjSTDTRow, table .prjEDDTRow {
 	text-align: center;
 }
 
-table .prjUsrINDTHead, table .prjUsrOTDTHead {
+table .usrPrjINDTHead, table .usrPrjOTDTHead {
 	min-width: 100px;
 	text-align: center;
 }
@@ -879,8 +879,8 @@ table .roleHead {
 									<th class="rankHead">직급</th>
 									<th class="gradeHead">기술등급</th>
 									<th class="skillsHead">보유기술</th>
-									<th class="prjUsrINDTHead">투입일</th>
-									<th class="prjUsrOTDTHead">철수일</th>
+									<th class="usrPrjINDTHead">투입일</th>
+									<th class="usrPrjOTDTHead">철수일</th>
 									<th class="roleHead">역할</th>
 									<th class="editHead">상세/수정</th>
 								</tr>
