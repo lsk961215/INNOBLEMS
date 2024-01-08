@@ -18,4 +18,5 @@ public interface UserService {
 	void addUserProject(Map insertMap);
 	void delUserProject(Map deleteMap);
 	void saveUserProject(List updateList);
+	UserDTO login(UserDTO userDTO);
 }

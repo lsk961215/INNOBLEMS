@@ -23,4 +23,5 @@ public interface UserDAO {
 	void addUserProject(UserProjectDTO userProjectDTO);
 	void delUserProject(Map deleteMap);
 	void saveUserProject(UserProjectDTO userProjectDTO);
+	UserDTO login(UserDTO userDTO);
 }

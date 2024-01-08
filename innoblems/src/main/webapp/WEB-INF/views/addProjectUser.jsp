@@ -174,9 +174,21 @@
 	                	str += "<td class='checkRow'><input type='checkbox' class='usrSeq' value=" + data.projectUserList[i].usrSeq + " onclick='checkOne()'></td>"
 	               		str += "<td class='numberRow'><a href='getUserDetail?usrSeq=" + data.projectUserList[i].usrSeq +"'>" + data.projectUserList[i].usrSeq + "</a></td>"
 	               		str += "<td class='nameRow'>" + data.projectUserList[i].usrNm + "</td>"
-	               		str += "<td class='rankRow'>" + rank + "</td>"
-	               		str += "<td class='gradeRow'>" + grade + "</td>"
-	               		str += "<td class='statusRow'>" + status + "</td>"
+	               		if(rank == undefined){
+	               			str += "<td class='rankRow'>-</td>"
+	               		} else {
+	               			str += "<td class='rankRow'>" + rank + "</td>"
+	               		}
+	               		if(grade == undefined){
+	               			str += "<td class='gradeRow'>-</td>"
+	               		} else {
+	               			str += "<td class='gradeRow'>" + grade + "</td>"
+	               		}
+	               		if(status == undefined){
+	               			str += "<td class='statusRow'>-</td>"
+	               		} else {
+	               			str += "<td class='statusRow'>" + status + "</td>"
+	               		}
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
 	              		str += "</tr>"
 	                })

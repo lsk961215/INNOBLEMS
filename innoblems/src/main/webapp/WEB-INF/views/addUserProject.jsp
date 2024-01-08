@@ -12,21 +12,56 @@
   crossorigin="anonymous"></script>
 <script>
 	$(function(){
-		
 		$("#minSTDT").change(function(){
-			$("#maxSTDT").attr("min", $(this).val())
+			if($("#maxSTDT").val() == ""){
+				
+			} else {
+				if($(this).val() <= $("#maxSTDT").val()){
+					
+				} else {
+					alert("날짜값이 올바르지 않습니다.")
+					$(this).val("")
+				}
+			}
 		})
 		
 		$("#maxSTDT").change(function(){
-			$("#minSTDT").attr("max", $(this).val())
+			if($("#minSTDT").val() == ""){
+				
+			} else {
+				if($(this).val() >= $("#minSTDT").val()){
+					
+				} else {
+					alert("날짜값이 올바르지 않습니다.")
+					$(this).val("")
+				}
+			}
 		})
 		
 		$("#minEDDT").change(function(){
-			$("#maxEDDT").attr("min", $(this).val())
+			if($("#maxEDDT").val() == ""){
+				
+			} else {
+				if($(this).val() <= $("#maxEDDT").val()){
+					
+				} else {
+					alert("날짜값이 올바르지 않습니다.")
+					$(this).val("")
+				}
+			}
 		})
 		
 		$("#maxEDDT").change(function(){
-			$("#minEDDT").attr("max", $(this).val())
+			if($("#minEDDT").val() == ""){
+				
+			} else {
+				if($(this).val() >= $("#minEDDT").val()){
+					
+				} else {
+					alert("날짜값이 올바르지 않습니다.")
+					$(this).val("")
+				}
+			}
 		})
 		
 		$("#checkAll").change(function(){
@@ -193,7 +228,11 @@
 	               		str += "<td class='customerRow'>" + customer + "</td>"
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
 	               		str += "<td class='startRow'>" + data.userProjectList[i].prjSTDT + "</td>"
-	               		str += "<td class='endRow'>" + data.userProjectList[i].prjEDDT + "</td>"
+	               		if(data.userProjectList[i].prjEDDT == null){
+	               			str += "<td class='endRow'>-</td>"
+	               		} else {
+	               			str += "<td class='endRow'>" + data.userProjectList[i].prjEDDT + "</td>"
+	               		}
 	              		str += "</tr>"
 	                })
 	                

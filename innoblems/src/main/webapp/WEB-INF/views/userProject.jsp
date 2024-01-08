@@ -107,7 +107,7 @@
 		        		
 	                	str += "<tr>"
 	                	str += "<td class='checkRow'><input type='checkbox' class='prjSeq' value=" + data.userProjectList[i].prjSeq + " onclick='checkOne()'></td>"
-	               		str += "<td class='numberRow'><a href='getProjectDetail?prjSeq=" + data.userProjectList[i].prjSeq +"'>" + data.userProjectList[i].prjSeq + "</a></td>"
+	               		str += "<td class='numberRow'><button id='numberButton' onclick='edit(this)' name='" + data.userProjectList[i].prjSeq + "'>" + data.userProjectList[i].prjSeq + "</button></td>"
 	               		str += "<td class='nameRow'>" + data.userProjectList[i].prjNm + "</td>"
 	               		str += "<td class='customerRow'>" + customer + "</td>"
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
@@ -812,6 +812,14 @@ table .roleHead {
 	
 	margin-top: 30px;
 	justify-content: center;
+}
+
+#usrSeq, #usrNm, #raCD, #grCD, #stCD {
+	background-color: lightgrey;
+}
+
+.skill {
+ 	accent-color: lightgrey;
 }
 </style>
 </head>

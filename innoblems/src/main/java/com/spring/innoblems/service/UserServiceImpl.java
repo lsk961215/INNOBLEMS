@@ -205,4 +205,9 @@ public class UserServiceImpl  implements UserService {
 			userDAO.saveUserProject(userProjectDTO);
 		}
 	}
+
+	@Override
+	public UserDTO login(UserDTO userDTO) {
+		return userDAO.login(userDTO);
+	}
 }

@@ -22,6 +22,25 @@
 		setAddress()
 		setSkills()
 		pwCheck()
+		
+		$("#usrNm").keyup(function (event) {
+	    	regexp = /[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g;
+	        v = $(this).val();
+	        if (regexp.test(v)) {
+	            alert("한글만 입력가능 합니다.");
+	            $(this).val(v.replace(regexp, ''));
+	        }
+	    });
+		
+		$("#usrEm").focusout(function (event) {
+			let check = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+    		
+    		if(!check.test($(this).val()) || !$(this).val() == null){
+    			alert("이메일이 형식에 맞지 않습니다.")
+    		}  else {
+    			
+    		}
+		});
 	})	
 	
 	function setBirth (){
@@ -116,6 +135,18 @@
 		var form = new FormData();
         form.append( "file1", $("#file1")[0].files[0] );
         
+        var pwCheck = false
+        var skillsCheck = false
+        
+        if($("#usrPw").val() != "" && $("#usrPw").val() == $("#usrPwCheck").val()){
+        	pwCheck = true
+        }
+        
+        if($(".skill:checked").length > 0){
+        	skillsCheck = true
+        }
+        
+        if(usrNm != "" && usrId != "" && pwCheck != false && usrINDT != "" && skillsCheck != false && usrPn != ""){
         	if(form.get("file1") == "undefined") {
         		console.log("업로드된 이미지 없음")
         		
@@ -221,7 +252,9 @@
 		           }
 		       	})
         	}
-        
+        } else {
+        	alert("필수항목을 입력해주세요")
+        }
 	}
 </script>
 <script type="text/javascript">
@@ -558,7 +591,7 @@ table td{
 							</tr>
 					    	<tr>
 					    		<td>사원명<a class="star">*</a></td>
-					    		<td><input type="text" id="usrNm" value="${userDTO.usrNm}" maxlength="10"></td>
+					    		<td><input type="text" id="usrNm" value="${userDTO.usrNm}" maxlength="10" style="ime-mode:active;" placeholder="한글 10글자"></td>
 					    		<td>재직상태</td>
 					    		<td>
 					    			<select name="stCD" id="stCD">
@@ -598,7 +631,7 @@ table td{
 					    	</tr> 
 					    	<tr>
 					    		<td>비밀번호<a class="star">*</a></td>
-					    		<td><input type="password" id="usrPw" value="${userDTO.usrPw}" maxlength="16"></td>
+					    		<td><input type="password" id="usrPw" value="${userDTO.usrPw}" maxlength="16" placeholder="특수문자, 영문포함 16글자"></td>
 					    		<td>기술등급</td>
 					    		<td>
 					    			<select name="grCD" id="grCD">
@@ -618,7 +651,7 @@ table td{
 					    	</tr> 
 					    	<tr>
 					    		<td>비밀번호 확인<a class="star">*</a></td>
-					    		<td><input type="password" id="usrPwCheck" value="${userDTO.usrPw}" maxlength="16"></td>
+					    		<td><input type="password" id="usrPwCheck" value="${userDTO.usrPw}" maxlength="16" placeholder="특수문자, 영문포함 16글자"></td>
 					    		<td>개발분야</td>
 					    		<td>
 						    		<select name="dvCD" id="dvCD">
@@ -642,7 +675,7 @@ table td{
 					    			</div>
 					    		</td>
 					    		<td>전화번호<a class="star">*</a></td>
-					    		<td><input type="text" id="usrPn" value="${userDTO.usrPn}" placeholder="숫자만 입력해주세요" maxlength="11"></td>
+					    		<td><input type="text" id="usrPn" value="${userDTO.usrPn}" placeholder="숫자만 입력해주세요" maxlength="11" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"></td>
 					    	</tr> 
 					    	<tr>
 					    		<td>생년월일</td>

@@ -79,79 +79,86 @@
 	</select>
 	
 	<select id="getAddUserProjectList" parameterType="java.util.HashMap" resultMap="userProjectMap">
-		SELECT c.PRJ_SEQ, c.PRJ_NM, c.CUS_CD, c.PRJ_ST_DT, c.PRJ_ED_DT, d.SKILLS
+		SELECT *
 		FROM (
-		    SELECT b.PRJ_SEQ, b.PRJ_NM, b.CUS_CD, b.PRJ_ST_DT, b.PRJ_ED_DT
-		    FROM
-		    (
-		        SELECT *
-		        FROM USER_PROJECT_TABLE
-		        WHERE USR_SEQ = #{userProjectDTO.usrSeq}
-		    ) a
-		    RIGHT OUTER JOIN
-		    (
-		        SELECT *
-		        FROM PROJECT_INFO
-		    ) b
-		    ON a.PRJ_SEQ = b.PRJ_SEQ
-		    WHERE USR_SEQ IS NULL
-		    <if test="userProjectDTO.prjNm != '' and userProjectDTO.prjNm != null">
-				AND b.PRJ_NM like '%' || #{userProjectDTO.prjNm} || '%'
-			</if>
-			<if test="userProjectDTO.prjSeq != 0">
-				AND b.PRJ_SEQ = #{userProjectDTO.prjSeq}
-			</if>
-			<if test="userProjectDTO.cusCD != 0">
-				AND b.CUS_CD = #{userProjectDTO.cusCD}
-			</if>
-			<if test="userProjectDTO.minSTDT != '' and userProjectDTO.maxSTDT != ''">
-				AND b.PRJ_ST_DT BETWEEN #{userProjectDTO.minSTDT} AND #{userProjectDTO.maxSTDT}
-			</if>
-			<if test="userProjectDTO.minSTDT == '' and userProjectDTO.maxSTDT != ''">
-				AND b.PRJ_ST_DT <![CDATA[ <= ]]> #{userProjectDTO.maxSTDT}
-			</if>
-			<if test="userProjectDTO.minSTDT != '' and userProjectDTO.maxSTDT == ''">
-				AND b.PRJ_ST_DT <![CDATA[ >= ]]> #{userProjectDTO.minSTDT}
-			</if>
-			<if test="userProjectDTO.minEDDT != '' and userProjectDTO.maxEDDT != ''">
-				AND b.PRJ_ED_DT BETWEEN #{userProjectDTO.minEDDT} AND #{userProjectDTO.maxEDDT}
-			</if>
-			<if test="userProjectDTO.minEDDT == '' and userProjectDTO.maxEDDT != ''">
-				AND b.PRJ_ED_DT <![CDATA[ <= ]]> #{userProjectDTO.maxEDDT}
-			</if>
-			<if test="userProjectDTO.minEDDT != '' and userProjectDTO.maxEDDT == ''">
-				AND b.PRJ_ED_DT <![CDATA[ >= ]]> #{userProjectDTO.minEDDT}
-			</if>
-		) c
-		RIGHT OUTER JOIN
-		(
-		    SELECT f.PRJ_SEQ, f.SKILLS
-		    FROM 
-		    (
-		        SELECT PRJ_SEQ
-		         , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
-		         FROM
-		        (
-		            SELECT *
-		            FROM PROJECT_SKILL_TABLE
-		        	WHERE SK_CD IN <foreach item="item" collection="skills" open="(" separator="," close=")"> #{item} </foreach>
-		    	)
-		    	GROUP BY PRJ_SEQ
-		    ) e
-		    
-		    LEFT OUTER JOIN
-		        
-		    (
-		        SELECT PRJ_SEQ
-		        , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
-		        FROM
-		            PROJECT_SKILL_TABLE
-		        GROUP BY PRJ_SEQ
-		    ) f
-		    ON e.PRJ_SEQ = f.PRJ_SEQ
-		) d
-		ON c.PRJ_SEQ = d.PRJ_SEQ
-		WHERE c.PRJ_SEQ IS NOT NULL
+			SELECT ROWNUM as rnum, g.*
+			FROM (
+				SELECT c.PRJ_SEQ, c.PRJ_NM, c.CUS_CD, c.PRJ_ST_DT, c.PRJ_ED_DT, d.SKILLS
+				FROM (
+				    SELECT b.PRJ_SEQ, b.PRJ_NM, b.CUS_CD, b.PRJ_ST_DT, b.PRJ_ED_DT
+				    FROM
+				    (
+				        SELECT *
+				        FROM USER_PROJECT_TABLE
+				        WHERE USR_SEQ = #{userProjectDTO.usrSeq}
+				    ) a
+				    RIGHT OUTER JOIN
+				    (
+				        SELECT *
+				        FROM PROJECT_INFO
+				    ) b
+				    ON a.PRJ_SEQ = b.PRJ_SEQ
+				    WHERE USR_SEQ IS NULL
+				    <if test="userProjectDTO.prjNm != '' and userProjectDTO.prjNm != null">
+						AND b.PRJ_NM like '%' || #{userProjectDTO.prjNm} || '%'
+					</if>
+					<if test="userProjectDTO.prjSeq != 0">
+						AND b.PRJ_SEQ = #{userProjectDTO.prjSeq}
+					</if>
+					<if test="userProjectDTO.cusCD != 0">
+						AND b.CUS_CD = #{userProjectDTO.cusCD}
+					</if>
+					<if test="userProjectDTO.minSTDT != '' and userProjectDTO.maxSTDT != ''">
+						AND b.PRJ_ST_DT BETWEEN #{userProjectDTO.minSTDT} AND #{userProjectDTO.maxSTDT}
+					</if>
+					<if test="userProjectDTO.minSTDT == '' and userProjectDTO.maxSTDT != ''">
+						AND b.PRJ_ST_DT <![CDATA[ <= ]]> #{userProjectDTO.maxSTDT}
+					</if>
+					<if test="userProjectDTO.minSTDT != '' and userProjectDTO.maxSTDT == ''">
+						AND b.PRJ_ST_DT <![CDATA[ >= ]]> #{userProjectDTO.minSTDT}
+					</if>
+					<if test="userProjectDTO.minEDDT != '' and userProjectDTO.maxEDDT != ''">
+						AND b.PRJ_ED_DT BETWEEN #{userProjectDTO.minEDDT} AND #{userProjectDTO.maxEDDT}
+					</if>
+					<if test="userProjectDTO.minEDDT == '' and userProjectDTO.maxEDDT != ''">
+						AND b.PRJ_ED_DT <![CDATA[ <= ]]> #{userProjectDTO.maxEDDT}
+					</if>
+					<if test="userProjectDTO.minEDDT != '' and userProjectDTO.maxEDDT == ''">
+						AND b.PRJ_ED_DT <![CDATA[ >= ]]> #{userProjectDTO.minEDDT}
+					</if>
+				) c
+				RIGHT OUTER JOIN
+				(
+				    SELECT f.PRJ_SEQ, f.SKILLS
+				    FROM 
+				    (
+				        SELECT PRJ_SEQ
+				         , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+				         FROM
+				        (
+				            SELECT *
+				            FROM PROJECT_SKILL_TABLE
+				        	WHERE SK_CD IN <foreach item="item" collection="skills" open="(" separator="," close=")"> #{item} </foreach>
+				    	)
+				    	GROUP BY PRJ_SEQ
+				    ) e
+				    
+				    LEFT OUTER JOIN
+				        
+				    (
+				        SELECT PRJ_SEQ
+				        , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+				        FROM
+				            PROJECT_SKILL_TABLE
+				        GROUP BY PRJ_SEQ
+				    ) f
+				    ON e.PRJ_SEQ = f.PRJ_SEQ
+				) d
+				ON c.PRJ_SEQ = d.PRJ_SEQ
+				WHERE c.PRJ_SEQ IS NOT NULL
+			) g
+		)
+		WHERE RNUM <![CDATA[>=]]> #{startNum} and RNUM <![CDATA[<=]]> #{endNum}
 	</select>
 	
 	<select id="getAddUserProjectTotal" parameterType="java.util.HashMap" resultType="int">

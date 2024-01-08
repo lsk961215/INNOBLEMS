@@ -111,7 +111,7 @@
 		        		
 	                	str += "<tr>"
 	                	str += "<td class='checkRow'><input type='checkbox' class='usrSeq' value=" + data.projectUserList[i].usrSeq + " onclick='checkOne()'></td>"
-	               		str += "<td class='numberRow'><a href='getUserDetail?usrSeq=" + data.projectUserList[i].usrSeq +"'>" + data.projectUserList[i].usrSeq + "</a></td>"
+	               		str += "<td class='numberRow'><button id='numberButton' onclick='edit(this)' name='" + data.projectUserList[i].usrSeq + "'>" + data.projectUserList[i].usrSeq + "</button></td>"
 	               		str += "<td class='nameRow'>" + data.projectUserList[i].usrNm + "</td>"
 	               		str += "<td class='rankRow'>" + rank + "</td>"
 	               		str += "<td class='gradeRow'>" + grade + "</td>"
@@ -822,6 +822,14 @@ table .roleHead {
 	margin-top: 30px;
 	justify-content: center;
 }
+
+#prjSeq, #prjNm, #cusCD, #prjSTDT, #prjEDDT {
+	background-color: lightgrey;
+}
+
+.skill {
+ 	accent-color: lightgrey;
+}
 </style>
 </head>
 <body>
@@ -838,7 +846,7 @@ table .roleHead {
 						<div class="filterSection_1">
 							<small>프로젝트 번호</small>
 							<input name="prjSeq" id="prjSeq" type="text" value="${projectDTO.prjSeq}" readonly>
-							<small>사원명</small>
+							<small>프로젝트명</small>
 							<input name="prjNm" id="prjNm" type="text" value="${projectDTO.prjNm}" readonly>
 							<small>고객사명</small>
 							<input type="text" name="cusCD" id="cusCD" 

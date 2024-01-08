@@ -10,8 +10,6 @@
 <link rel="stylesheet" href="resources/css/header.css">
 <!-- aside css -->
 <link rel="stylesheet" href="resources/css/aside.css">
-<!-- header script -->
-<script src="resources/js/header.js"></script>
 <script
   src="https://code.jquery.com/jquery-3.7.1.js"
   integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
@@ -55,21 +53,32 @@
 	       		param += ","
 	       	}
 	    }
+		
+		var skillsCheck = false
+		
+		if($(".skill:checked").length > 0){
+	       skillsCheck = true
+	    }
                
         console.log("param" + param)
-               
-        $.ajax({
-			url: "addProject", 
-			type:"post",
-			data: param,
-			success: function(data) {
-				alert("등록되었습니다.")
-				opener.getProjectList(1)
-			},
-			error: function() {
-			    alert("통신실패")
-			}
-		})
+        
+        if(prjNm != "" && prjSTDT != "" && cusCD != "0" && skillsCheck != false){
+        	 $.ajax({
+     			url: "addProject", 
+     			type:"post",
+     			data: param,
+     			success: function(data) {
+     				alert("등록되었습니다.")
+     				opener.getProjectList(1)
+     			},
+     			error: function() {
+     			    alert("통신실패")
+     			}
+     		})
+        } else {
+        	alert("필수항목을 입력해주세요")
+        }
+       
 	}
 	
 	function cancel() {
@@ -320,7 +329,7 @@ table td{
 					    	<tr>
 					    		<td>비고</td>
 					    		<td>
-						    		<input id="prjNote" type="text">
+						    		<input id="prjNote" type="text" maxlength="333">
 					    		</td>
 					    	</tr>
 						</table>

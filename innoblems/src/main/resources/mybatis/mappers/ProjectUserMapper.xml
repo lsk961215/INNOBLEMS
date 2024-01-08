@@ -87,64 +87,74 @@
 	</select>
 	
 	<select id="getAddProjectUserList" parameterType="java.util.HashMap" resultMap="userProjectMap">
-		SELECT c.USR_SEQ, c.USR_NM, c.RA_CD, c.GR_CD, c.ST_CD, d.SKILLS
+	SELECT *
+	FROM (
+		SELECT ROWNUM as rnum, g.*
 		FROM (
-		    SELECT a.PRJ_SEQ, b.USR_SEQ, b.USR_NM, b.RA_CD, b.GR_CD, b.ST_CD
-		    FROM
-		    (
-		        SELECT *
-		        FROM USER_PROJECT_TABLE
-		        WHERE PRJ_SEQ = #{userProjectDTO.prjSeq}
-		    ) a
-		    RIGHT OUTER JOIN
-		    (
-		        SELECT *
-		        FROM USER_INFO
-		    ) b
-		    ON a.USR_SEQ = b.USR_SEQ
-		    WHERE PRJ_SEQ IS NULL
-		) c
-		RIGHT OUTER JOIN
-		(
-		    SELECT f.USR_SEQ, f.SKILLS
-		    FROM 
-		    (
-		        SELECT USR_SEQ
-		         , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
-		         FROM
-		        (
-		            SELECT *
-		            FROM USER_SKILL_TABLE
-		        	WHERE SK_CD IN <foreach item="item" collection="skills" open="(" separator="," close=")"> #{item} </foreach>
-		    	)
-		    	GROUP BY USR_SEQ
-		    ) e
-		    
-		    LEFT OUTER JOIN
-		        
-		    (
-		        SELECT USR_SEQ
-		        , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
-		        FROM
-		            USER_SKILL_TABLE
-		        GROUP BY USR_SEQ
-		    ) f
-		    ON e.USR_SEQ = f.USR_SEQ
-		) d
-		ON c.USR_SEQ = d.USR_SEQ
-		WHERE c.USR_SEQ IS NOT NULL
-		<if test="userProjectDTO.usrSeq != 0">
-			AND c.USR_SEQ = #{userProjectDTO.usrSeq}
-		</if>
-		<if test="userProjectDTO.usrNm != '' and userProjectDTO.usrNm != null">
-			AND c.USR_NM like '%' || #{userProjectDTO.usrNm} || '%'
-		</if>
-		<if test="userProjectDTO.grCD != 0">
-			AND c.GR_CD = #{userProjectDTO.grCD}
-		</if>
-		<if test="userProjectDTO.stCD != 0">
-			AND c.ST_CD = #{userProjectDTO.stCD}
-		</if>
+			SELECT *
+			FROM (
+				SELECT c.USR_SEQ, c.USR_NM, c.RA_CD, c.GR_CD, c.ST_CD, d.SKILLS
+				FROM (
+				    SELECT a.PRJ_SEQ, b.USR_SEQ, b.USR_NM, b.RA_CD, b.GR_CD, b.ST_CD
+				    FROM
+				    (
+				        SELECT *
+				        FROM USER_PROJECT_TABLE
+				        WHERE PRJ_SEQ = #{userProjectDTO.prjSeq}
+				    ) a
+				    RIGHT OUTER JOIN
+				    (
+				        SELECT *
+				        FROM USER_INFO
+				    ) b
+				    ON a.USR_SEQ = b.USR_SEQ
+				    WHERE PRJ_SEQ IS NULL
+				) c
+				RIGHT OUTER JOIN
+				(
+				    SELECT f.USR_SEQ, f.SKILLS
+				    FROM 
+				    (
+				        SELECT USR_SEQ
+				         , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+				         FROM
+				        (
+				            SELECT *
+				            FROM USER_SKILL_TABLE
+				        	WHERE SK_CD IN <foreach item="item" collection="skills" open="(" separator="," close=")"> #{item} </foreach>
+				    	)
+				    	GROUP BY USR_SEQ
+				    ) e
+				    
+				    LEFT OUTER JOIN
+				        
+				    (
+				        SELECT USR_SEQ
+				        , LISTAGG(SK_CD, ',') WITHIN GROUP(ORDER BY SK_CD) AS SKILLS
+				        FROM
+				            USER_SKILL_TABLE
+				        GROUP BY USR_SEQ
+				    ) f
+				    ON e.USR_SEQ = f.USR_SEQ
+				) d
+				ON c.USR_SEQ = d.USR_SEQ
+				WHERE c.USR_SEQ IS NOT NULL
+				<if test="userProjectDTO.usrSeq != 0">
+					AND c.USR_SEQ = #{userProjectDTO.usrSeq}
+				</if>
+				<if test="userProjectDTO.usrNm != '' and userProjectDTO.usrNm != null">
+					AND c.USR_NM like '%' || #{userProjectDTO.usrNm} || '%'
+				</if>
+				<if test="userProjectDTO.grCD != 0">
+					AND c.GR_CD = #{userProjectDTO.grCD}
+				</if>
+				<if test="userProjectDTO.stCD != 0">
+					AND c.ST_CD = #{userProjectDTO.stCD}
+				</if>
+				) 
+			) g
+		)
+		WHERE RNUM <![CDATA[>=]]> #{startNum} and RNUM <![CDATA[<=]]> #{endNum}
 	</select>
 	
 	<select id="getAddProjectUserTotal" parameterType="java.util.HashMap" resultType="int">

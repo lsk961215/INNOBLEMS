@@ -28,26 +28,28 @@
 		})
 		
 		$("#minDT").change(function(){
-			$("#maxDT").attr("min", $(this).val())
-		})
-		
-		$("#minDT").focusout(function(){
-			if($(this).val() < $("#maxDT").val() || $("#maxDT").val() == 0){
+			if($("#maxDT").val() == ""){
 				
 			} else {
-				alert("날짜값이 올바르지 않습니다.")
+				if($(this).val() <= $("#maxDT").val()){
+					
+				} else {
+					alert("날짜값이 올바르지 않습니다.")
+					$(this).val("")
+				}
 			}
 		})
 		
 		$("#maxDT").change(function(){
-			$("#minDT").attr("max", $(this).val())
-		})
-		
-		$("#maxDT").focusout(function(){
-			if($(this).val() > $("#minDT").val() || $("#minDT").val() == 0){
+			if($("#minDT").val() == ""){
 				
 			} else {
-				alert("날짜값이 올바르지 않습니다.")
+				if($(this).val() >= $("#minDT").val()){
+					
+				} else {
+					alert("날짜값이 올바르지 않습니다.")
+					$(this).val("")
+				}
 			}
 		})
 		
@@ -164,13 +166,25 @@
 		        		
 	                	str += "<tr>"
 	                	str += "<td class='checkRow'><input type='checkbox' class='usrSeq' value=" + data.userList[i].usrSeq + " onclick='checkOne()'></td>"
-	               		str += "<td class='numberRow'><a href='getUserDetail?usrSeq=" + data.userList[i].usrSeq +"'>" + data.userList[i].usrSeq + "</a></td>"
+	               		str += "<td class='numberRow'><button id='numberButton' onclick='edit(this)' name='" + data.userList[i].usrSeq + "'>" + data.userList[i].usrSeq + "</button></td>"
 	               		str += "<td class='inDateRow'>" + data.userList[i].usrINDT + "</td>"
-	               		str += "<td class='rankRow'>" + rank + "</td>"
+	               		if(rank == undefined){
+	               			str += "<td class='rankRow'>-</td>"
+	               		} else {
+	               			str += "<td class='rankRow'>" + rank + "</td>"
+	               		}
 	               		str += "<td class='nameRow'>" + data.userList[i].usrNm + "</td>"
-	               		str += "<td class='gradeRow'>" + grade + "</td>"
+	               		if(grade == undefined){
+	               			str += "<td class='gradeRow'>-</td>"
+	               		} else {
+	               			str += "<td class='gradeRow'>" + grade + "</td>"
+	               		}
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
-	               		str += "<td class='statusRow'>" + status + "</td>"
+	               		if(status == undefined){
+	               			str += "<td class='statusRow'>-</td>"
+	               		} else {
+	               			str += "<td class='statusRow'>" + status + "</td>"
+	               		}
 	               		str += "<td class='editRow'><button id='edit' onclick='edit(this)' name='" + data.userList[i].usrSeq + "'>상세/수정</button></td>"
 	              		str += "<td class='projectRow'><a id='project' href='getUserProject?usrSeq=" + data.userList[i].usrSeq + "'>프로젝트 관리</a></td>"
 	              		str += "</tr>"

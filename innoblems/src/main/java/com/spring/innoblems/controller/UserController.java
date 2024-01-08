@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,34 @@ public class UserController {
 	
 	@Autowired
 	MainService mainService;
+	
+	@ResponseBody
+	@RequestMapping("/login")
+	public UserDTO login(HttpServletRequest request, Model model, UserDTO userDTO) {
+		HttpSession session = request.getSession();
+		
+		try {
+			userDTO = userService.login(userDTO);
+			
+			session.setAttribute("userDTO", userDTO);
+			
+			return userDTO;
+		} catch (NullPointerException e) {
+			
+			userDTO.setMessage("아이디 또는 비밀번호가 일치하지 않습니다.");
+			
+			return userDTO;
+		}
+	}
+	
+	@RequestMapping("/logout")
+	public String logout(HttpServletRequest request, Model model, UserDTO userDTO) {
+		HttpSession session = request.getSession();
+		
+		session.invalidate();
+		
+		return "login";
+	}
 	
 	@ResponseBody
 	@RequestMapping("/getUserList")

@@ -20,6 +20,7 @@ public class UserDTO {
 	private String maxDT;
 	private String skills;
 	private String currentPage;
+	private String message;
 	public int getUsrSeq() {
 		return usrSeq;
 	}
@@ -134,13 +135,27 @@ public class UserDTO {
 	public void setCurrentPage(String currentPage) {
 		this.currentPage = currentPage;
 	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
 	@Override
 	public String toString() {
 		return "UserDTO [usrSeq=" + usrSeq + ", usrId=" + usrId + ", usrPw=" + usrPw + ", usrNm=" + usrNm + ", usrBDT="
 				+ usrBDT + ", gdCD=" + gdCD + ", usrINDT=" + usrINDT + ", stCD=" + stCD + ", raCD=" + raCD + ", grCD="
 				+ grCD + ", dvCD=" + dvCD + ", usrImg=" + usrImg + ", usrPn=" + usrPn + ", usrEm=" + usrEm + ", usrAd="
 				+ usrAd + ", minDT=" + minDT + ", maxDT=" + maxDT + ", skills=" + skills + ", currentPage="
-				+ currentPage + "]";
+				+ currentPage + ", message=" + message + ", getUsrSeq()=" + getUsrSeq() + ", getUsrId()=" + getUsrId()
+				+ ", getUsrPw()=" + getUsrPw() + ", getUsrNm()=" + getUsrNm() + ", getUsrBDT()=" + getUsrBDT()
+				+ ", getGdCD()=" + getGdCD() + ", getUsrINDT()=" + getUsrINDT() + ", getStCD()=" + getStCD()
+				+ ", getRaCD()=" + getRaCD() + ", getGrCD()=" + getGrCD() + ", getDvCD()=" + getDvCD()
+				+ ", getUsrImg()=" + getUsrImg() + ", getUsrPn()=" + getUsrPn() + ", getUsrEm()=" + getUsrEm()
+				+ ", getUsrAd()=" + getUsrAd() + ", getMinDT()=" + getMinDT() + ", getMaxDT()=" + getMaxDT()
+				+ ", getSkills()=" + getSkills() + ", getCurrentPage()=" + getCurrentPage() + ", getMessage()="
+				+ getMessage() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
+				+ super.toString() + "]";
 	}
 	
 	

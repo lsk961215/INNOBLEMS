@@ -38,14 +38,15 @@ public class MainController {
 	
 	@RequestMapping("/")
 	public String goMain(Model model) {
-		List codeList = mainService.getCodeList();
-		
-		model.addAttribute("codeList", codeList);
-		
-		return "userList";
+		return "main";
 	}
 	
-	@RequestMapping("/goUserListPage")
+	@RequestMapping("/goLogin")
+	public String goLogin(Model model) {
+		return "login";
+	}
+	
+	@RequestMapping("goUserListPage")
 	public String goUserListPage(Model model) {
 		List codeList = mainService.getCodeList();
 		

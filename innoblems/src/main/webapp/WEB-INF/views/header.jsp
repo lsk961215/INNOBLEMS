@@ -18,10 +18,8 @@
 							} else {
 							%>
 							<li>${sessionScope.userDTO.usrNm}님 환영합니다.</li>
-							<li class="menu_logout"><a href="doLogout">로그아웃</a></li>
+							<li class="menu_logout"><a href="logout">로그아웃</a></li>
 							<li class="menu_my"><a href="goInfo">내 정보</a></li>
-							<li class="menu_reser"><a href="my-예약내역.html">예약내역</a></li>
-							
 							<%	
 							}
 							%>

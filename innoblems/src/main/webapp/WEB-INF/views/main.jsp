@@ -19,18 +19,19 @@
 <script>
 	$(function(){
 		$("#search").click(function(){
-			if($("#maxSTDT").val() >= $("#minSTDT").val() && $("#maxEDDT").val() >= $("#minEDDT").val()){
-				getProjectList(1)
+			if($("#maxDT").val() >= $("#minDT").val()){
+				getUserList(1)
 			} else {
 				alert("날짜값이 올바르지 않습니다.")
 			}
+			
 		})
 		
-		$("#minSTDT").change(function(){
-			if($("#maxSTDT").val() == ""){
+		$("#minDT").change(function(){
+			if($("#maxDT").val() == ""){
 				
 			} else {
-				if($(this).val() <= $("#maxSTDT").val()){
+				if($(this).val() <= $("#maxDT").val()){
 					
 				} else {
 					alert("날짜값이 올바르지 않습니다.")
@@ -39,37 +40,11 @@
 			}
 		})
 		
-		$("#maxSTDT").change(function(){
-			if($("#minSTDT").val() == ""){
+		$("#maxDT").change(function(){
+			if($("#minDT").val() == ""){
 				
 			} else {
-				if($(this).val() >= $("#minSTDT").val()){
-					
-				} else {
-					alert("날짜값이 올바르지 않습니다.")
-					$(this).val("")
-				}
-			}
-		})
-		
-		$("#minEDDT").change(function(){
-			if($("#maxEDDT").val() == ""){
-				
-			} else {
-				if($(this).val() <= $("#maxEDDT").val()){
-					
-				} else {
-					alert("날짜값이 올바르지 않습니다.")
-					$(this).val("")
-				}
-			}
-		})
-		
-		$("#maxEDDT").change(function(){
-			if($("#minEDDT").val() == ""){
-				
-			} else {
-				if($(this).val() >= $("#minEDDT").val()){
+				if($(this).val() >= $("#minDT").val()){
 					
 				} else {
 					alert("날짜값이 올바르지 않습니다.")
@@ -80,29 +55,28 @@
 		
 		$("#checkAll").change(function(){
 			if($(this).is(":checked") == true){
-				$(".prjSeq").each(function(){
+				$(".usrSeq").each(function(){
 					$(this).prop('checked',true)
 				})
 			} else {
-				$(".prjSeq").each(function(){
+				$(".usrSeq").each(function(){
 					$(this).prop('checked',false)
 				})
 			}
 		})
 	})
 	
-	function getProjectList(pageNum){
-		var prjSeq = $("#prjSeq").val()
-		var prjNm = $("#prjNm").val()
-		var cusCD = $("#cusCD").val()
-		var minSTDT = $("#minSTDT").val()
-		var maxSTDT = $("#maxSTDT").val()
-		var minEDDT = $("#minEDDT").val()
-		var maxEDDT = $("#maxEDDT").val()
+	function getUserList(pageNum){
+		var usrSeq = $("#usrSeq").val()
+		var usrNm = $("#usrNm").val()
+		var grCD = $("#grCD").val()
+		var stCD = $("#stCD").val()
+		var minDT = $("#minDT").val()
+		var maxDT = $("#maxDT").val()
 		var skills = new Array()
 		
-		if(prjSeq == ""){
-			prjSeq = 0
+		if(usrSeq == ""){
+			usrSeq = 0
 		}
 		
 		$(".skill").each(function(){
@@ -111,13 +85,12 @@
 		    }
 		})
 		
-		var param = "prjSeq="+prjSeq
-		param += "&prjNm="+prjNm
-		param += "&cusCD="+cusCD
-		param += "&minSTDT="+minSTDT
-		param += "&maxSTDT="+maxSTDT
-		param += "&minEDDT="+minEDDT
-		param += "&maxEDDT="+maxEDDT
+		var param = "usrSeq="+usrSeq
+		param += "&usrNm="+usrNm
+		param += "&grCD="+grCD
+		param += "&stCD="+stCD
+		param += "&minDT="+minDT
+		param += "&maxDT="+maxDT
 		param += "&skills="
 		
 		for(var i = 0; i<skills.length; i++){
@@ -132,13 +105,13 @@
 		console.log("param = " + param)
 		
 		$.ajax({
-	        url: "getProjectList", 
+	        url: "getUserList", 
 	        type:"post",
 	        data: param,
 	        success: function(data) {
 	        	var str = ""
 	        	var page = ""
-	        	var add = "<button id='add' onclick='add()'>추가</a>"
+	        	var add = "<button id='add' onclick='add()'>추가</button>"
 	        	var del = "<button id='del' onclick='del()'>삭제</button>"
 	        	
 	        	
@@ -161,16 +134,24 @@
 		        $(".resultPage").empty()
 		        $(".resultButton").empty()
 		        
-		        if(data.projectList.length >= 1){
-		        	$.each(data.projectList, function(i){
-		        		var customer
+		        if(data.userList.length >= 1){
+		        	$.each(data.userList, function(i){
+		        		var rank
+		        		var grade
+		        		var status
 		        		var skills = ""
 		        		
-		        		var skillArr = data.projectList[i].skills.split(",")
+		        		var skillArr = data.userList[i].skills.split(",")
 		        		
 		        		for(var j = 0; j<codeList.length; j++){
-		        			if(codeList[j].indexOf("mstCD=CU01") != -1 && codeList[j].indexOf("dtCD=" + data.projectList[i].cusCD + ",") != -1){
-		        				customer = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
+		        			if(codeList[j].indexOf("mstCD=RA01") != -1 && codeList[j].indexOf("dtCD=" + data.userList[i].raCD + ",") != -1){
+		        				rank = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
+		        			}
+		        			if(codeList[j].indexOf("mstCD=GR01") != -1 && codeList[j].indexOf("dtCD=" + data.userList[i].grCD + ",") != -1){
+		        				grade = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
+		        			}
+		        			if(codeList[j].indexOf("mstCD=ST01") != -1 && codeList[j].indexOf("dtCD=" + data.userList[i].stCD + ",") != -1){
+		        				status = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
 		        			}
 		        			
 		        			for(var k = 0; k<skillArr.length; k++){
@@ -184,41 +165,50 @@
 		        		}
 		        		
 	                	str += "<tr>"
-	                	str += "<td class='checkRow'><input type='checkbox' class='prjSeq' value=" + data.projectList[i].prjSeq + " onclick='checkOne()'></td>"
-	               		str += "<td class='numberRow'><button id='numberButton' onclick='edit(this)' name='" + data.projectList[i].prjSeq + "'>" + data.projectList[i].prjSeq + "</button></td>"
-	               		str += "<td class='nameRow'>" + data.projectList[i].prjNm + "</td>"
-	               		str += "<td class='customerRow'>" + customer + "</td>"
-	               		str += "<td class='skillsRow'>" + skills + "</td>"
-	               		str += "<td class='startRow'>" + data.projectList[i].prjSTDT + "</td>"
-	               		if(data.projectList[i].prjEDDT == null){
-	               			str += "<td class='endRow'>-</td>"
+	                	str += "<td class='checkRow'><input type='checkbox' class='usrSeq' value=" + data.userList[i].usrSeq + " onclick='checkOne()'></td>"
+	               		str += "<td class='numberRow'><button id='numberButton' onclick='edit(this)' name='" + data.userList[i].usrSeq + "'>" + data.userList[i].usrSeq + "</button></td>"
+	               		str += "<td class='inDateRow'>" + data.userList[i].usrINDT + "</td>"
+	               		if(rank == undefined){
+	               			str += "<td class='rankRow'>-</td>"
 	               		} else {
-	               			str += "<td class='endRow'>" + data.projectList[i].prjEDDT + "</td>"
+	               			str += "<td class='rankRow'>" + rank + "</td>"
 	               		}
-	               		str += "<td class='editRow'><button id='edit' onclick='edit(this)' name='" + data.projectList[i].prjSeq + "'>상세/수정</button></td>"
-	              		str += "<td class='userRow'><a id='user' href='getProjectUser?prjSeq=" + data.projectList[i].prjSeq + "'>인원 관리</a></td>"
+	               		str += "<td class='nameRow'>" + data.userList[i].usrNm + "</td>"
+	               		if(grade == undefined){
+	               			str += "<td class='gradeRow'>-</td>"
+	               		} else {
+	               			str += "<td class='gradeRow'>" + grade + "</td>"
+	               		}
+	               		str += "<td class='skillsRow'>" + skills + "</td>"
+	               		if(status == undefined){
+	               			str += "<td class='statusRow'>-</td>"
+	               		} else {
+	               			str += "<td class='statusRow'>" + status + "</td>"
+	               		}
+	               		str += "<td class='editRow'><button id='edit' onclick='edit(this)' name='" + data.userList[i].usrSeq + "'>상세/수정</button></td>"
+	              		str += "<td class='projectRow'><a id='project' href='getUserProject?usrSeq=" + data.userList[i].usrSeq + "'>프로젝트 관리</a></td>"
 	              		str += "</tr>"
 	                })
 	                
 		        	if(data.beginPaging != 1){
-		        		page += "<a href=getProjectList?pageNum=" + (data.beginPaging - 1) + ">이전</a>"
+		        		page += "<a href=getUserList?pageNum=" + (data.beginPaging - 1) + ">이전</a>"
 		        	}
 		        	
 		        	for(var i = data.beginPaging; i <= data.endPaging; i++){
 		        		if(i == data.pageNum){
-		        			page += "<button style='font-size:2em' class='page' value=" + i +">" + i + "</button>"
+		        			page += "<button style='font-size:2em' id='currentPage' class='page' value=" + i +">" + i + "</button>"
 		        		} else {
-		        			page += "<button class='page' value=" + i +" onclick='getProjectList(" + i + ")'>" + i + "</button>"
+		        			page += "<button class='page' value=" + i +" onclick='getUserList(" + i + ")'>" + i + "</button>"
 		        		}
 		        	}
 		        	
 		        	if(data.endPaging != data.totalPaging){
-		        		page += "<a href=getProjectList?pageNum=" + (data.endPaging + 1) + ">다음</a>"
+		        		page += "<a href=getUserList?pageNum=" + (data.endPaging + 1) + ">다음</a>"
 		        	}
 		        	
 		        } else {
 		        	str += "<tr>"
-		        	str += '<td colspan="9"><h3>검색결과가 없습니다.</h3></td>'
+		        	str += '<td colspan="10"><h3>검색결과가 없습니다.</h3></td>'
 		        	str += "</tr>"
 		        }
 	        	
@@ -235,26 +225,26 @@
 	}
 	
 	function edit(e){
-    	var url = "getProjectDetail"
-    	var prjSeq = e.name
+    	var url = "getUserDetail"
+    	var usrSeq = e.name
     	
-        window.open("", "openForm", "width=1000px height=480px");
+        window.open("", "openForm", "width=1000px height=620px");
        
         let $form = $('<form></form>'); // 폼 태그 생성
         $form.attr('action', url); 		// 폼 속성 설정
         $form.attr("target", "openForm");
         $form.attr('method', 'post');
         
-    	$form.append('<input type="hidden" name="prjSeq" value="' + prjSeq + '"/>')
+    	$form.append('<input type="hidden" name="usrSeq" value="' + usrSeq + '"/>')
         
         $form.appendTo('body'); // body태그에 추가
         $form.submit(); // 전송
 	}
 	
 	function add(){
-    	var url = "goAddProject";
+    	var url = "goAddUser";
     	
-    	window.open("", "openForm", "width=1000px height=455px");
+        window.open("", "openForm", "width=1000px height=600px");
         
         let $form = $('<form></form>'); // 폼 태그 생성
         $form.attr('action', url); 		// 폼 속성 설정
@@ -266,52 +256,59 @@
 	}
 	
 	function del(){
-		var prjSeqList = new Array()
-		$(".prjSeq").each(function(){
-			if($(this).is(":checked")==true){
-				prjSeqList.push($(this).val())
-		    }
-		})
+		var usrSeqList = new Array()
 		
-		var param = "&prjSeqList="
 		
-		for(var i = 0; i<prjSeqList.length; i++){
-			param += prjSeqList[i]
-			if(i != prjSeqList.length - 1){
-				param += ","
+		if($(".usrSeq:checked").length > 0){
+			$(".usrSeq").each(function(){
+				if($(this).is(":checked")==true){
+					usrSeqList.push($(this).val())
+			    }
+			})
+			
+			var param = "&usrSeqList="
+			
+			for(var i = 0; i<usrSeqList.length; i++){
+				if(i != 0){
+					param += ","
+				}
+				param += usrSeqList[i]
 			}
+			
+			console.log("param : " + param)
+			
+			$.ajax({
+		        url: "delUser", 
+		        type:"post",
+		        data: param,
+		        success: function(data) {
+		        	if(data == 0){
+		        		alert("삭제 되었습니다.")
+		        		getUserList(1)
+		        	} else {
+		        		alert("해당 사원은 현재 소속되어있는 프로젝트가 있습니다.")
+		        	}
+		        },
+		        error: function() {
+		            alert("통신실패")
+		        }
+		    })
+		} else {
+			alert("한개 이상의 항목을 선택해주세요")
 		}
 		
-		console.log("param : " + param)
-		
-		$.ajax({
-	        url: "delProject", 
-	        type:"post",
-	        data: param,
-	        success: function(data) {
-	        	if(data == 0){
-	        		alert("삭제 되었습니다.")
-	        		getUserList(1)
-	        	} else {
-	        		alert("해당 프로젝트는 현재 소속되어있는 인원이 있습니다.")
-	        	}
-	        },
-	        error: function() {
-	            alert("통신실패")
-	        }
-	    })
 	}
 	
 	function checkOne(){
 		var count = 0
 		
-		$(".prjSeq").each(function(){
+		$(".usrSeq").each(function(){
 			 if( $(this).is(":checked") == true ){
 				 count += 1
 			 }
 		})
 		
-		if(count == $(".prjSeq").length){
+		if(count == $(".usrSeq").length){
 			$("#checkAll").prop('checked',true)
 		} else {
 			$("#checkAll").prop('checked',false)
@@ -447,11 +444,6 @@ input[type=text], select {
 	margin-bottom: 10px;
 }
 
-.filterSection_2 {
-	display: flex;
-	justify-content: space-between;
-}
-
 .filterSection_3 {
 	display: flex;
 	justify-content: space-between;
@@ -544,7 +536,7 @@ input[type=text], select {
 	text-decoration: none;
 }
 
-#user {
+#project {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -574,8 +566,6 @@ table td, table th{
   	padding-left: 5px;
 	padding-right: 5px;
 	
-	min-width: max-content;
-	
 	text-align: center;
 		
 	border: 2px solid lightgrey;
@@ -590,19 +580,38 @@ table .checkRow {
 	min-width: 50px;
 	text-align: center;
 }
-
 table .checkHead {
 	min-width: 50px;
 	text-align: center;
 }
 
-table .startRow, table .endRow {
+table .numberRow {
+	min-width: 100px;
+	text-align: right;
+}
+
+table .numberHead {
 	min-width: 100px;
 	text-align: center;
 }
 
-table .startHead, table .endHead {
+table .inDateRow, table .rankRow, table .gradeRow, table .statusRow {
 	min-width: 100px;
+	text-align: center;
+}
+
+table .inDateHead, table .rankHead, table .gradeHead, table .statusHead {
+	min-width: 100px;
+	text-align: center;
+}
+
+table .nameRow {
+	min-width: 150px;
+	text-align: left;
+}
+
+table .nameHead {
+	min-width: 150px;
 	text-align: center;
 }
 
@@ -616,33 +625,8 @@ table .skillsHead {
 	text-align: center;
 }
 
-table .nameRow {
-	min-width: 200px;
-	text-align: left;
-}
-
-table .nameHead {
-	min-width: 200px;
-	text-align: center;
-}
-
-table .numberRow {
-	min-width: 120px;
-	text-align: right;
-}
-
-table .numberHead {
-	min-width: 120px;
-	text-align: center;
-}
-
-table .customerRow {
-	min-width: 120px;
-	text-align: left;
-}
-
-table .customerHead {
-	min-width: 120px;
+table .editRow {
+	min-width: 100px;
 	text-align: center;
 }
 
@@ -651,10 +635,18 @@ table .editHead {
 	text-align: center;
 }
 
-table .userHead {
+table .projectRow {
 	min-width: 100px;
 	text-align: center;
 }
+
+table .projectHead {
+	min-width: 100px;
+	text-align: center;
+}
+
+
+
 
 .resultPage {
 	display: flex;
@@ -670,105 +662,26 @@ table .userHead {
 	display:flex;
 	justify-content: center;
 }
-
-.filterWrap {
-	display: flex;
-	justify-content: space-between;
-	width: 200px;
-}
-
-.dateWrap {
-	display: flex;
-	justify-content: space-between;
-	width: 400px;
-}
 </style>
 </head>
 <body>
 <jsp:include page="header.jsp"/>
 <main>
 	<div class="wrap">
-		<div class="pageTitle"><h1>프로젝트 관리</h1></div>
+		<div class="pageTitle"><h1>메인페이지</h1></div>
 		<div class="middle">
 			<jsp:include page="aside.jsp"/>
 			<section>
 				<div class="filter"> 
-					<div class="filterTitle"><h1>검색 조건</h1></div>
+					<div class="filterTitle"><h1>공지사항</h1></div>
 					<div class="filterDetail">
-						<div class="filterSection_1">
-							<div class="filterWrap">
-								<small>프로젝트 번호</small>
-								<input name="prjSeq" id="prjSeq" type="text">
-							</div>
-							<div class="filterWrap">
-								<small>프로젝트명</small>
-								<input name="prjNm" id="prjNm" type="text">
-							</div>
-							<div class="filterWrap">
-								<small>고객사명</small>
-								<select name="cusCD" id="cusCD">
-									<option value="0">선택</option>
-									<c:forEach var="item" items="${codeList}" varStatus="i">
-										<c:if test = "${item.mstCD == 'CU01'}">
-											<option value="${item.dtCD}">${item.dtCDNM}</option>
-										</c:if>
-									</c:forEach>
-								</select>
-							</div>
-						</div>
-						<div class="filterSection_2">
-							<div class="dateWrap">
-								<small>시작일</small> <input id="minSTDT" type="date" max="9999-12-31"> ~ <input id="maxSTDT" type="date" max="9999-12-31">
-							</div>
-							<div class="dateWrap">
-								<small>종료일</small> <input id="minEDDT" type="date" max="9999-12-31"> ~ <input id="maxEDDT" type="date" max="9999-12-31">
-							</div>
-						</div>
-						<div class="filterSection_3">
-							<small class="skillText">필요기술</small> 
-							<c:forEach var="item" items="${codeList}" varStatus="i">
-								<c:if test = "${item.mstCD == 'SK01'}">
-									<input type="checkbox" class="skill" id="${item.dtCD}" value="${item.dtCD}">
-									<label for="${item.dtCD}">${item.dtCDNM} </label>
-								</c:if>
-							</c:forEach>
-						</div>
-						<div class="filterSection_4">
-							<button id="search">조회</button>
-						</div>
+						
 					</div>
 				</div>
 				<div class="result">
-					<div class="resultTitle"><h1>검색 결과</h1></div>
+					<div class="resultTitle"><h1>사내게시판</h1></div>
 					<div class="resultDetail">
-						<table>
-							<thead>
-								<tr>
-									<th class="checkHead"><input type="checkbox" id="checkAll"></th>
-									<th class="numberHead">프로젝트 번호</th>
-									<th class="nameHead">프로젝트명</th>
-									<th class="customerHead">고객사명</th>
-									<th class="skillsHead">필요기술</th>
-									<th class="startHead">시작일</th>
-									<th class="endHead">종료일</th>
-									<th class="editHead">상세/수정</th>
-									<th class="userHead">인원 관리</th>
-								</tr>
-							</thead>
-							<tbody id="tbody">
-								<tr>
-									<td colspan="9"><h3>조회가 필요합니다.</h3></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="resultPage">
 						
-					</div>
-					<div class="resultButtonWrap">
-						<div class="resultButton">
-					
-						</div>
 					</div>
 				</div>
 			</section>

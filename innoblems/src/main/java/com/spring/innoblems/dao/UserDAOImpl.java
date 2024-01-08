@@ -97,4 +97,9 @@ public class UserDAOImpl implements UserDAO {
 		sqlSession.update("userProject.saveUserProject", userProjectDTO);
 		return;
 	}
+
+	@Override
+	public UserDTO login(UserDTO userDTO) {
+		return sqlSession.selectOne("user.login", userDTO);
+	}
 }

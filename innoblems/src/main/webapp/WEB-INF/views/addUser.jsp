@@ -10,8 +10,6 @@
 <link rel="stylesheet" href="resources/css/header.css">
 <!-- aside css -->
 <link rel="stylesheet" href="resources/css/aside.css">
-<!-- header script -->
-<script src="resources/js/header.js"></script>
 <script
   src="https://code.jquery.com/jquery-3.7.1.js"
   integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
@@ -21,7 +19,28 @@
 		setBirth()
 		
 		pwCheck()
-	})	
+		
+		$("#usrNm").keyup(function (event) {
+	    	regexp = /[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g;
+	        v = $(this).val();
+	        if (regexp.test(v)) {
+	            alert("한글만 입력가능 합니다.");
+	            $(this).val(v.replace(regexp, ''));
+	        }
+	    });
+		
+		$("#usrEm").focusout(function (event) {
+			let check = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+    		
+    		if(!check.test($(this).val()) || !$(this).val() == null){
+    			alert("이메일이 형식에 맞지 않습니다.")
+    		}  else {
+    			
+    		}
+		});
+	})
+	
+	
 	
 	function setBirth (){
 		var today = new Date()
@@ -31,6 +50,17 @@
 		'-' + ( (today.getDate()) < 9 ? "0" + (today.getDate()) : (today.getDate()) )
 		
 		$("#usrBDT").prop("max", date)
+	}
+	
+	function pwView() {
+		if($("#usrPw").prop("type") == "password"){
+			$("#usrPw").prop("type", "text")
+			$("#usrPwCheck").prop("type", "text")
+		} else {
+			$("#usrPw").prop("type", "password")
+			$("#usrPwCheck").prop("type", "password")
+		}
+		
 	}
 	
 	function pwCheck() {
@@ -85,65 +115,83 @@
 		var form = new FormData();
         form.append( "file1", $("#file1")[0].files[0] );
         
-        jQuery.ajax({
-             url : "result"
-           , type : "POST"
-           , processData : false
-           , contentType : false
-           , data : form
-           , success:function(response) {
-              
-        	   if(response != -1){
-            	   usrImg = response;
-                   
-                 	var param = "usrId="+usrId
-   	       		param += "&usrPw="+usrPw
-   	       		param += "&usrNm="+usrNm
-   	       		param += "&usrImg="+usrImg
-   	       		param += "&usrBDT="+usrBDT
-   	       		param += "&usrINDT="+usrINDT
-   	       		param += "&usrPn="+usrPn
-   	       		param += "&usrEm="+usrEm
-   	       		param += "&usrAd="+usrAd
-   	       		param += "&raCD="+raCD
-   	       		param += "&gdCD="+gdCD
-   	       		param += "&grCD="+grCD
-   	       		param += "&dvCD="+dvCD
-   	       		param += "&skills="
-   	       		
-   	       		for(var i = 0; i<skills.length; i++){
-   	       			param += skills[i]
-   	       			if(i != skills.length - 1){
-   	       				param += ","
-   	       			}
-   	       		}
-                  
-                  console.log("param" + param)
-                  
-                  $.ajax({
-   			        url: "addUser", 
-   			        type:"post",
-   			        data: param,
-   			        success: function(data) {
-   			        	alert("등록되었습니다.")
-   			        	opener.getUserList(1)
-   			        },
-   			        error: function() {
-   			            alert("통신실패")
-   			        }
-   			    })
-               } else {
-            	   alert("이미지는 5MB 이하의 파일만 가능합니다.")
-               }
-               
-           }
-           ,error: function (jqXHR) 
-           { 
-               alert(jqXHR.responseText); 
-           }
-       	})
-       	
-       	
+        var pwCheck = false
+        var skillsCheck = false
+        
+        if($("#usrPw").val() != "" && $("#usrPw").val() == $("#usrPwCheck").val()){
+        	pwCheck = true
+        }
+        
+        
+        if($(".skill:checked").length > 0){
+        	skillsCheck = true
+        }
+        
+        if(usrNm != "" && usrId != "" && pwCheck != false && usrINDT != "" && skillsCheck != false && usrPn != ""){
+        	if($("#file1").val() != ""){
+        		jQuery.ajax({
+                    url : "result"
+                  , type : "POST"
+                  , processData : false
+                  , contentType : false
+                  , data : form
+                  , success:function(response) {
+                     
+               	   if(response != -1){
+                   	  usrImg = response;
+                   	   
+                      } else {
+                   	   alert("이미지는 5MB 이하의 파일만 가능합니다.")
+                      }
+                      
+                  }
+                  ,error: function (jqXHR) 
+                  { 
+                      alert(jqXHR.responseText); 
+                  }
+              	})
+        	}
+        	
+        	var param = "usrId="+usrId
+	       		param += "&usrPw="+usrPw
+	       		param += "&usrNm="+usrNm
+	       		param += "&usrImg="+usrImg
+	       		param += "&usrBDT="+usrBDT
+	       		param += "&usrINDT="+usrINDT
+	       		param += "&usrPn="+usrPn
+	       		param += "&usrEm="+usrEm
+	       		param += "&usrAd="+usrAd
+	       		param += "&raCD="+raCD
+	       		param += "&gdCD="+gdCD
+	       		param += "&grCD="+grCD
+	       		param += "&dvCD="+dvCD
+	       		param += "&skills="
+	       		
+	       		for(var i = 0; i<skills.length; i++){
+	       			param += skills[i]
+	       			if(i != skills.length - 1){
+	       				param += ","
+	       			}
+	       		}
+             
+             console.log("param" + param)
+             
+             $.ajax({
+			        url: "addUser", 
+			        type:"post",
+			        data: param,
+			        success: function(data) {
+			        	alert("등록되었습니다.")
+			        	opener.getUserList(1)
+			        },
+			        error: function() {
+			            alert("통신실패")
+			        }
+			    })
+        	
+        } else {
+        	alert("필수항목을 입력해주세요")
+        }
 		
 	}
 	
@@ -464,13 +512,13 @@ table td{
 				<table>
 					<tr>
 						<td>사원명<a class="star">*</a></td>
-					    <td><input type="text" id="usrNm" maxlength="10"></td>
+					    <td><input type="text" id="usrNm" maxlength="10" style="ime-mode:active;" placeholder="한글 10글자"></td>
 					    <td>입사일<a class="star">*</a></td>
 					    <td><input type="date" id="usrINDT"></td>
 					</tr> 
 					<tr>
 					    <td>아이디<a class="star">*</a></td>
-					    <td><input type="text" id="usrId" maxlength="20"></td>
+					    <td><input type="text" id="usrId" maxlength="20" placeholder="소문자, 숫자 20글자"></td>
 					    <td>직급</td>
 					    <td>
 						    <select name="raCD" id="raCD">
@@ -485,7 +533,7 @@ table td{
 					</tr> 
 					<tr>
 					    <td>비밀번호<a class="star">*</a></td>
-					    <td><input type="password" id="usrPw" maxlength="16"></td>
+					    <td><input type="password" id="usrPw" maxlength="16" placeholder="특수문자, 영문포함 16글자"></td>
 					    <td>기술등급</td>
 					    <td>
 					    	<select name="grCD" id="grCD">
@@ -500,7 +548,7 @@ table td{
 					</tr> 
 					<tr>
 					    <td>비밀번호 확인<a class="star">*</a></td>
-					    <td><input type="password" id="usrPwCheck" maxlength="16"></td>
+					    <td><input type="password" id="usrPwCheck" maxlength="16" placeholder="특수문자, 영문포함 16글자"></td>
 					    <td>개발분야</td>
 					    <td>
 						    <select name="dvCD" id="dvCD">
@@ -515,11 +563,12 @@ table td{
 					   </tr> 
 					   <tr>
 					   <td colspan="2">
+					   <button onclick="pwView()">보기</button>
 					    	<div id="checkText">
 					    	</div>
 					   </td>
 					   <td>전화번호<a class="star">*</a></td>
-					   <td><input type="text" id="usrPn" placeholder="숫자만 입력해주세요" maxlength="11"></td>
+					   <td><input type="text" id="usrPn" placeholder="숫자만 입력해주세요" maxlength="11" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"></td>
 					   </tr> 
 					   <tr>
 					   <td>생년월일</td>

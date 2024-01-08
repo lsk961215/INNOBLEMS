@@ -168,7 +168,6 @@
 		 		USR_BDT,
 		 		GD_CD,
 		 		USR_IN_DT,
-		 		ST_CD,
 		 		RA_CD,
 		 		GR_CD,
 		 		DV_CD,
@@ -185,7 +184,6 @@
 		 	#{usrBDT},
 		 	#{gdCD},
 		 	#{usrINDT},
-		 	'1',
 		 	#{raCD},
 		 	#{grCD},
 		 	#{dvCD},
@@ -223,12 +221,25 @@
 		 	RA_CD = #{raCD},
 		 	GR_CD = #{grCD},
 		 	DV_CD = #{dvCD},
-		 	USR_IMG = #{usrImg},
+		 	<if test="usrImg != '' and usrImg != null">
+				USR_IMG = #{usrImg},
+			</if>
 		 	USR_PN = #{usrPn},
 		 	USR_EM = #{usrEm},
 		 	USR_AD = #{usrAd}
 		WHERE
 			USR_SEQ = #{usrSeq}
 	</update>
+	
+	<select id="login" parameterType="com.spring.innoblems.dto.UserDTO" resultMap="userMap">
+		SELECT 
+			* 
+		FROM 
+			USER_INFO 
+		WHERE 
+			USR_ID = #{usrId} 
+		AND 
+			USR_PW = #{usrPw}
+	</select>
 	
 </mapper>
