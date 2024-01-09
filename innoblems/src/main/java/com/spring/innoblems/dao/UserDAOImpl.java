@@ -102,4 +102,9 @@ public class UserDAOImpl implements UserDAO {
 	public UserDTO login(UserDTO userDTO) {
 		return sqlSession.selectOne("user.login", userDTO);
 	}
+
+	@Override
+	public UserDTO getUserSalt(UserDTO userDTO) {
+		return sqlSession.selectOne("user.getUserSalt", userDTO);
+	}
 }

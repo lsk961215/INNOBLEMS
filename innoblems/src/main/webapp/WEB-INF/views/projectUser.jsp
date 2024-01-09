@@ -40,13 +40,14 @@
 	
 	function getProjectUserList(pageNum){
 		var prjSeq = $("#prjSeq").val()
+		var countPerPage = $("#countPerPage").val()
 		
 		if(prjSeq == ""){
 			prjSeq = 0
 		}
 		
 		var param = "prjSeq="+prjSeq
-		
+		param += "&countPerPage="+countPerPage
 		param += "&pageNum="+pageNum
 		
 		$.ajax({
@@ -113,8 +114,16 @@
 	                	str += "<td class='checkRow'><input type='checkbox' class='usrSeq' value=" + data.projectUserList[i].usrSeq + " onclick='checkOne()'></td>"
 	               		str += "<td class='numberRow'><button id='numberButton' onclick='edit(this)' name='" + data.projectUserList[i].usrSeq + "'>" + data.projectUserList[i].usrSeq + "</button></td>"
 	               		str += "<td class='nameRow'>" + data.projectUserList[i].usrNm + "</td>"
-	               		str += "<td class='rankRow'>" + rank + "</td>"
-	               		str += "<td class='gradeRow'>" + grade + "</td>"
+	               		if(rank == undefined){
+	               			str += "<td class='rankRow'>-</td>"
+	               		} else {
+	               			str += "<td class='rankRow'>" + rank + "</td>"
+	               		}
+	                	if(grade == undefined){
+	               			str += "<td class='gradeRow'>-</td>"
+	               		} else {
+	               			str += "<td class='gradeRow'>" + grade + "</td>"
+	               		}
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
 	               		str += "<td class='usrPrjINDTRow'><input type='date' id='usrPrjINDT' value='" + data.projectUserList[i].usrPrjINDT + "'></td>"
 	               		str += "<td class='usrPrjOTDTRow'><input type='date' id='usrPrjOTDT' value='" + data.projectUserList[i].usrPrjOTDT + "'></td>"
@@ -830,6 +839,12 @@ table .roleHead {
 .skill {
  	accent-color: lightgrey;
 }
+
+.resultPerPage {
+	display: flex;
+	flex-direction: row-reverse;
+	margin-bottom: 10px;
+}
 </style>
 </head>
 <body>
@@ -877,6 +892,12 @@ table .roleHead {
 				</div>
 				<div class="result">
 					<div class="resultTitle"><h1>참여 인원</h1></div>
+					<div class="resultPerPage">
+						<select name="countPerPage" id="countPerPage">
+							<option value="5">5개씩 보기</option>
+							<option value="10">10개씩 보기</option>
+						</select>
+					</div>
 					<div class="resultDetail">
 						<table>
 							<thead>

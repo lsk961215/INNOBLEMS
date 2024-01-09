@@ -22,6 +22,10 @@
 	</resultMap>
 	
 	<select id="getUserProjectList" parameterType="java.util.HashMap" resultMap="userProjectMap">
+	SELECT *
+	    FROM (
+		    SELECT ROWNUM as rnum, b.*
+			FROM (
 		SELECT 
 			* 
 		FROM
@@ -46,6 +50,10 @@
         	(A.PRJ_SEQ = B.PRJ_SEQ) 
         WHERE 
         	USR_SEQ = #{userProjectDTO.usrSeq}
+        ORDER BY USR_SEQ
+			)b
+		)
+		WHERE RNUM <![CDATA[>=]]> #{startNum} and RNUM <![CDATA[<=]]> #{endNum}
 	</select>
 	
 	<select id="getUserProjectTotal" parameterType="java.util.HashMap" resultType="int">

@@ -35,7 +35,7 @@
 		$("#usrEm").focusout(function (event) {
 			let check = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
     		
-    		if(!check.test($(this).val()) || !$(this).val() == null){
+    		if(!check.test($(this).val()) || !$(this).val() == null ){
     			alert("이메일이 형식에 맞지 않습니다.")
     		}  else {
     			
@@ -51,6 +51,17 @@
 		'-' + ( (today.getDate()) < 9 ? "0" + (today.getDate()) : (today.getDate()) )
 		
 		$("#usrBDT").prop("max", date)
+	}
+	
+	function pwView() {
+		if($("#usrPw").prop("type") == "password"){
+			$("#usrPw").prop("type", "text")
+			$("#usrPwCheck").prop("type", "text")
+		} else {
+			$("#usrPw").prop("type", "password")
+			$("#usrPwCheck").prop("type", "password")
+		}
+		
 	}
 	
 	function pwCheck() {
@@ -181,7 +192,6 @@
 			        data: param,
 			        success: function(data) {
 			        	alert("저장되었습니다.")
-			        	opener.getUserList(1)
 			        },
 			        error: function() {
 			            alert("통신실패")
@@ -631,7 +641,7 @@ table td{
 					    	</tr> 
 					    	<tr>
 					    		<td>비밀번호<a class="star">*</a></td>
-					    		<td><input type="password" id="usrPw" value="${userDTO.usrPw}" maxlength="16" placeholder="특수문자, 영문포함 16글자"></td>
+					    		<td><input type="password" id="usrPw" maxlength="16" placeholder="특수문자, 영문포함 16글자"></td>
 					    		<td>기술등급</td>
 					    		<td>
 					    			<select name="grCD" id="grCD">
@@ -651,7 +661,7 @@ table td{
 					    	</tr> 
 					    	<tr>
 					    		<td>비밀번호 확인<a class="star">*</a></td>
-					    		<td><input type="password" id="usrPwCheck" value="${userDTO.usrPw}" maxlength="16" placeholder="특수문자, 영문포함 16글자"></td>
+					    		<td><input type="password" id="usrPwCheck" maxlength="16" placeholder="특수문자, 영문포함 16글자"></td>
 					    		<td>개발분야</td>
 					    		<td>
 						    		<select name="dvCD" id="dvCD">
@@ -671,6 +681,7 @@ table td{
 					    	</tr> 
 					    	<tr>
 					    		<td colspan="2">
+					    			<button onclick="pwView()">보기</button>
 					    			<div id="checkText">
 					    			</div>
 					    		</td>

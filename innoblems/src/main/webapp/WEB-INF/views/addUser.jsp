@@ -38,6 +38,16 @@
     			
     		}
 		});
+		
+		$("#usrId").keyup(function (event) {
+	    	regexp = /^[a-zA-Z0-9]*$/;
+	        v = $(this).val();
+	        if (!regexp.test(v)) {
+	            alert("소문자와 숫자만 입력가능 합니다.");
+	            $(this).val(v.replace(regexp, ''));
+	            $(this).val("");
+	        }
+	    });
 	})
 	
 	

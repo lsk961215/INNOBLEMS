@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.spring.innoblems.aop.SHA256;
 import com.spring.innoblems.dto.SkillDTO;
 import com.spring.innoblems.dto.UserDTO;
 import com.spring.innoblems.dto.UserProjectDTO;
@@ -38,14 +39,21 @@ public class UserController {
 		try {
 			userDTO = userService.login(userDTO);
 			
-			session.setAttribute("userDTO", userDTO);
-			
-			return userDTO;
+			if(userDTO.getUsrSeq() != 0) {
+				session.setAttribute("userDTO", userDTO);
+				return userDTO;
+			} else {
+				UserDTO failUserDTO = new UserDTO();
+				failUserDTO.setMessage("아이디 또는 비밀번호가 일치하지 않습니다.");
+				
+				return failUserDTO;
+			}
 		} catch (NullPointerException e) {
+			System.out.println(e);
+			UserDTO failUserDTO = new UserDTO();
+			failUserDTO.setMessage("아이디 또는 비밀번호가 일치하지 않습니다.");
 			
-			userDTO.setMessage("아이디 또는 비밀번호가 일치하지 않습니다.");
-			
-			return userDTO;
+			return failUserDTO;
 		}
 	}
 	
@@ -128,6 +136,17 @@ public class UserController {
 	public int addUser(HttpServletRequest request, UserDTO userDTO) throws Exception {
 		
 		try {
+			String join_pw = userDTO.getUsrPw();
+			
+			new SHA256();
+			
+			String salt = SHA256.createSalt(join_pw);
+			
+			String pw = SHA256.encrypt(join_pw, salt);
+			
+			userDTO.setUsrPw(pw);
+			userDTO.setSalt(salt);
+			
 			int usrSeq = userService.addUser(userDTO);
 			
 			List<SkillDTO> skillList = new ArrayList();
@@ -195,6 +214,17 @@ public class UserController {
 	public int saveUser(HttpServletRequest request, UserDTO userDTO) throws Exception {
 		
 		try {
+			String save_pw = userDTO.getUsrPw();
+			
+			new SHA256();
+			
+			String salt = SHA256.createSalt(save_pw);
+			
+			String pw = SHA256.encrypt(save_pw, salt);
+			
+			userDTO.setUsrPw(pw);
+			userDTO.setSalt(salt);
+			
 			userService.saveUser(userDTO);
 			
 			List<SkillDTO> skillList = new ArrayList();
@@ -227,6 +257,8 @@ public class UserController {
 	
 	@RequestMapping("/getUserProject")
 	public String getUserProject (HttpServletRequest request, UserDTO userDTO, Model model) {
+		List menuList = mainService.getMenuList();
+		model.addAttribute("menuList", menuList);
 		List codeList = mainService.getCodeList();
 		
 		userDTO = userService.getUserDetail(userDTO);
@@ -291,6 +323,8 @@ public class UserController {
 	@RequestMapping("/goAddUserProject")
 	public String addUserProject(Model model, UserProjectDTO userProjectDTO) {
 		
+		List menuList = mainService.getMenuList();
+		model.addAttribute("menuList", menuList);
 		List codeList = mainService.getCodeList();
 		
 		model.addAttribute("codeList", codeList);

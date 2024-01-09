@@ -9,11 +9,18 @@
 	  <result column="MST_CD_NM" property="mstCDNM"/>
 	  <result column="DT_CD" property="dtCD"/>
 	  <result column="DT_CD_NM" property="dtCDNM"/>
+	  <result column="DT_CD_URL" property="dtCDURL"/>	  
 	</resultMap>
 	
 	<select id="getCodeList" resultMap="codeMap">
 	    SELECT *
 		FROM DT_CD_DATA
+		ORDER BY MST_CD, TO_NUMBER(DT_CD)
+	</select>
+	
+	<select id="getMenuList" resultMap="codeMap">
+	    SELECT *
+		FROM MENU_CD_DATA
 		ORDER BY MST_CD, TO_NUMBER(DT_CD)
 	</select>
 	

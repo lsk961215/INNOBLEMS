@@ -22,34 +22,42 @@
 	</resultMap>
 	
 	<select id="getProjectUserList" parameterType="java.util.HashMap" resultMap="userProjectMap">
-		SELECT 
-            d.USR_SEQ, d.USR_NM, d.RA_CD, d.GR_CD, d.SKILLS, c.USR_PRJ_IN_DT, c.USR_PRJ_OT_DT, c.RL_CD
-		FROM
-			USER_PROJECT_TABLE c
-		LEFT OUTER JOIN
-        (
-            SELECT 
-				a.*, b.SKILLS
-			FROM 
-				USER_INFO a
-			LEFT OUTER JOIN 
-			(
-                SELECT 
-                    USR_SEQ, LISTAGG(SK_CD, ',') 
-                WITHIN GROUP
-                    (ORDER BY SK_CD) AS SKILLS
-                FROM 
-                    USER_SKILL_TABLE
-                GROUP BY 
-                    USR_SEQ
-            ) b
-            ON 
-                a.USR_SEQ = b.USR_SEQ
-        ) d
-        ON 
-       		c.USR_SEQ = d.USR_SEQ
-        WHERE 
-			PRJ_SEQ = #{userProjectDTO.prjSeq}
+		SELECT *
+	    FROM (
+		    SELECT ROWNUM as rnum, b.*
+			FROM (
+				SELECT 
+		            d.USR_SEQ, d.USR_NM, d.RA_CD, d.GR_CD, d.SKILLS, c.USR_PRJ_IN_DT, c.USR_PRJ_OT_DT, c.RL_CD
+				FROM
+					USER_PROJECT_TABLE c
+				LEFT OUTER JOIN
+		        (
+		            SELECT 
+						a.*, b.SKILLS
+					FROM 
+						USER_INFO a
+					LEFT OUTER JOIN 
+					(
+		                SELECT 
+		                    USR_SEQ, LISTAGG(SK_CD, ',') 
+		                WITHIN GROUP
+		                    (ORDER BY SK_CD) AS SKILLS
+		                FROM 
+		                    USER_SKILL_TABLE
+		                GROUP BY 
+		                    USR_SEQ
+		            ) b
+		            ON 
+		                a.USR_SEQ = b.USR_SEQ
+		        ) d
+		        ON 
+		       		c.USR_SEQ = d.USR_SEQ
+		        WHERE 
+					PRJ_SEQ = #{userProjectDTO.prjSeq}
+				ORDER BY USR_SEQ
+			)b
+		)
+		WHERE RNUM <![CDATA[>=]]> #{startNum} and RNUM <![CDATA[<=]]> #{endNum}
 	</select>
 	
 	<select id="getProjectUserTotal" parameterType="java.util.HashMap" resultType="int">

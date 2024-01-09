@@ -327,11 +327,11 @@
 	        type:"post",
 	        data: param,
 	        success: function(data) {
-	        	if(data != ""){
+	        	if(data.usrSeq != 0){
 	        		alert(data.usrNm + "님 환영합니다.")
 		        	location.href="/innoblems"
 	        	} else {
-	        		alert("아이디 또는 비밀번호가 맞지 않습니다.")
+	        		alert(data.message)
 	        	}
 	        	
 	        },
@@ -703,6 +703,33 @@ table .projectHead {
 
 .sectionMain {
 	display: flex;	
+}
+
+.sectionLeft {
+	display: flex;
+	width: 70%;
+	
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.sectionRight {
+	display: flex;
+	width: 20%;
+	height: 150px;
+	font-size: 150%;
+	
+	align-items: center;
+}
+
+.sectionLogo {
+	display: flex;	
+	justify-content: center;
+}
+
+#usrId {
+	width: 162px;
 }
 
 #login {

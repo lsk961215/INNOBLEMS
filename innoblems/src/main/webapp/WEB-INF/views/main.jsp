@@ -672,12 +672,6 @@ table .projectHead {
 		<div class="middle">
 			<jsp:include page="aside.jsp"/>
 			<section>
-				<div class="filter"> 
-					<div class="filterTitle"><h1>공지사항</h1></div>
-					<div class="filterDetail">
-						
-					</div>
-				</div>
 				<div class="result">
 					<div class="resultTitle"><h1>사내게시판</h1></div>
 					<div class="resultDetail">

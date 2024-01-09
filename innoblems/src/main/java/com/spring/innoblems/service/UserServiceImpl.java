@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.innoblems.aop.SHA256;
 import com.spring.innoblems.dao.UserDAO;
 import com.spring.innoblems.dto.SkillDTO;
 import com.spring.innoblems.dto.UserDTO;
@@ -208,6 +209,22 @@ public class UserServiceImpl  implements UserService {
 
 	@Override
 	public UserDTO login(UserDTO userDTO) {
-		return userDAO.login(userDTO);
+		UserDTO db_userDTO = userDAO.getUserSalt(userDTO);
+		
+		String login_pw = userDTO.getUsrPw();
+		
+		String salt = db_userDTO.getSalt();
+		
+		new SHA256();
+		
+		String pw = SHA256.encrypt(login_pw, salt);
+		
+		if(pw.equals(db_userDTO.getUsrPw())) {
+			return db_userDTO;
+		} else {
+			return userDTO;
+		}
+		
+		
 	}
 }

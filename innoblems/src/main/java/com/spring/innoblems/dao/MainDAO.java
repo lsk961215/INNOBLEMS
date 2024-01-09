@@ -7,4 +7,5 @@ import com.spring.innoblems.dto.UserDTO;
 
 public interface MainDAO {
 	List getCodeList();
+	List getMenuList();
 }

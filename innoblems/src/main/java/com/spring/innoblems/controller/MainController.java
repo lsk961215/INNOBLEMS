@@ -38,6 +38,8 @@ public class MainController {
 	
 	@RequestMapping("/")
 	public String goMain(Model model) {
+		List menuList = mainService.getMenuList();
+		model.addAttribute("menuList", menuList);
 		return "main";
 	}
 	
@@ -48,6 +50,8 @@ public class MainController {
 	
 	@RequestMapping("goUserListPage")
 	public String goUserListPage(Model model) {
+		List menuList = mainService.getMenuList();
+		model.addAttribute("menuList", menuList);
 		List codeList = mainService.getCodeList();
 		
 		model.addAttribute("codeList", codeList);
@@ -57,11 +61,17 @@ public class MainController {
 	
 	@RequestMapping("/goProjectListPage")
 	public String goProjectListPage(Model model) {
+		List menuList = mainService.getMenuList();
+		model.addAttribute("menuList", menuList);
 		
 		List codeList = mainService.getCodeList();
-		
 		model.addAttribute("codeList", codeList);
-		
+				
 		return "projectList";
+	}
+	
+	public List getMenuList() {
+		List menuList = mainService.getMenuList();
+		return menuList;
 	}
 }

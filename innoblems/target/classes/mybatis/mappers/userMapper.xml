@@ -26,7 +26,7 @@
 	<select id="getUserList" parameterType="java.util.HashMap" resultMap="userMap">
 	    SELECT *
 	    FROM (
-	    SELECT ROWNUM as rnum, b.*
+	    SELECT ROWNUM as RNUM, b.*
 		FROM (
 		SELECT a.USR_SEQ
 		FROM USER_INFO a
@@ -174,7 +174,8 @@
 		 		USR_IMG,
 		 		USR_PN,
 		 		USR_EM,
-		 		USR_AD
+		 		USR_AD,
+		 		SALT
 		 		)
 		 VALUES (
 		 	USR_SEQ.NEXTVAL,
@@ -190,7 +191,8 @@
 		 	#{usrImg},
 		 	#{usrPn},
 		 	#{usrEm},
-		 	#{usrAd}
+		 	#{usrAd},
+		 	#{salt}
 		 )
 		<selectKey resultType="int" keyProperty="usrSeq" order="AFTER">
 	        SELECT USR_SEQ FROM USER_INFO WHERE USR_ID = #{usrId}
@@ -226,7 +228,8 @@
 			</if>
 		 	USR_PN = #{usrPn},
 		 	USR_EM = #{usrEm},
-		 	USR_AD = #{usrAd}
+		 	USR_AD = #{usrAd},
+		 	SALT = #{salt}
 		WHERE
 			USR_SEQ = #{usrSeq}
 	</update>
@@ -240,6 +243,15 @@
 			USR_ID = #{usrId} 
 		AND 
 			USR_PW = #{usrPw}
+	</select>
+	
+	<select id="getUserSalt" parameterType="com.spring.innoblems.dto.UserDTO" resultMap="userMap">
+		SELECT 
+			* 
+		FROM 
+			USER_INFO 
+		WHERE 
+			USR_ID = #{usrId}
 	</select>
 	
 </mapper>

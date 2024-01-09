@@ -73,6 +73,7 @@
 		var stCD = $("#stCD").val()
 		var minDT = $("#minDT").val()
 		var maxDT = $("#maxDT").val()
+		var countPerPage = $("#countPerPage").val()
 		var skills = new Array()
 		
 		if(usrSeq == ""){
@@ -91,6 +92,7 @@
 		param += "&stCD="+stCD
 		param += "&minDT="+minDT
 		param += "&maxDT="+maxDT
+		param += "&countPerPage="+countPerPage
 		param += "&skills="
 		
 		for(var i = 0; i<skills.length; i++){
@@ -662,6 +664,13 @@ table .projectHead {
 	display:flex;
 	justify-content: center;
 }
+
+.resultPerPage {
+	display: flex;
+	flex-direction: row-reverse;
+	margin-bottom: 10px;
+}
+
 </style>
 </head>
 <body>
@@ -718,6 +727,12 @@ table .projectHead {
 				</div>
 				<div class="result">
 					<div class="resultTitle"><h1>검색 결과</h1></div>
+					<div class="resultPerPage">
+						<select name="countPerPage" id="countPerPage">
+							<option value="5">5개씩 보기</option>
+							<option value="10">10개씩 보기</option>
+						</select>
+					</div>
 					<div class="resultDetail">
 						<table>
 							<thead>

@@ -99,6 +99,7 @@
 		var maxSTDT = $("#maxSTDT").val()
 		var minEDDT = $("#minEDDT").val()
 		var maxEDDT = $("#maxEDDT").val()
+		var countPerPage = $("#countPerPage").val()
 		var skills = new Array()
 		
 		if(prjSeq == ""){
@@ -118,6 +119,7 @@
 		param += "&maxSTDT="+maxSTDT
 		param += "&minEDDT="+minEDDT
 		param += "&maxEDDT="+maxEDDT
+		param += "&countPerPage="+countPerPage
 		param += "&skills="
 		
 		for(var i = 0; i<skills.length; i++){
@@ -682,6 +684,12 @@ table .userHead {
 	justify-content: space-between;
 	width: 400px;
 }
+
+.resultPerPage {
+	display: flex;
+	flex-direction: row-reverse;
+	margin-bottom: 10px;
+}
 </style>
 </head>
 <body>
@@ -740,6 +748,12 @@ table .userHead {
 				</div>
 				<div class="result">
 					<div class="resultTitle"><h1>검색 결과</h1></div>
+					<div class="resultPerPage">
+						<select name="countPerPage" id="countPerPage">
+							<option value="5">5개씩 보기</option>
+							<option value="10">10개씩 보기</option>
+						</select>
+					</div>
 					<div class="resultDetail">
 						<table>
 							<thead>

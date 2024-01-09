@@ -30,6 +30,23 @@
 		getAddProjectUserList(1)
 	}
 	
+	function edit(e){
+    	var url = "getUserDetail"
+    	var usrSeq = e.name
+    	
+        window.open("", "childForm", "width=1000px height=620px");
+       
+        let $form = $('<form></form>'); // 폼 태그 생성
+        $form.attr('action', url); 		// 폼 속성 설정
+        $form.attr("target", "childForm");
+        $form.attr('method', 'post');
+        
+    	$form.append('<input type="hidden" name="usrSeq" value="' + usrSeq + '"/>')
+        
+        $form.appendTo('body'); // body태그에 추가
+        $form.submit(); // 전송
+	}
+	
 	function add(){
 		var prjSeq = '${userProjectDTO.prjSeq}'
 		
@@ -90,6 +107,7 @@
 		var usrNm = $("#usrNm").val()
 		var grCD = $("#grCD").val()
 		var stCD = $("#stCD").val()
+		var countPerPage = $("#countPerPage").val()
 		var skills = new Array()
 		
 		if(usrSeq == ""){
@@ -102,6 +120,7 @@
 		param += "&stCD="+stCD
 		param += "&skills="+'${userProjectDTO.skills}'
 		param += "&prjSeq="+'${userProjectDTO.prjSeq}'
+		param += "&countPerPage="+countPerPage
 		
 		
 		param += "&pageNum="+pageNum
@@ -172,7 +191,7 @@
 		        		
 	                	str += "<tr>"
 	                	str += "<td class='checkRow'><input type='checkbox' class='usrSeq' value=" + data.projectUserList[i].usrSeq + " onclick='checkOne()'></td>"
-	               		str += "<td class='numberRow'><a href='getUserDetail?usrSeq=" + data.projectUserList[i].usrSeq +"'>" + data.projectUserList[i].usrSeq + "</a></td>"
+	               		str += "<td class='numberRow'><button id='numberButton' onclick='edit(this)' name='" + data.projectUserList[i].usrSeq + "'>" + data.projectUserList[i].usrSeq + "</button></td>"
 	               		str += "<td class='nameRow'>" + data.projectUserList[i].usrNm + "</td>"
 	               		if(rank == undefined){
 	               			str += "<td class='rankRow'>-</td>"
@@ -651,6 +670,12 @@ table .userHead {
 	justify-content: space-between;
 	width: 400px;
 }
+
+.resultPerPage {
+	display: flex;
+	flex-direction: row-reverse;
+	margin-bottom: 10px;
+}
 </style>
 </head>
 <body>
@@ -698,6 +723,12 @@ table .userHead {
 	</div>
 	<div class="result">
 		<div class="resultTitle"><h1>검색 결과</h1></div>
+		<div class="resultPerPage">
+						<select name="countPerPage" id="countPerPage">
+							<option value="5">5개씩 보기</option>
+							<option value="10">10개씩 보기</option>
+						</select>
+					</div>
 		<div class="resultDetail">
 			<table>
 				<thead>

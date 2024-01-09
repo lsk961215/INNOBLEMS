@@ -199,6 +199,8 @@ public class ProjectController {
 	
 	@RequestMapping("/getProjectUser")
 	public String getProjectUser (HttpServletRequest request, ProjectDTO projectDTO, Model model) {
+		List menuList = mainService.getMenuList();
+		model.addAttribute("menuList", menuList);
 		List codeList = mainService.getCodeList();
 		
 		projectDTO = projectService.getProjectDetail(projectDTO);
@@ -263,9 +265,12 @@ public class ProjectController {
 	@RequestMapping("/goAddProjectUser")
 	public String goAddProjectUser(Model model, UserProjectDTO userProjectDTO) {
 		
+		
+		
 		List codeList = mainService.getCodeList();
 		
 		model.addAttribute("codeList", codeList);
+		
 		
 		model.addAttribute("userProjectDTO", userProjectDTO);
 		

@@ -21,6 +21,7 @@ public class UserDTO {
 	private String skills;
 	private String currentPage;
 	private String message;
+	private String salt;
 	public int getUsrSeq() {
 		return usrSeq;
 	}
@@ -141,21 +142,27 @@ public class UserDTO {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+	public String getSalt() {
+		return salt;
+	}
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
 	@Override
 	public String toString() {
 		return "UserDTO [usrSeq=" + usrSeq + ", usrId=" + usrId + ", usrPw=" + usrPw + ", usrNm=" + usrNm + ", usrBDT="
 				+ usrBDT + ", gdCD=" + gdCD + ", usrINDT=" + usrINDT + ", stCD=" + stCD + ", raCD=" + raCD + ", grCD="
 				+ grCD + ", dvCD=" + dvCD + ", usrImg=" + usrImg + ", usrPn=" + usrPn + ", usrEm=" + usrEm + ", usrAd="
 				+ usrAd + ", minDT=" + minDT + ", maxDT=" + maxDT + ", skills=" + skills + ", currentPage="
-				+ currentPage + ", message=" + message + ", getUsrSeq()=" + getUsrSeq() + ", getUsrId()=" + getUsrId()
-				+ ", getUsrPw()=" + getUsrPw() + ", getUsrNm()=" + getUsrNm() + ", getUsrBDT()=" + getUsrBDT()
-				+ ", getGdCD()=" + getGdCD() + ", getUsrINDT()=" + getUsrINDT() + ", getStCD()=" + getStCD()
-				+ ", getRaCD()=" + getRaCD() + ", getGrCD()=" + getGrCD() + ", getDvCD()=" + getDvCD()
-				+ ", getUsrImg()=" + getUsrImg() + ", getUsrPn()=" + getUsrPn() + ", getUsrEm()=" + getUsrEm()
-				+ ", getUsrAd()=" + getUsrAd() + ", getMinDT()=" + getMinDT() + ", getMaxDT()=" + getMaxDT()
-				+ ", getSkills()=" + getSkills() + ", getCurrentPage()=" + getCurrentPage() + ", getMessage()="
-				+ getMessage() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()="
-				+ super.toString() + "]";
+				+ currentPage + ", message=" + message + ", salt=" + salt + ", getUsrSeq()=" + getUsrSeq()
+				+ ", getUsrId()=" + getUsrId() + ", getUsrPw()=" + getUsrPw() + ", getUsrNm()=" + getUsrNm()
+				+ ", getUsrBDT()=" + getUsrBDT() + ", getGdCD()=" + getGdCD() + ", getUsrINDT()=" + getUsrINDT()
+				+ ", getStCD()=" + getStCD() + ", getRaCD()=" + getRaCD() + ", getGrCD()=" + getGrCD() + ", getDvCD()="
+				+ getDvCD() + ", getUsrImg()=" + getUsrImg() + ", getUsrPn()=" + getUsrPn() + ", getUsrEm()="
+				+ getUsrEm() + ", getUsrAd()=" + getUsrAd() + ", getMinDT()=" + getMinDT() + ", getMaxDT()="
+				+ getMaxDT() + ", getSkills()=" + getSkills() + ", getCurrentPage()=" + getCurrentPage()
+				+ ", getMessage()=" + getMessage() + ", getSalt()=" + getSalt() + ", getClass()=" + getClass()
+				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
 	}
 	
 	

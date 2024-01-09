@@ -19,4 +19,9 @@ public class MainDAOImpl implements MainDAO{
 	public List getCodeList() {
 		return sqlSession.selectList("code.getCodeList");
 	}
+
+	@Override
+	public List getMenuList() {
+		return sqlSession.selectList("code.getMenuList");
+	}
 }

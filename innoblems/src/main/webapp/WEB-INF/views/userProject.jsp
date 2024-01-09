@@ -40,13 +40,14 @@
 	
 	function getUserProjectList(pageNum){
 		var usrSeq = $("#usrSeq").val()
+		var countPerPage = $("#countPerPage").val()
 		
 		if(usrSeq == ""){
 			usrSeq = 0
 		}
 		
 		var param = "usrSeq="+usrSeq
-		
+		param += "&countPerPage="+countPerPage
 		param += "&pageNum="+pageNum
 		
 		$.ajax({
@@ -112,7 +113,11 @@
 	               		str += "<td class='customerRow'>" + customer + "</td>"
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
 	               		str += "<td class='prjSTDTRow'>" + data.userProjectList[i].prjSTDT + "</td>"
-	               		str += "<td class='prjEDDTRow'>" + data.userProjectList[i].prjEDDT + "</td>"
+	               		if(data.userProjectList[i].prjEDDT == null){
+	               			str += "<td class='prjEDDTRow'>-</td>"
+	               		} else {
+	               			str += "<td class='prjEDDTRow'>" + data.userProjectList[i].prjEDDT + "</td>"
+	               		}
 	               		str += "<td class='usrPrjINDTRow'><input type='date' id='usrPrjINDT' value='" + data.userProjectList[i].usrPrjINDT + "'></td>"
 	               		str += "<td class='usrPrjOTDTRow'><input type='date' id='usrPrjOTDT' value='" + data.userProjectList[i].usrPrjOTDT + "'></td>"
 	               		str += "<td class='roleRow'>"
@@ -137,7 +142,7 @@
 	              		str += "</tr>"
 	                })
 	                
-		        	if(data.beginPaging != 1){
+	                if(data.beginPaging != 1){
 		        		page += "<a href=getUserProjectList?pageNum=" + (data.beginPaging - 1) + ">이전</a>"
 		        	}
 		        	
@@ -821,6 +826,12 @@ table .roleHead {
 .skill {
  	accent-color: lightgrey;
 }
+
+.resultPerPage {
+	display: flex;
+	flex-direction: row-reverse;
+	margin-bottom: 10px;
+}
 </style>
 </head>
 <body>
@@ -880,6 +891,12 @@ table .roleHead {
 				</div>
 				<div class="result">
 					<div class="resultTitle"><h1>소속 프로젝트</h1></div>
+					<div class="resultPerPage">
+						<select name="countPerPage" id="countPerPage">
+							<option value="5">5개씩 보기</option>
+							<option value="10">10개씩 보기</option>
+						</select>
+					</div>
 					<div class="resultDetail">
 						<table>
 							<thead>
