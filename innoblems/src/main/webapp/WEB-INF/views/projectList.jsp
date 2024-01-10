@@ -154,10 +154,12 @@
 	        	for(var i = 0; i<codeList.length; i++){
 	        		var str = codeList[i]
 	        		
-	        		codeList[i] = str.substring(2, str.length-3)
+	        		if(i < codeList.length-1){
+	        			codeList[i] = str.substring(1, str.length-3)
+	        		} else {
+	        			codeList[i] = str.substring(1, str.length-1)
+	        		}
 	        	}
-	        	
-	        	console.log("codeList = " + codeList)
 	        	
 		        $("#tbody").empty()
 		        $(".resultPage").empty()
@@ -170,7 +172,10 @@
 		        		
 		        		var skillArr = data.projectList[i].skills.split(",")
 		        		
+		        		console.log("skillArr = " + skillArr)
+		        		
 		        		for(var j = 0; j<codeList.length; j++){
+		        			console.log("substr test = " + codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7))
 		        			if(codeList[j].indexOf("mstCD=CU01") != -1 && codeList[j].indexOf("dtCD=" + data.projectList[i].cusCD + ",") != -1){
 		        				customer = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
 		        			}
@@ -184,6 +189,9 @@
 			        			}
 		        			}
 		        		}
+		        		
+		        		console.log("skills = " + skills)
+		        		console.log("customer = " + customer)
 		        		
 	                	str += "<tr>"
 	                	str += "<td class='checkRow'><input type='checkbox' class='prjSeq' value=" + data.projectList[i].prjSeq + " onclick='checkOne()'></td>"

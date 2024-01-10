@@ -214,7 +214,9 @@
 		 UPDATE
 		 	USER_INFO
 		 SET
-		 	USR_PW = #{usrPw},
+		 	<if test="usrPw != '' and usrPw != null and usrPw != 'undefined'">
+				USR_PW = #{usrPw},
+			</if>
 		 	USR_NM = #{usrNm},
 		 	USR_BDT = #{usrBDT},
 		 	GD_CD = #{gdCD},
@@ -229,7 +231,9 @@
 		 	USR_PN = #{usrPn},
 		 	USR_EM = #{usrEm},
 		 	USR_AD = #{usrAd},
-		 	SALT = #{salt}
+		 	<if test="salt != '' and salt != null">
+				SALT = #{salt}
+			</if>
 		WHERE
 			USR_SEQ = #{usrSeq}
 	</update>

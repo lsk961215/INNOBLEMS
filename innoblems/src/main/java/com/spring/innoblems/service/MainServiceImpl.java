@@ -21,10 +21,4 @@ public class MainServiceImpl implements MainService {
 	public List getCodeList() {
 		return mainDAO.getCodeList();
 	}
-
-	@Override
-	public List getMenuList() {
-		return mainDAO.getMenuList();
-	}
-	
 }

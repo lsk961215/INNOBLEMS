@@ -125,7 +125,6 @@ public class UserController {
 	public String goAddUser(Model model, HttpServletRequest request, UserDTO userDTO) {
 		
 		List codeList = mainService.getCodeList();
-		
 		model.addAttribute("codeList", codeList);
 		
 		return "addUser";
@@ -200,7 +199,6 @@ public class UserController {
 	@RequestMapping("/getUserDetail")
 	public String getUserDetail (HttpServletRequest request, UserDTO userDTO, Model model) {
 		List codeList = mainService.getCodeList();
-		
 		userDTO = userService.getUserDetail(userDTO);
 		
 		model.addAttribute("codeList", codeList);
@@ -212,18 +210,19 @@ public class UserController {
 	@ResponseBody
 	@RequestMapping("/saveUser")
 	public int saveUser(HttpServletRequest request, UserDTO userDTO) throws Exception {
-		
 		try {
-			String save_pw = userDTO.getUsrPw();
-			
-			new SHA256();
-			
-			String salt = SHA256.createSalt(save_pw);
-			
-			String pw = SHA256.encrypt(save_pw, salt);
-			
-			userDTO.setUsrPw(pw);
-			userDTO.setSalt(salt);
+			if(userDTO.getUsrPw() != null) {
+				String save_pw = userDTO.getUsrPw();
+				
+				new SHA256();
+				
+				String salt = SHA256.createSalt(save_pw);
+				
+				String pw = SHA256.encrypt(save_pw, salt);
+				
+				userDTO.setUsrPw(pw);
+				userDTO.setSalt(salt);
+			}
 			
 			userService.saveUser(userDTO);
 			
@@ -257,14 +256,10 @@ public class UserController {
 	
 	@RequestMapping("/getUserProject")
 	public String getUserProject (HttpServletRequest request, UserDTO userDTO, Model model) {
-		List menuList = mainService.getMenuList();
-		model.addAttribute("menuList", menuList);
 		List codeList = mainService.getCodeList();
-		
-		userDTO = userService.getUserDetail(userDTO);
-		
 		model.addAttribute("codeList", codeList);
 		
+		userDTO = userService.getUserDetail(userDTO);
 		model.addAttribute("userDTO", userDTO);
 		
 		return "userProject";
@@ -274,7 +269,6 @@ public class UserController {
 	@RequestMapping("/getUserProjectList")
 	public Map getUserProjectList (HttpServletRequest request, UserProjectDTO userProjectDTO, Model model) {
 		List codeList = mainService.getCodeList();
-		
 		model.addAttribute("codeList", codeList);
 		
 		Map selectMap = new HashMap();
@@ -323,10 +317,7 @@ public class UserController {
 	@RequestMapping("/goAddUserProject")
 	public String addUserProject(Model model, UserProjectDTO userProjectDTO) {
 		
-		List menuList = mainService.getMenuList();
-		model.addAttribute("menuList", menuList);
 		List codeList = mainService.getCodeList();
-		
 		model.addAttribute("codeList", codeList);
 		
 		model.addAttribute("userProjectDTO", userProjectDTO);

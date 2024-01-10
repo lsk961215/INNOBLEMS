@@ -1,5 +1,13 @@
 package com.spring.innoblems.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
 public class UserDTO {
 	private int usrSeq;
 	private String usrId;
@@ -22,148 +30,4 @@ public class UserDTO {
 	private String currentPage;
 	private String message;
 	private String salt;
-	public int getUsrSeq() {
-		return usrSeq;
-	}
-	public void setUsrSeq(int usrSeq) {
-		this.usrSeq = usrSeq;
-	}
-	public String getUsrId() {
-		return usrId;
-	}
-	public void setUsrId(String usrId) {
-		this.usrId = usrId;
-	}
-	public String getUsrPw() {
-		return usrPw;
-	}
-	public void setUsrPw(String usrPw) {
-		this.usrPw = usrPw;
-	}
-	public String getUsrNm() {
-		return usrNm;
-	}
-	public void setUsrNm(String usrNm) {
-		this.usrNm = usrNm;
-	}
-	public String getUsrBDT() {
-		return usrBDT;
-	}
-	public void setUsrBDT(String usrBDT) {
-		this.usrBDT = usrBDT;
-	}
-	public String getGdCD() {
-		return gdCD;
-	}
-	public void setGdCD(String gdCD) {
-		this.gdCD = gdCD;
-	}
-	public String getUsrINDT() {
-		return usrINDT;
-	}
-	public void setUsrINDT(String usrINDT) {
-		this.usrINDT = usrINDT;
-	}
-	public String getStCD() {
-		return stCD;
-	}
-	public void setStCD(String stCD) {
-		this.stCD = stCD;
-	}
-	public String getRaCD() {
-		return raCD;
-	}
-	public void setRaCD(String raCD) {
-		this.raCD = raCD;
-	}
-	public String getGrCD() {
-		return grCD;
-	}
-	public void setGrCD(String grCD) {
-		this.grCD = grCD;
-	}
-	public String getDvCD() {
-		return dvCD;
-	}
-	public void setDvCD(String dvCD) {
-		this.dvCD = dvCD;
-	}
-	public String getUsrImg() {
-		return usrImg;
-	}
-	public void setUsrImg(String usrImg) {
-		this.usrImg = usrImg;
-	}
-	public String getUsrPn() {
-		return usrPn;
-	}
-	public void setUsrPn(String usrPn) {
-		this.usrPn = usrPn;
-	}
-	public String getUsrEm() {
-		return usrEm;
-	}
-	public void setUsrEm(String usrEm) {
-		this.usrEm = usrEm;
-	}
-	public String getUsrAd() {
-		return usrAd;
-	}
-	public void setUsrAd(String usrAd) {
-		this.usrAd = usrAd;
-	}
-	public String getMinDT() {
-		return minDT;
-	}
-	public void setMinDT(String minDT) {
-		this.minDT = minDT;
-	}
-	public String getMaxDT() {
-		return maxDT;
-	}
-	public void setMaxDT(String maxDT) {
-		this.maxDT = maxDT;
-	}
-	public String getSkills() {
-		return skills;
-	}
-	public void setSkills(String skills) {
-		this.skills = skills;
-	}
-	public String getCurrentPage() {
-		return currentPage;
-	}
-	public void setCurrentPage(String currentPage) {
-		this.currentPage = currentPage;
-	}
-	public String getMessage() {
-		return message;
-	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	public String getSalt() {
-		return salt;
-	}
-	public void setSalt(String salt) {
-		this.salt = salt;
-	}
-	@Override
-	public String toString() {
-		return "UserDTO [usrSeq=" + usrSeq + ", usrId=" + usrId + ", usrPw=" + usrPw + ", usrNm=" + usrNm + ", usrBDT="
-				+ usrBDT + ", gdCD=" + gdCD + ", usrINDT=" + usrINDT + ", stCD=" + stCD + ", raCD=" + raCD + ", grCD="
-				+ grCD + ", dvCD=" + dvCD + ", usrImg=" + usrImg + ", usrPn=" + usrPn + ", usrEm=" + usrEm + ", usrAd="
-				+ usrAd + ", minDT=" + minDT + ", maxDT=" + maxDT + ", skills=" + skills + ", currentPage="
-				+ currentPage + ", message=" + message + ", salt=" + salt + ", getUsrSeq()=" + getUsrSeq()
-				+ ", getUsrId()=" + getUsrId() + ", getUsrPw()=" + getUsrPw() + ", getUsrNm()=" + getUsrNm()
-				+ ", getUsrBDT()=" + getUsrBDT() + ", getGdCD()=" + getGdCD() + ", getUsrINDT()=" + getUsrINDT()
-				+ ", getStCD()=" + getStCD() + ", getRaCD()=" + getRaCD() + ", getGrCD()=" + getGrCD() + ", getDvCD()="
-				+ getDvCD() + ", getUsrImg()=" + getUsrImg() + ", getUsrPn()=" + getUsrPn() + ", getUsrEm()="
-				+ getUsrEm() + ", getUsrAd()=" + getUsrAd() + ", getMinDT()=" + getMinDT() + ", getMaxDT()="
-				+ getMaxDT() + ", getSkills()=" + getSkills() + ", getCurrentPage()=" + getCurrentPage()
-				+ ", getMessage()=" + getMessage() + ", getSalt()=" + getSalt() + ", getClass()=" + getClass()
-				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
-	}
-	
-	
 }

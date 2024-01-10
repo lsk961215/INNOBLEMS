@@ -18,6 +18,8 @@
   crossorigin="anonymous"></script>
 <script>
 	$(function(){
+		getBoardList(1)
+		
 		$("#search").click(function(){
 			if($("#maxDT").val() >= $("#minDT").val()){
 				getUserList(1)
@@ -66,157 +68,70 @@
 		})
 	})
 	
-	function getUserList(pageNum){
-		var usrSeq = $("#usrSeq").val()
+	function getBoardList(pageNum){
+		var boTi = $("#boTi").val()
 		var usrNm = $("#usrNm").val()
-		var grCD = $("#grCD").val()
-		var stCD = $("#stCD").val()
+		var tpCD = $("#tpCD").val()
 		var minDT = $("#minDT").val()
 		var maxDT = $("#maxDT").val()
-		var skills = new Array()
 		
-		if(usrSeq == ""){
-			usrSeq = 0
-		}
-		
-		$(".skill").each(function(){
-			if($(this).is(":checked")==true){
-				skills.push($(this).val())
-		    }
-		})
-		
-		var param = "usrSeq="+usrSeq
+		var param = "boTi="+boTi
 		param += "&usrNm="+usrNm
-		param += "&grCD="+grCD
-		param += "&stCD="+stCD
+		param += "&tpCD="+tpCD
 		param += "&minDT="+minDT
 		param += "&maxDT="+maxDT
-		param += "&skills="
-		
-		for(var i = 0; i<skills.length; i++){
-			param += skills[i]
-			if(i != skills.length - 1){
-				param += ","
-			}
-		}
-		
 		param += "&pageNum="+pageNum
 		
 		console.log("param = " + param)
 		
 		$.ajax({
-	        url: "getUserList", 
+	        url: "getBoardList",
 	        type:"post",
 	        data: param,
 	        success: function(data) {
 	        	var str = ""
 	        	var page = ""
-	        	var add = "<button id='add' onclick='add()'>추가</button>"
-	        	var del = "<button id='del' onclick='del()'>삭제</button>"
-	        	
-	        	
-	        	/* model 에서 toString() 으로 받아온 문자열을 배열로 파싱 */
-	        	var codeList = '${codeList}'
-	        	
-	        	codeList = codeList.substring(1, codeList.length-1)
-	        	codeList = codeList.split("CodeDTO")
-	        	codeList.shift()
-	        	
-	        	for(var i = 0; i<codeList.length; i++){
-	        		var str = codeList[i]
-	        		
-	        		codeList[i] = str.substring(2, str.length-3)
-	        	}
-	        	
-	        	console.log("codeList = " + codeList)
+	        	var add = "<button id='add' onclick='add()'>글쓰기</button>"
 	        	
 		        $("#tbody").empty()
 		        $(".resultPage").empty()
 		        $(".resultButton").empty()
 		        
-		        if(data.userList.length >= 1){
-		        	$.each(data.userList, function(i){
-		        		var rank
-		        		var grade
-		        		var status
-		        		var skills = ""
-		        		
-		        		var skillArr = data.userList[i].skills.split(",")
-		        		
-		        		for(var j = 0; j<codeList.length; j++){
-		        			if(codeList[j].indexOf("mstCD=RA01") != -1 && codeList[j].indexOf("dtCD=" + data.userList[i].raCD + ",") != -1){
-		        				rank = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
-		        			}
-		        			if(codeList[j].indexOf("mstCD=GR01") != -1 && codeList[j].indexOf("dtCD=" + data.userList[i].grCD + ",") != -1){
-		        				grade = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
-		        			}
-		        			if(codeList[j].indexOf("mstCD=ST01") != -1 && codeList[j].indexOf("dtCD=" + data.userList[i].stCD + ",") != -1){
-		        				status = codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
-		        			}
-		        			
-		        			for(var k = 0; k<skillArr.length; k++){
-		        				if(codeList[j].indexOf("mstCD=SK01") != -1 && codeList[j].indexOf("dtCD=" + skillArr[k] + ",") != -1){
-		        					if(k != 0){
-			        					skills += ", "
-			        				}
-		        					skills += codeList[j].substr(codeList[j].indexOf("dtCDNM=")+7)
-			        			}
-		        			}
-		        		}
-		        		
+		        if(data.boardList.length >= 1){
+		        	$.each(data.boardList, function(i){
 	                	str += "<tr>"
-	                	str += "<td class='checkRow'><input type='checkbox' class='usrSeq' value=" + data.userList[i].usrSeq + " onclick='checkOne()'></td>"
-	               		str += "<td class='numberRow'><button id='numberButton' onclick='edit(this)' name='" + data.userList[i].usrSeq + "'>" + data.userList[i].usrSeq + "</button></td>"
-	               		str += "<td class='inDateRow'>" + data.userList[i].usrINDT + "</td>"
-	               		if(rank == undefined){
-	               			str += "<td class='rankRow'>-</td>"
-	               		} else {
-	               			str += "<td class='rankRow'>" + rank + "</td>"
-	               		}
-	               		str += "<td class='nameRow'>" + data.userList[i].usrNm + "</td>"
-	               		if(grade == undefined){
-	               			str += "<td class='gradeRow'>-</td>"
-	               		} else {
-	               			str += "<td class='gradeRow'>" + grade + "</td>"
-	               		}
-	               		str += "<td class='skillsRow'>" + skills + "</td>"
-	               		if(status == undefined){
-	               			str += "<td class='statusRow'>-</td>"
-	               		} else {
-	               			str += "<td class='statusRow'>" + status + "</td>"
-	               		}
-	               		str += "<td class='editRow'><button id='edit' onclick='edit(this)' name='" + data.userList[i].usrSeq + "'>상세/수정</button></td>"
-	              		str += "<td class='projectRow'><a id='project' href='getUserProject?usrSeq=" + data.userList[i].usrSeq + "'>프로젝트 관리</a></td>"
+	               		str += "<td class='numberRow'>"+ data.boardList[i].boSeq + "</td>"
+	               		str += "<td class='titleRow'>" + data.boardList[i].boTi + "</td>"
+	               		str += "<td class='nameRow'>" + data.boardList[i].usrNm + "</td>"
+	               		str += "<td class='dateRow'>" + data.boardList[i].boDT + "</td>"
 	              		str += "</tr>"
 	                })
 	                
 		        	if(data.beginPaging != 1){
-		        		page += "<a href=getUserList?pageNum=" + (data.beginPaging - 1) + ">이전</a>"
+		        		page += "<a href=getBoardList?pageNum=" + (data.beginPaging - 1) + ">이전</a>"
 		        	}
 		        	
 		        	for(var i = data.beginPaging; i <= data.endPaging; i++){
 		        		if(i == data.pageNum){
 		        			page += "<button style='font-size:2em' id='currentPage' class='page' value=" + i +">" + i + "</button>"
 		        		} else {
-		        			page += "<button class='page' value=" + i +" onclick='getUserList(" + i + ")'>" + i + "</button>"
+		        			page += "<button class='page' value=" + i +" onclick='getBoardList(" + i + ")'>" + i + "</button>"
 		        		}
 		        	}
 		        	
 		        	if(data.endPaging != data.totalPaging){
-		        		page += "<a href=getUserList?pageNum=" + (data.endPaging + 1) + ">다음</a>"
+		        		page += "<a href=getBoardList?pageNum=" + (data.endPaging + 1) + ">다음</a>"
 		        	}
 		        	
 		        } else {
 		        	str += "<tr>"
-		        	str += '<td colspan="10"><h3>검색결과가 없습니다.</h3></td>'
+		        	str += '<td colspan="4"><h3>검색결과가 없습니다.</h3></td>'
 		        	str += "</tr>"
 		        }
 	        	
-	        	$("#checkAll").prop('checked',false)
 	        	$("#tbody").append(str)
 	        	$(".resultPage").append(page)
 	        	$(".resultButton").append(add)
-	        	$(".resultButton").append(del)
 	        },
 	        error: function() {
 	            alert("통신실패")
@@ -242,7 +157,7 @@
 	}
 	
 	function add(){
-    	var url = "goAddUser";
+    	var url = "goAddBoard";
     	
         window.open("", "openForm", "width=1000px height=600px");
         
@@ -497,14 +412,26 @@ input[type=text], select {
 	
 	cursor: pointer;
 	
-	margin-right: 50px;
-	
 	text-decoration: none;
 }
 
 #del {
 	border: none;
 	background-color: red;
+	color: white;
+	
+	font-weight: bold;
+	font-size: 105%;
+	
+	width: 80px;
+	height: 30px;
+	
+	cursor: pointer;
+}
+
+#more {
+	border: none;
+	background-color: grey;
 	color: white;
 	
 	font-weight: bold;
@@ -558,6 +485,7 @@ input[type=text], select {
 
 table {
 	margin-bottom: 1%;
+	width: 100%;
 		
 	border-collapse : collapse;
 }
@@ -576,22 +504,22 @@ table th {
 	color: black;
 }
 
-table .checkRow {
-	min-width: 50px;
+table .dateRow {
+	max-width: 100px;
 	text-align: center;
 }
-table .checkHead {
-	min-width: 50px;
+table .dateHead {
+	max-width: 100px;
 	text-align: center;
 }
 
 table .numberRow {
-	min-width: 100px;
+	max-width: 100px;
 	text-align: right;
 }
 
 table .numberHead {
-	min-width: 100px;
+	max-width: 100px;
 	text-align: center;
 }
 
@@ -606,22 +534,22 @@ table .inDateHead, table .rankHead, table .gradeHead, table .statusHead {
 }
 
 table .nameRow {
-	min-width: 150px;
+	max-width: 100px;
 	text-align: left;
 }
 
 table .nameHead {
-	min-width: 150px;
+	max-width: 100px;
 	text-align: center;
 }
 
-table .skillsRow {
-	min-width: 400px;
+table .titleRow {
+	min-width: 350px;
 	text-align: left;
 }
 
-table .skillsHead {
-	min-width: 400px;
+table .titleHead {
+	min-width: 350px;
 	text-align: center;
 }
 
@@ -675,7 +603,29 @@ table .projectHead {
 				<div class="result">
 					<div class="resultTitle"><h1>사내게시판</h1></div>
 					<div class="resultDetail">
+						<table>
+							<thead>
+								<tr>
+									<th class="numberHead">글번호</th>
+									<th class="titleHead">제목</th>
+									<th class="nameHead">작성자</th>
+									<th class="dateHead">작성일</th>
+								</tr>
+							</thead>
+							<tbody id="tbody">
+								<tr>
+									<td colspan="4"><h3>글이 없습니다.</h3></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="resultPage">
 						
+					</div>
+					<div class="resultButtonWrap">
+						<div class="resultButton">
+					
+						</div>
 					</div>
 				</div>
 			</section>

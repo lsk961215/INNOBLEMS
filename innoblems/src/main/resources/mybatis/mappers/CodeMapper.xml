@@ -18,10 +18,4 @@
 		ORDER BY MST_CD, TO_NUMBER(DT_CD)
 	</select>
 	
-	<select id="getMenuList" resultMap="codeMap">
-	    SELECT *
-		FROM MENU_CD_DATA
-		ORDER BY MST_CD, TO_NUMBER(DT_CD)
-	</select>
-	
 </mapper>

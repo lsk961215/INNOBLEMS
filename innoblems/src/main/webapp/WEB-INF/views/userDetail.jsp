@@ -21,7 +21,6 @@
 		setBirth()
 		setAddress()
 		setSkills()
-		pwCheck()
 		
 		$("#usrNm").keyup(function (event) {
 	    	regexp = /[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g;
@@ -51,6 +50,19 @@
 		'-' + ( (today.getDate()) < 9 ? "0" + (today.getDate()) : (today.getDate()) )
 		
 		$("#usrBDT").prop("max", date)
+	}
+	
+	function chagePwButton(){
+		var pwRow = "<input type='password' id='usrPw' maxlength='16' placeholder='특수문자, 영문포함 16글자'>"
+		var pwCheckRow = "<input type='password' id='usrPwCheck' maxlength='16' placeholder='특수문자, 영문포함 16글자'>"
+		
+		if($("#usrPw").val() == undefined){
+			$(".pwRow").append(pwRow);
+			$(".pwCheckRow").append(pwCheckRow);	
+		} else {
+			$("#usrPw").remove()
+			$("#usrPwCheck").remove()
+		}
 	}
 	
 	function pwView() {
@@ -163,7 +175,9 @@
         		
         		var param = "usrId="+usrId
 	       		param += "&usrSeq="+usrSeq
-	       		param += "&usrPw="+usrPw
+	       		if(usrPw != undefined){
+	       			param += "&usrPw="+usrPw
+	       		}
 	       		param += "&usrNm="+usrNm
 	       		param += "&usrBDT="+usrBDT
 	       		param += "&usrINDT="+usrINDT
@@ -572,6 +586,19 @@ table td{
 .star {
 	color: red;
 }
+
+.pwChangeButton {
+	border: none;
+	background-color: #0C70F2;
+	color: white;
+	
+	font-weight: bold;
+	
+	width: 140px;
+	height: 20px;
+	
+	cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -641,7 +668,7 @@ table td{
 					    	</tr> 
 					    	<tr>
 					    		<td>비밀번호<a class="star">*</a></td>
-					    		<td><input type="password" id="usrPw" maxlength="16" placeholder="특수문자, 영문포함 16글자"></td>
+					    		<td class="pwRow"><button class="pwChangeButton" onclick="chagePwButton(); pwCheck()">비밀번호 변경하기</button></td>
 					    		<td>기술등급</td>
 					    		<td>
 					    			<select name="grCD" id="grCD">
@@ -661,7 +688,7 @@ table td{
 					    	</tr> 
 					    	<tr>
 					    		<td>비밀번호 확인<a class="star">*</a></td>
-					    		<td><input type="password" id="usrPwCheck" maxlength="16" placeholder="특수문자, 영문포함 16글자"></td>
+					    		<td class="pwCheckRow"></td>
 					    		<td>개발분야</td>
 					    		<td>
 						    		<select name="dvCD" id="dvCD">

@@ -139,19 +139,21 @@
 	        	
 	        	
 	        	/* model 에서 toString() 으로 받아온 문자열을 배열로 파싱 */
-	        	var codeList = '${codeList}'
-	        	
-	        	codeList = codeList.substring(1, codeList.length-1)
-	        	codeList = codeList.split("CodeDTO")
-	        	codeList.shift()
-	        	
-	        	for(var i = 0; i<codeList.length; i++){
-	        		var str = codeList[i]
-	        		
-	        		codeList[i] = str.substring(2, str.length-3)
-	        	}
-	        	
-	        	console.log("codeList = " + codeList)
+		        var codeList = '${codeList}'
+		        	
+		        codeList = codeList.substring(1, codeList.length-1)
+		        codeList = codeList.split("CodeDTO")
+		        codeList.shift()
+		        	
+		        for(var i = 0; i<codeList.length; i++){
+		        	var str = codeList[i]
+		        		
+		        	if(i < codeList.length-1){
+		        		codeList[i] = str.substring(1, str.length-3)
+		        	} else {
+		        		codeList[i] = str.substring(1, str.length-1)
+		        	}
+		        }
 	        	
 		        $("#tbody").empty()
 		        $(".resultPage").empty()

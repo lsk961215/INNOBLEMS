@@ -29,6 +29,8 @@
         <beans:property name="defaultEncoding" value="utf-8"></beans:property>
 	</beans:bean>
 	
+	<context:property-placeholder location="classpath:path.properties" />
+	
 	<!-- 인터셉터 -->
 	<interceptors>
            <interceptor>
