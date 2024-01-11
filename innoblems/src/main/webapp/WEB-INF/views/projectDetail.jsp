@@ -16,12 +16,40 @@
   crossorigin="anonymous"></script>
 <script>
 	$(function(){
-		$("#prjSTDT").change(function(){
-			$("#prjEDDT").attr("min", $(this).val())
+		$("#prjSTDT").focusout(function(){
+			if($(this).val() == ""){
+				$(this).val("")
+			} else {
+				$("#prjEDDT").prop("min", $(this).val())
+				if($("#prjEDDT").val() == ""){
+					
+				} else {
+					if($(this).val() <= $("#prjEDDT").val()){
+						
+					} else {
+						alert("날짜값이 올바르지 않습니다.")
+						$(this).val("")
+					}
+				}
+			}
 		})
 		
-		$("#prjEDDT").change(function(){
-			$("#prjSTDT").attr("max", $(this).val())
+		$("#prjEDDT").focusout(function(){
+			if($(this).val() == ""){
+				$(this).val("")
+			} else {
+				$("#prjSTDT").prop("max", $(this).val())
+				if($("#prjSTDT").val() == ""){
+					
+				} else {
+					if($(this).val() >= $("#prjSTDT").val()){
+						
+					} else {
+						alert("날짜값이 올바르지 않습니다.")
+						$(this).val("")
+					}
+				}
+			}
 		})
 		
 		setSkills()
@@ -312,11 +340,11 @@ table td{
 					    	</tr> 
 					    	<tr>
 					    		<td>시작일<a class="star">*</a></td>
-					    		<td><input type="date" id="prjSTDT" value="${projectDTO.prjSTDT}"></td>
+					    		<td><input type="date" id="prjSTDT" value="${projectDTO.prjSTDT}" max="9999-12-31"></td>
 					    	</tr> 
 					    	<tr>
 					    		<td>종료일</td>
-					    		<td><input type="date" id="prjEDDT" value="${projectDTO.prjEDDT}"></td>
+					    		<td><input type="date" id="prjEDDT" value="${projectDTO.prjEDDT}" max="9999-12-31"></td>
 					    	</tr> 
 					    	<tr>
 					    		<td>고객사명<a class="star">*</a></td>

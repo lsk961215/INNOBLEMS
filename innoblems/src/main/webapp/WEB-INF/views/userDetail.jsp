@@ -10,8 +10,6 @@
 <link rel="stylesheet" href="resources/css/header.css">
 <!-- aside css -->
 <link rel="stylesheet" href="resources/css/aside.css">
-<!-- header script -->
-<script src="resources/js/header.js"></script>
 <script
   src="https://code.jquery.com/jquery-3.7.1.js"
   integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
@@ -23,7 +21,7 @@
 		setSkills()
 		
 		$("#usrNm").keyup(function (event) {
-	    	regexp = /[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g;
+	    	var regexp = /[a-z0-9]|[ \[\]{}()<>?|`~!@#$%^&*-_+=,.;:\"'\\]/g;
 	        v = $(this).val();
 	        if (regexp.test(v)) {
 	            alert("한글만 입력가능 합니다.");
@@ -40,6 +38,42 @@
     			
     		}
 		});
+		
+		$("#usrBDT").focusout(function(){
+			if($(this).val() == ""){
+				$(this).val("")
+			} else {
+				$("#usrINDT").prop("min", $(this).val())
+				if($("#usrINDT").val() == ""){
+					
+				} else {
+					if($(this).val() <= $("#usrINDT").val()){
+						
+					} else {
+						alert("날짜값이 올바르지 않습니다.")
+						$(this).val("")
+					}
+				}
+			}
+		})
+		
+		$("#usrINDT").focusout(function(){
+			if($(this).val() == ""){
+				$(this).val("")
+			} else {
+				$("#usrBDT").prop("max", $(this).val())
+				if($("#usrBDT").val() == ""){
+					
+				} else {
+					if($(this).val() >= $("#usrBDT").val()){
+						
+					} else {
+						alert("날짜값이 올바르지 않습니다.")
+						$(this).val("")
+					}
+				}
+			}
+		})
 	})	
 	
 	function setBirth (){
@@ -624,7 +658,7 @@ table td{
 								<td>사원번호</td>
 								<td><input type="text" id="usrSeq" value="${userDTO.usrSeq}" readonly></td>
 								<td>입사일<a class="star">*</a></td>
-					    		<td><input type="date" id="usrINDT" value="${userDTO.usrINDT}"></td>
+					    		<td><input type="date" id="usrINDT" value="${userDTO.usrINDT}" max="9999-12-31"></td>
 							</tr>
 					    	<tr>
 					    		<td>사원명<a class="star">*</a></td>
@@ -717,7 +751,7 @@ table td{
 					    	</tr> 
 					    	<tr>
 					    		<td>생년월일</td>
-					    		<td><input type="date" id="usrBDT" value="${userDTO.usrBDT}"></td>
+					    		<td><input type="date" id="usrBDT" value="${userDTO.usrBDT}" max="9999-12-31"></td>
 					    		<td>이메일</td>
 					    		<td><input type="text" id="usrEm" value="${userDTO.usrEm}" placeholder="~@~ 형식으로 입력해주세요"></td>
 					    	</tr> 

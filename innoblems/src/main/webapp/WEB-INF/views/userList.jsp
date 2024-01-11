@@ -19,7 +19,17 @@
 <script>
 	$(function(){
 		$("#search").click(function(){
-			if($("#maxDT").val() >= $("#minDT").val()){
+			var minDT = $("#minDT").val()
+			var maxDT = $("#maxDT").val()
+			
+			if(maxDT = ""){
+				maxDT = 9999-12-31
+			}
+			if(minDT = ""){
+				minDT = 0001-01-01
+			}
+			
+			if(maxDT >= minDT){
 				getUserList(1)
 			} else {
 				alert("날짜값이 올바르지 않습니다.")
@@ -27,28 +37,38 @@
 			
 		})
 		
-		$("#minDT").change(function(){
-			if($("#maxDT").val() == ""){
-				
+		$("#minDT").focusout(function(){
+			if($(this).val() == ""){
+				$(this).val("")
 			} else {
-				if($(this).val() <= $("#maxDT").val()){
+				$("#maxDT").prop("min", $(this).val())
+				if($("#maxDT").val() == ""){
 					
 				} else {
-					alert("날짜값이 올바르지 않습니다.")
-					$(this).val("")
+					if($(this).val() <= $("#maxDT").val()){
+						
+					} else {
+						alert("날짜값이 올바르지 않습니다.")
+						$(this).val("")
+					}
 				}
 			}
 		})
 		
-		$("#maxDT").change(function(){
-			if($("#minDT").val() == ""){
-				
+		$("#maxDT").focusout(function(){
+			if($(this).val() == ""){
+				$(this).val("")
 			} else {
-				if($(this).val() >= $("#minDT").val()){
+				$("#minDT").prop("max", $(this).val())
+				if($("#minDT").val() == ""){
 					
 				} else {
-					alert("날짜값이 올바르지 않습니다.")
-					$(this).val("")
+					if($(this).val() >= $("#minDT").val()){
+						
+					} else {
+						alert("날짜값이 올바르지 않습니다.")
+						$(this).val("")
+					}
 				}
 			}
 		})
@@ -711,7 +731,7 @@ table .projectHead {
 							</select>
 						</div>
 						<div class="filterSection_2">
-							<small class="inDT">입사일</small> <input id="minDT" type="date" max="9999-12-31"> ~ <input id="maxDT" type="date" max="9999-12-31">
+							<small class="inDT">입사일</small> <input id="minDT" type="date" max="9999-12-31" oninput="checkDate(this)"> ~ <input id="maxDT" type="date" max="9999-12-31" oninput="checkDate(this)">
 						</div>
 						<div class="filterSection_3">
 							<small class="skillText">보유기술</small> 

@@ -26,4 +26,8 @@ public class UserProjectDTO {
 	private String usrPrjINDT;
 	private String usrPrjOTDT;
 	private String rlCD;
+	private String prjSeqList;
+	private String usrPrjINDTList;
+	private String usrPrjOTDTList;
+	private String rlCDList;
 }

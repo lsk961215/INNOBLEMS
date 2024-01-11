@@ -101,7 +101,7 @@
 		        	$.each(data.boardList, function(i){
 	                	str += "<tr>"
 	               		str += "<td class='numberRow'>"+ data.boardList[i].boSeq + "</td>"
-	               		str += "<td class='titleRow'>" + data.boardList[i].boTi + "</td>"
+	               		str += "<td class='titleRow'><a href='getBoardDetail?boSeq=" + data.boardList[i].boSeq + "'>" + data.boardList[i].boTi + "</a></td>"
 	               		str += "<td class='nameRow'>" + data.boardList[i].usrNm + "</td>"
 	               		str += "<td class='dateRow'>" + data.boardList[i].boDT + "</td>"
 	              		str += "</tr>"
@@ -158,12 +158,9 @@
 	
 	function add(){
     	var url = "goAddBoard";
-    	
-        window.open("", "openForm", "width=1000px height=600px");
         
         let $form = $('<form></form>'); // 폼 태그 생성
         $form.attr('action', url); 		// 폼 속성 설정
-        $form.attr("target", "openForm");
         $form.attr('method', 'post');
         
         $form.appendTo('body'); // body태그에 추가

@@ -10,4 +10,5 @@ public interface BoardDAO {
 	List getBoardList(Map map);
 	int getBoardTotal(Map map);
 	void addBoard(BoardDTO boardDTO);
+	BoardDTO getBoardDetail(BoardDTO boardDTO);
 }

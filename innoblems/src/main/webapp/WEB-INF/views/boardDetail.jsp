@@ -760,7 +760,7 @@ table .projectHead {
 							</tr>
 							<tr>
 								<td>제목</td>
-							    <td><input type="text" id="boTi" maxlength="50"></td>
+							    <td><input type="text" id="boTi" maxlength="50" value="${boardDTO.boTi}"></td>
 							</tr>
 						</table>
 					</div>
@@ -770,8 +770,13 @@ table .projectHead {
 							<tr>
 							    <td colspan="2">
 							   		<div class=imgSection>
-										<img id="img">
-										<label for="file1" class="imgLabel">사진 첨부</label> 
+								   		<c:if test = "${boardDTO.boImg == null}">
+								   		
+										</c:if>
+										<c:if test = "${boardDTO.boImg != null}">
+											<img id="img" src="resources/boardImages/${boardDTO.boImg}">
+										</c:if>
+										<label for="file1" class="imgLabel">사진 첨부</label>
 										<input type="file" id="file1" name="file1"> 
 										<button id="btn_submit" onclick="javascript:fn_submit()">전송</button>    
 									</div>
@@ -779,7 +784,7 @@ table .projectHead {
 							</tr>
 							<tr class="boTXTRow">
 							    <td>내용</td>
-							    <td class="boTXTWrap"><textarea id="boTXT" maxlength="300"></textarea></td>
+							    <td class="boTXTWrap"><textarea id="boTXT" maxlength="300" value="${boardDTO.boTXT}"></textarea></td>
 							</tr>
 						</table>
 					</div>

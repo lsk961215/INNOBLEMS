@@ -19,10 +19,13 @@
 <script>
 	$(function(){
 		
+		getProjectUserList(1)
+		
 		setSkills()
 		
 		$("#search").click(function(){
 			getProjectUserList(1)
+			alert("조회 완료")
 		})
 		
 		$("#checkAll").change(function(){

@@ -70,4 +70,13 @@
 		 )
 	</insert>
 	
+	<select id="getBoardDetail" parameterType="com.spring.innoblems.dto.BoardDTO" resultMap="boardMap">
+		SELECT
+			*
+		FROM
+			BOARD_INFO
+		WHERE
+			BO_SEQ = #{boSeq}
+	</select>
+	
 </mapper>

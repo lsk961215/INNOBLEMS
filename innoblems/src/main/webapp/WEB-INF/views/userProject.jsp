@@ -18,11 +18,13 @@
   crossorigin="anonymous"></script>
 <script>
 	$(function(){
+		getUserProjectList(1)
 		
 		setSkills()
 		
 		$("#search").click(function(){
 			getUserProjectList(1)
+			alert("조회 완료")
 		})
 		
 		$("#checkAll").change(function(){
@@ -36,7 +38,24 @@
 				})
 			}
 		})
+		
 	})
+	
+	
+		//////////////////////////TODO//////////////////////////////
+	function checkDate(e) {
+		if($(e).val() == ""){
+			$(e).val("")
+		} else {
+			var val = $(e).val()
+			console.log(val)
+			 if($(e).attr("id") == "usrPrjINDT"){
+				 console.log($(e).parent().parent().find("#usrPrjOTDT"))
+			 }
+			
+		///////////////////////////////////////////////////////////////
+		}
+	}
 	
 	function getUserProjectList(pageNum){
 		var usrSeq = $("#usrSeq").val()
@@ -122,8 +141,8 @@
 	               		} else {
 	               			str += "<td class='prjEDDTRow'>" + data.userProjectList[i].prjEDDT + "</td>"
 	               		}
-	               		str += "<td class='usrPrjINDTRow'><input type='date' id='usrPrjINDT' value='" + data.userProjectList[i].usrPrjINDT + "'></td>"
-	               		str += "<td class='usrPrjOTDTRow'><input type='date' id='usrPrjOTDT' value='" + data.userProjectList[i].usrPrjOTDT + "'></td>"
+	               		str += "<td class='usrPrjINDTRow'><input type='date' id='usrPrjINDT' onfocusout='checkDate(this)' value='" + data.userProjectList[i].usrPrjINDT + "' max='9999-12-31'></td>"
+	               		str += "<td class='usrPrjOTDTRow'><input type='date' id='usrPrjOTDT' onfocusout='checkDate(this)' value='" + data.userProjectList[i].usrPrjOTDT + "' max='9999-12-31'></td>"
 	               		str += "<td class='roleRow'>"
 	               		str += "<select name='rlCD' id='rlCD'>"
 	               		str += "<option value='0'>선택</option>"
@@ -133,9 +152,9 @@
 	               		for(var j = 0; j<codeList.length; j++){
 	               			if(codeList[j].indexOf("mstCD=RL01") != -1){
 	               				if(codeList[j].indexOf("dtCD=" + data.userProjectList[i].rlCD + ",") != -1){
-	    		        			str += "<option value='" + codeList[j].substring(codeList[j].indexOf("dtCD=")+5, codeList[j].indexOf(", dtCDNM"))+"' selected>" + codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7) + "</option>"
+	    		        			str += "<option value='" + codeList[j].substring(codeList[j].indexOf("dtCD=")+5, codeList[j].indexOf(", dtCDURL"))+"' selected>" + codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7) + "</option>"
 	    		        		} else {
-	    		        			str += "<option value='" + codeList[j].substring(codeList[j].indexOf("dtCD=")+5, codeList[j].indexOf(", dtCDNM"))+"' >" + codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7) + "</option>"
+	    		        			str += "<option value='" + codeList[j].substring(codeList[j].indexOf("dtCD=")+5, codeList[j].indexOf(", dtCDURL"))+"' >" + codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7) + "</option>"
 	    		        		}
 			        			role = codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7)
 			        		}
@@ -241,72 +260,65 @@
 		var rlCDs = ""
 		var index = 0
 		
-		if($(".prjSeq:checked").length > 0){
-			$(".prjSeq").each(function(){
-				if($(this).is(":checked")==true){
-					var usrPrjINDT = $(this).parent().parent().find("#usrPrjINDT").val()
-					var usrPrjOTDT = $(this).parent().parent().find("#usrPrjOTDT").val()
-					var rlCD = $(this).parent().parent().find("#rlCD").val()
+		$(".prjSeq").each(function(){
+			var usrPrjINDT = $(this).parent().parent().find("#usrPrjINDT").val()
+			var usrPrjOTDT = $(this).parent().parent().find("#usrPrjOTDT").val()
+			var rlCD = $(this).parent().parent().find("#rlCD").val()
 					
-					if(usrPrjINDT == ""){
-						usrPrjINDT = "none"
-					}
+			if(usrPrjINDT == ""){
+				usrPrjINDT = "none"
+			}
 					
-					if(usrPrjOTDT == ""){
-						usrPrjOTDT = "none"
-					}
+			if(usrPrjOTDT == ""){
+				usrPrjOTDT = "none"
+			}
 					
-					if(index != 0){
-						prjSeqs += ","
-						usrPrjINDTs += ","
-						usrPrjOTDTs += ","
-						rlCDs += ","
-					}
+			if(index != 0){
+				prjSeqs += ","
+				usrPrjINDTs += ","
+				usrPrjOTDTs += ","
+				rlCDs += ","
+			}
 					
-					prjSeqs += $(this).val()
+			prjSeqs += $(this).val()
 					
-					usrPrjINDTs += usrPrjINDT
+			usrPrjINDTs += usrPrjINDT
 					
-					usrPrjOTDTs += usrPrjOTDT
+			usrPrjOTDTs += usrPrjOTDT
 
-					rlCDs += rlCD
+			rlCDs += rlCD
 					
-					index += 1
-				}
-			})
-				
-			var param = "&prjSeqList=" + prjSeqs
-			
-			param += "&usrPrjINDTList=" + usrPrjINDTs
-			
-			param += "&usrPrjOTDTList=" + usrPrjOTDTs
-			
-			param += "&rlCDList=" + rlCDs
-			
-			param += "&usrSeq=" + usrSeq
-			
-			console.log("param : " + param)
-			
-			$.ajax({
-		        url: "saveUserProject", 
-		        type:"post",
-		        data: param,
-		        success: function(data) {
-		        	if(data == 0){
-		        		alert("저장 되었습니다.")
-		        		getUserProjectList(1)
-		        	} else {
-		        		alert("저장할 수 없습니다.")
-		        	}
-		        },
-		        error: function() {
-		            alert("통신실패")
-		        }
-		    })
-		} else {
-			alert("한개 이상의 항목을 선택해주세요")
-		}
+			index += 1
+		})
 		
+		var param = "&prjSeqList=" + prjSeqs
+		
+		param += "&usrPrjINDTList=" + usrPrjINDTs
+				
+		param += "&usrPrjOTDTList=" + usrPrjOTDTs
+				
+		param += "&rlCDList=" + rlCDs
+				
+		param += "&usrSeq=" + usrSeq
+				
+		console.log("param : " + param)
+				
+		$.ajax({
+			url: "saveUserProject", 
+			type:"post",
+			data: param,
+			success: function(data) {
+				if(data == 0){
+			    	alert("저장 되었습니다.")
+			        getUserProjectList(1)
+			    } else {
+			        alert("저장할 수 없습니다.")
+			    }
+			},
+			error: function() {
+				alert("통신실패")
+			}
+		})
 	}
 	
 	function edit(e){

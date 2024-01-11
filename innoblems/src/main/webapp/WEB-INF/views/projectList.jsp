@@ -19,61 +19,99 @@
 <script>
 	$(function(){
 		$("#search").click(function(){
-			if($("#maxSTDT").val() >= $("#minSTDT").val() && $("#maxEDDT").val() >= $("#minEDDT").val()){
+			var maxSTDT = $("#maxSTDT").val()
+			var minSTDT = $("#minSTDT").val()
+			var maxEDDT = $("#maxEDDT").val()
+			var minEDDT = $("#minEDDT").val()
+			
+			if(maxSTDT = ""){
+				maxSTDT = 9999-12-31
+			}
+			if(minSTDT = ""){
+				minSTDT = 0001-01-01
+			}
+			if(maxEDDT = ""){
+				maxEDDT = 9999-12-31
+			}
+			if(minEDDT = ""){
+				minEDDT = 0001-01-01
+			}
+			
+			if(maxSTDT >= minSTDT && maxEDDT >= minEDDT){
 				getProjectList(1)
 			} else {
 				alert("날짜값이 올바르지 않습니다.")
 			}
 		})
 		
-		$("#minSTDT").change(function(){
-			if($("#maxSTDT").val() == ""){
-				
+		$("#minSTDT").focusout(function(){
+			if($(this).val() == ""){
+				$(this).val("")
 			} else {
-				if($(this).val() <= $("#maxSTDT").val()){
+				$("#maxSTDT").prop("min", $(this).val())
+				if($("#maxSTDT").val() == ""){
 					
 				} else {
-					alert("날짜값이 올바르지 않습니다.")
-					$(this).val("")
+					if($(this).val() <= $("#maxSTDT").val()){
+						
+					} else {
+						alert("날짜값이 올바르지 않습니다.")
+						$(this).val("")
+					}
 				}
 			}
 		})
 		
-		$("#maxSTDT").change(function(){
-			if($("#minSTDT").val() == ""){
-				
+		$("#maxSTDT").focusout(function(){
+			if($(this).val() == ""){
+				$(this).val("")
 			} else {
-				if($(this).val() >= $("#minSTDT").val()){
+				$("#minSTDT").prop("max", $(this).val())
+				if($("#minSTDT").val() == ""){
 					
 				} else {
-					alert("날짜값이 올바르지 않습니다.")
-					$(this).val("")
+					if($(this).val() >= $("#minSTDT").val()){
+						
+					} else {
+						alert("날짜값이 올바르지 않습니다.")
+						$(this).val("")
+					}
 				}
 			}
 		})
 		
-		$("#minEDDT").change(function(){
-			if($("#maxEDDT").val() == ""){
-				
+		$("#minEDDT").focusout(function(){
+			if($(this).val() == ""){
+				$(this).val("")
 			} else {
-				if($(this).val() <= $("#maxEDDT").val()){
+				$("#maxEDDT").prop("min", $(this).val())
+				if($("#maxEDDT").val() == ""){
 					
 				} else {
-					alert("날짜값이 올바르지 않습니다.")
-					$(this).val("")
+					if($(this).val() <= $("#maxEDDT").val()){
+						
+					} else {
+						alert("날짜값이 올바르지 않습니다.")
+						$(this).val("")
+					}
 				}
 			}
 		})
 		
-		$("#maxEDDT").change(function(){
-			if($("#minEDDT").val() == ""){
-				
+		$("#maxEDDT").focusout(function(){
+			if($(this).val() == ""){
+				$(this).val("")
 			} else {
-				if($(this).val() >= $("#minEDDT").val()){
+				$("#minEDDT").prop("max", $(this).val())
+				if($("#minEDDT").val() == ""){
 					
 				} else {
-					alert("날짜값이 올바르지 않습니다.")
-					$(this).val("")
+					if($(this).val() >= $("#minEDDT").val()){
+						
+					} else {
+						alert("날짜값이 올바르지 않습니다.")
+						$(this).val("")
+					}
 				}
 			}
 		})

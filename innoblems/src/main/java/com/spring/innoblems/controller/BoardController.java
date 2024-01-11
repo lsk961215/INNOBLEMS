@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.innoblems.aop.SHA256;
 import com.spring.innoblems.dto.BoardDTO;
+import com.spring.innoblems.dto.ProjectDTO;
 import com.spring.innoblems.dto.SkillDTO;
 import com.spring.innoblems.dto.UserDTO;
 import com.spring.innoblems.service.BoardService;
@@ -99,5 +100,17 @@ public class BoardController {
 			
 			return 1;
 		}
+	}
+	
+	@RequestMapping("/getBoardDetail")
+	public String getBoardDetail (HttpServletRequest request, BoardDTO boardDTO, Model model) {
+		List codeList = mainService.getCodeList();
+		
+		boardDTO = boardService.getBoardDetail(boardDTO);
+		
+		model.addAttribute("codeList", codeList);
+		model.addAttribute("boardDTO", boardDTO);
+		
+		return "boardDetail";
 	}
 }

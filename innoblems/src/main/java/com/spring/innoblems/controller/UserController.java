@@ -439,15 +439,11 @@ public class UserController {
 	@ResponseBody
 	@RequestMapping("/saveUserProject")
 	public int saveUserProject(HttpServletRequest request, Model model, UserProjectDTO userProjectDTO) {
-		String tmp_prjSeqList = request.getParameter("prjSeqList");
-		String tmp_usrPrjINDTList = request.getParameter("usrPrjINDTList");
-		String tmp_usrPrjOTDTList = request.getParameter("usrPrjOTDTList");
-		String tmp_rlCDList = request.getParameter("rlCDList");
-			
-		String[] prjSeqArray = tmp_prjSeqList.split(",");
-		String[] usrPrjINDTArray = tmp_usrPrjINDTList.split(",");
-		String[] usrPrjOTDTArray = tmp_usrPrjOTDTList.split(",");
-		String[] rlCDArray = tmp_rlCDList.split(",");
+		
+		String[] prjSeqArray = userProjectDTO.getPrjSeqList().split(",");
+		String[] usrPrjINDTArray = userProjectDTO.getUsrPrjINDTList().split(",");
+		String[] usrPrjOTDTArray = userProjectDTO.getUsrPrjOTDTList().split(",");
+		String[] rlCDArray = userProjectDTO.getRlCDList().split(",");
 			
 		List updateList= new ArrayList();
 		
