@@ -49,7 +49,7 @@ public class UserController {
 				return failUserDTO;
 			}
 		} catch (NullPointerException e) {
-			System.out.println(e);
+			System.out.println("로그인 시도 fail");
 			UserDTO failUserDTO = new UserDTO();
 			failUserDTO.setMessage("아이디 또는 비밀번호가 일치하지 않습니다.");
 			
@@ -430,7 +430,6 @@ public class UserController {
 			userService.delUserProject(deleteMap);
 			return 0;
 		} catch(Exception e){
-			e.printStackTrace();
 			System.out.println("오류가 발생했습니다.");
 			return 1;
 		}

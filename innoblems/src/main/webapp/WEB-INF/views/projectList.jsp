@@ -39,6 +39,7 @@
 			
 			if(maxSTDT >= minSTDT && maxEDDT >= minEDDT){
 				getProjectList(1)
+				alert("조회 완료")
 			} else {
 				alert("날짜값이 올바르지 않습니다.")
 			}

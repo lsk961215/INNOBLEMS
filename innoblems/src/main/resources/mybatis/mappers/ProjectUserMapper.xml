@@ -260,11 +260,20 @@
 			<if test="usrPrjINDT != 'none'">
 				USR_PRJ_IN_DT = #{usrPrjINDT},
 			</if>
+			<if test="usrPrjINDT == 'none'">
+				USR_PRJ_IN_DT = null,
+			</if>
 			<if test="usrPrjINDT != 'none'">
 				USR_PRJ_OT_DT = #{usrPrjOTDT},
 			</if>
+			<if test="usrPrjINDT == 'none'">
+				USR_PRJ_OT_DT = null,
+			</if>
 			<if test="rlCD != 0">
 				RL_CD = #{rlCD},
+			</if>
+			<if test="rlCD == 0">
+				RL_CD = null
 			</if>
 		</set>
 		WHERE
