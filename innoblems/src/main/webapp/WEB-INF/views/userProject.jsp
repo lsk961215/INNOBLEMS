@@ -41,19 +41,95 @@
 		
 	})
 	
+	function blink(e) {
+		$(e).parent().parent().animate({'opacity': 0} ,100)
+		$(e).parent().parent().animate({'opacity': 0.5}, 500)
+		$(e).parent().parent().animate({'opacity': 1}, 500)
+	}
 	
-		//////////////////////////TODO//////////////////////////////
+	function alertDate(e) {
+		 alert("투입일이 프로젝트의 기간과 맞지않습니다.")
+		 $(e).val("")
+	}
+	
 	function checkDate(e) {
 		if($(e).val() == ""){
 			$(e).val("")
 		} else {
 			var val = $(e).val()
-			console.log(val)
-			 if($(e).attr("id") == "usrPrjINDT"){
-				 console.log($(e).parent().parent().find("#usrPrjOTDT"))
-			 }
 			
-		///////////////////////////////////////////////////////////////
+			if($(e).attr("id") == "usrPrjINDT"){
+				if($(e).parent().parent().find(".prjEDDTRow").text() == "-"){
+					if($(e).parent().parent().find(".prjSTDTRow").text() > val){
+						alertDate(e)
+					} else {
+						$(e).parent().parent().find("#usrPrjOTDT").prop("min", val)
+						if($(e).parent().parent().find("#usrPrjOTDT").val() == ""){
+							 
+						} else {
+							if(val <= $(e).parent().parent().find("#usrPrjOTDT").val()){
+								
+							} else {
+								alert("날짜값이 올바르지 않습니다.")
+								$(e).val("")
+							}
+						}
+					}
+				} else {
+					if($(e).parent().parent().find(".prjSTDTRow").text() > val || $(e).parent().parent().find(".prjEDDTRow").text() < val){
+						alertDate(e)
+					} else {
+						$(e).parent().parent().find("#usrPrjOTDT").prop("min", val)
+						if($(e).parent().parent().find("#usrPrjOTDT").val() == ""){
+							 
+						} else {
+							if(val <= $(e).parent().parent().find("#usrPrjOTDT").val()){
+								
+							} else {
+								alert("날짜값이 올바르지 않습니다.")
+								$(e).val("")
+							}
+						}
+					}
+				}
+			}
+			
+			
+			if($(e).attr("id") == "usrPrjOTDT"){
+				if($(e).parent().parent().find(".prjEDDTRow").text() == "-"){
+					if($(e).parent().parent().find(".prjSTDTRow").text() > val){
+						alertDate(e)
+					} else {
+						$(e).parent().parent().find("#usrPrjINDT").prop("max", val)
+						if($(e).parent().parent().find("#usrPrjINDT").val() == ""){
+							 
+						} else {
+							if(val >= $(e).parent().parent().find("#usrPrjINDT").val()){
+								
+							} else {
+								alert("날짜값이 올바르지 않습니다.")
+								$(e).val("")
+							}
+						}
+					}
+				} else {
+					if($(e).parent().parent().find(".prjSTDTRow").text() > val || $(e).parent().parent().find(".prjEDDTRow").text() < val){
+						alertDate(e)
+					} else {
+						$(e).parent().parent().find("#usrPrjINDT").prop("max", val)
+						if($(e).parent().parent().find("#usrPrjINDT").val() == ""){
+							 
+						} else {
+							if(val >= $(e).parent().parent().find("#usrPrjINDT").val()){
+								
+							} else {
+								alert("날짜값이 올바르지 않습니다.")
+								$(e).val("")
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 	
@@ -130,7 +206,7 @@
 		        		}
 		        		
 	                	str += "<tr>"
-	                	str += "<td class='checkRow'><input type='checkbox' class='prjSeq' value=" + data.userProjectList[i].prjSeq + " onclick='checkOne()'></td>"
+	                	str += "<td class='checkRow'><input type='checkbox' class='prjSeq' onchange='blink(this)' value=" + data.userProjectList[i].prjSeq + " onclick='checkOne()'></td>"
 	               		str += "<td class='numberRow'><button id='numberButton' onclick='edit(this)' name='" + data.userProjectList[i].prjSeq + "'>" + data.userProjectList[i].prjSeq + "</button></td>"
 	               		str += "<td class='nameRow'>" + data.userProjectList[i].prjNm + "</td>"
 	               		str += "<td class='customerRow'>" + customer + "</td>"
@@ -141,10 +217,10 @@
 	               		} else {
 	               			str += "<td class='prjEDDTRow'>" + data.userProjectList[i].prjEDDT + "</td>"
 	               		}
-	               		str += "<td class='usrPrjINDTRow'><input type='date' id='usrPrjINDT' onfocusout='checkDate(this)' value='" + data.userProjectList[i].usrPrjINDT + "' max='9999-12-31'></td>"
-	               		str += "<td class='usrPrjOTDTRow'><input type='date' id='usrPrjOTDT' onfocusout='checkDate(this)' value='" + data.userProjectList[i].usrPrjOTDT + "' max='9999-12-31'></td>"
+	               		str += "<td class='usrPrjINDTRow'><input type='date' id='usrPrjINDT' onfocusout='checkDate(this); blink(this)' value='" + data.userProjectList[i].usrPrjINDT + "' max='9999-12-31'></td>"
+	               		str += "<td class='usrPrjOTDTRow'><input type='date' id='usrPrjOTDT' onfocusout='checkDate(this); blink(this)' value='" + data.userProjectList[i].usrPrjOTDT + "' max='9999-12-31'></td>"
 	               		str += "<td class='roleRow'>"
-	               		str += "<select name='rlCD' id='rlCD'>"
+	               		str += "<select name='rlCD' id='rlCD' onchange='blink(this)'>"
 	               		str += "<option value='0'>선택</option>"
 	               		
 	               			console.log(codeList[0])

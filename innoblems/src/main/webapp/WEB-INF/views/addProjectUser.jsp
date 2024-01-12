@@ -28,6 +28,7 @@
 	
 	function search(){
 		getAddProjectUserList(1)
+		alert("조회 완료")
 	}
 	
 	function edit(e){

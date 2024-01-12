@@ -41,6 +41,98 @@
 		})
 	})
 	
+	function blink(e) {
+		$(e).parent().parent().animate({'opacity': 0} ,100)
+		$(e).parent().parent().animate({'opacity': 0.5}, 500)
+		$(e).parent().parent().animate({'opacity': 1}, 500)
+	}
+	
+	function alertDate(e) {
+		 alert("투입일이 프로젝트의 기간과 맞지않습니다.")
+		 $(e).val("")
+	}
+	
+	function checkDate(e) {
+		if($(e).val() == ""){
+			$(e).val("")
+		} else {
+			var val = $(e).val()
+			
+			if($(e).attr("id") == "usrPrjINDT"){
+				if($("#prjEDDT").val() == ""){
+					if($("#prjSTDT").val() > val){
+						alertDate(e)
+					} else {
+						$(e).parent().parent().find("#usrPrjOTDT").prop("min", val)
+						if($(e).parent().parent().find("#usrPrjOTDT").val() == ""){
+							 
+						} else {
+							if(val <= $(e).parent().parent().find("#usrPrjOTDT").val()){
+								
+							} else {
+								alert("날짜값이 올바르지 않습니다.")
+								$(e).val("")
+							}
+						}
+					}
+				} else {
+					if($("#prjSTDT").val() > val || $("#prjEDDT").val() < val){
+						alertDate(e)
+					} else {
+						$(e).parent().parent().find("#usrPrjOTDT").prop("min", val)
+						if($(e).parent().parent().find("#usrPrjOTDT").val() == ""){
+							 
+						} else {
+							if(val <= $(e).parent().parent().find("#usrPrjOTDT").val()){
+								
+							} else {
+								alert("날짜값이 올바르지 않습니다.")
+								$(e).val("")
+							}
+						}
+					}
+				}
+			}
+			
+			
+			if($(e).attr("id") == "usrPrjOTDT"){
+				if($("#prjEDDT").val() == ""){
+					if($("#prjSTDT").val() > val){
+						alertDate(e)
+					} else {
+						$(e).parent().parent().find("#usrPrjINDT").prop("max", val)
+						if($(e).parent().parent().find("#usrPrjINDT").val() == ""){
+							 
+						} else {
+							if(val >= $(e).parent().parent().find("#usrPrjINDT").val()){
+								
+							} else {
+								alert("날짜값이 올바르지 않습니다.")
+								$(e).val("")
+							}
+						}
+					}
+				} else {
+					if($("#prjSTDT").val() > val || $("#prjEDDT").val() < val){
+						alertDate(e)
+					} else {
+						$(e).parent().parent().find("#usrPrjINDT").prop("max", val)
+						if($(e).parent().parent().find("#usrPrjINDT").val() == ""){
+							 
+						} else {
+							if(val >= $(e).parent().parent().find("#usrPrjINDT").val()){
+								
+							} else {
+								alert("날짜값이 올바르지 않습니다.")
+								$(e).val("")
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
 	function getProjectUserList(pageNum){
 		var prjSeq = $("#prjSeq").val()
 		var countPerPage = $("#countPerPage").val()
@@ -118,7 +210,7 @@
 		        		}
 		        		
 	                	str += "<tr>"
-	                	str += "<td class='checkRow'><input type='checkbox' class='usrSeq' value=" + data.projectUserList[i].usrSeq + " onclick='checkOne()'></td>"
+	                	str += "<td class='checkRow'><input type='checkbox' onchange='blink(this)' class='usrSeq' value=" + data.projectUserList[i].usrSeq + " onclick='checkOne()'></td>"
 	               		str += "<td class='numberRow'><button id='numberButton' onclick='edit(this)' name='" + data.projectUserList[i].usrSeq + "'>" + data.projectUserList[i].usrSeq + "</button></td>"
 	               		str += "<td class='nameRow'>" + data.projectUserList[i].usrNm + "</td>"
 	               		if(rank == undefined){
@@ -132,17 +224,17 @@
 	               			str += "<td class='gradeRow'>" + grade + "</td>"
 	               		}
 	               		str += "<td class='skillsRow'>" + skills + "</td>"
-	               		str += "<td class='usrPrjINDTRow'><input type='date' id='usrPrjINDT' value='" + data.projectUserList[i].usrPrjINDT + "'></td>"
-	               		str += "<td class='usrPrjOTDTRow'><input type='date' id='usrPrjOTDT' value='" + data.projectUserList[i].usrPrjOTDT + "'></td>"
+	               		str += "<td class='usrPrjINDTRow'><input type='date' id='usrPrjINDT' onfocusout='checkDate(this); blink(this)' value='" + data.projectUserList[i].usrPrjINDT + "' max='9999-12-31'></td>"
+	               		str += "<td class='usrPrjOTDTRow'><input type='date' id='usrPrjOTDT' onfocusout='checkDate(this); blink(this)' value='" + data.projectUserList[i].usrPrjOTDT + "' max='9999-12-31'></td>"
 	               		str += "<td class='roleRow'>"
-	               		str += "<select name='rlCD' id='rlCD'>"
+	               		str += "<select name='rlCD' id='rlCD' onchange='blink(this)'>"
 	               		str += "<option value='0'>선택</option>"
 		               		for(var j = 0; j<codeList.length; j++){
 		               			if(codeList[j].indexOf("mstCD=RL01") != -1){
 		               				if(codeList[j].indexOf("dtCD=" + data.projectUserList[i].rlCD + ",") != -1){
-		    		        			str += "<option value='" + codeList[j].substring(codeList[j].indexOf("dtCD=")+5, codeList[j].indexOf(", dtCDNM"))+"' selected>" + codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7) + "</option>"
+		    		        			str += "<option value='" + codeList[j].substring(codeList[j].indexOf("dtCD=")+5, codeList[j].indexOf(", dtCDURL"))+"' selected>" + codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7) + "</option>"
 		    		        		} else {
-		    		        			str += "<option value='" + codeList[j].substring(codeList[j].indexOf("dtCD=")+5, codeList[j].indexOf(", dtCDNM"))+"' >" + codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7) + "</option>"
+		    		        			str += "<option value='" + codeList[j].substring(codeList[j].indexOf("dtCD=")+5, codeList[j].indexOf(", dtCDURL"))+"' >" + codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7) + "</option>"
 		    		        		}
 				        			role = codeList[j].substring(codeList[j].indexOf("dtCDNM=")+7)
 				        		}
@@ -248,72 +340,65 @@
 		var rlCDs = ""
 		var index = 0
 		
-		if($(".usrSeq:checked").length > 0){
-			$(".usrSeq").each(function(){
-				if($(this).is(":checked")==true){
-					var usrPrjINDT = $(this).parent().parent().find("#usrPrjINDT").val()
-					var usrPrjOTDT = $(this).parent().parent().find("#usrPrjOTDT").val()
-					var rlCD = $(this).parent().parent().find("#rlCD").val()
+		$(".usrSeq").each(function(){
+			var usrPrjINDT = $(this).parent().parent().find("#usrPrjINDT").val()
+			var usrPrjOTDT = $(this).parent().parent().find("#usrPrjOTDT").val()
+			var rlCD = $(this).parent().parent().find("#rlCD").val()
 					
-					if(usrPrjINDT == ""){
-						usrPrjINDT = "none"
-					}
+			if(usrPrjINDT == ""){
+				usrPrjINDT = "none"
+			}
 					
-					if(usrPrjOTDT == ""){
-						usrPrjOTDT = "none"
-					}
+			if(usrPrjOTDT == ""){
+				usrPrjOTDT = "none"
+			}
 					
-					if(index != 0){
-						usrSeqs += ","
-						usrPrjINDTs += ","
-						usrPrjOTDTs += ","
-						rlCDs += ","
-					}
+			if(index != 0){
+				usrSeqs += ","
+				usrPrjINDTs += ","
+				usrPrjOTDTs += ","
+				rlCDs += ","
+			}
 					
-					usrSeqs += $(this).val()
+			usrSeqs += $(this).val()
 					
-					usrPrjINDTs += usrPrjINDT
+			usrPrjINDTs += usrPrjINDT
 					
-					usrPrjOTDTs += usrPrjOTDT
+			usrPrjOTDTs += usrPrjOTDT
 
-					rlCDs += rlCD
+			rlCDs += rlCD
 					
-					index += 1
-				}
-			})
+			index += 1
+		})
 				
-			var param = "&usrSeqList=" + usrSeqs
+		var param = "&usrSeqList=" + usrSeqs
 			
-			param += "&usrPrjINDTList=" + usrPrjINDTs
+		param += "&usrPrjINDTList=" + usrPrjINDTs
 			
-			param += "&usrPrjOTDTList=" + usrPrjOTDTs
+		param += "&usrPrjOTDTList=" + usrPrjOTDTs
 			
-			param += "&rlCDList=" + rlCDs
+		param += "&rlCDList=" + rlCDs
 			
-			param += "&prjSeq=" + prjSeq
+		param += "&prjSeq=" + prjSeq
 			
-			console.log("param : " + param)
+		console.log("param : " + param)
 			
-			$.ajax({
-		        url: "saveProjectUser", 
-		        type:"post",
-		        data: param,
-		        success: function(data) {
-		        	if(data == 0){
-		        		alert("저장 되었습니다.")
-		        		getProjectUserList(1)
-		        	} else {
-		        		alert("저장할 수 없습니다.")
-		        	}
-		        },
-		        error: function() {
-		            alert("통신실패")
+		$.ajax({
+			url: "saveProjectUser", 
+		    type:"post",
+		    data: param,
+		    success: function(data) {
+		    	if(data == 0){
+		        	alert("저장 되었습니다.")
+		        	getProjectUserList(1)
+		        } else {
+		        	alert("저장할 수 없습니다.")
 		        }
-		    })
-		} else {
-			alert("한개 이상의 항목을 선택해주세요")
-		}
-		
+		   	},
+		    error: function() {
+		    	alert("통신실패")
+		   	}
+		})
 	}
 	
 	function edit(e){
