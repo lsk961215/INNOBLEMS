@@ -30,6 +30,12 @@ public class BoardDAOImpl implements BoardDAO{
 		sqlSession.insert("board.addBoard", boardDTO);
 		return;
 	}
+	
+	@Override
+	public void addBoard2(BoardDTO boardDTO) {
+		sqlSession.insert("board.addBoard2", boardDTO);
+		return;
+	}
 
 	@Override
 	public BoardDTO getBoardDetail(BoardDTO boardDTO) {

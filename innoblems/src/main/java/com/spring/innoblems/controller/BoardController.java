@@ -102,6 +102,22 @@ public class BoardController {
 		}
 	}
 	
+	@ResponseBody
+	@RequestMapping("/addBoard2")
+	public int addBoard2(HttpServletRequest request, BoardDTO boardDTO) throws Exception {
+		
+		try {
+			boardService.addBoard2(boardDTO);
+			
+			return 0;
+		}catch(Exception e){
+			e.printStackTrace();
+			System.out.println("오류가 발생했습니다.");
+			
+			return 1;
+		}
+	}
+	
 	@RequestMapping("/getBoardDetail")
 	public String getBoardDetail (HttpServletRequest request, BoardDTO boardDTO, Model model) {
 		List codeList = mainService.getCodeList();

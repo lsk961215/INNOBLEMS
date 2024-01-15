@@ -13,6 +13,7 @@
 	  <result column="BO_DT" property="boDT"/>	  
 	  <result column="BO_IMG" property="boImg"/>
 	  <result column="USR_NM" property="usrNm"/>
+	  <result column="BO_LOB" property="boLob"/>
 	</resultMap>
 	
 	<select id="getBoardList" parameterType="java.util.HashMap" resultMap="boardMap">
@@ -67,6 +68,32 @@
 		 	TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS'),
 		 	#{boImg},
 		 	#{usrNm}
+		 )
+	</insert>
+	
+	<insert id="addBoard2" parameterType="com.spring.innoblems.dto.BoardDTO">
+		INSERT INTO
+		 	BOARD_INFO (
+		 		BO_SEQ,
+		 		USR_SEQ,
+		 		TP_CD,
+		 		BO_TI,
+		 		BO_TXT,
+		 		BO_DT,
+		 		BO_IMG,
+		 		USR_NM,
+		 		BO_LOB
+		 		)
+		 VALUES (
+		 	BO_SEQ.NEXTVAL,
+		 	#{usrSeq},
+		 	#{tpCD},
+		 	'lobtest',
+		 	'lobtest',
+		 	TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS'),
+		 	#{boImg},
+		 	#{usrNm},
+		 	#{boLob}
 		 )
 	</insert>
 	

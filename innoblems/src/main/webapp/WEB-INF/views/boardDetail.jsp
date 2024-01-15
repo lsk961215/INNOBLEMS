@@ -14,6 +14,8 @@
   src="https://code.jquery.com/jquery-3.7.1.js"
   integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
   crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 <script>
 	$(function(){
 		setBirth()
@@ -313,13 +315,13 @@ input[type=text], select {
 }
 
 #boTi {
-	border: none;
-	width: 100%;
+	border: 2px solid lightgrey;
+	width: 99%;
 	outline: none;
 }
 
 #tpCD {
-	width: 100%;
+	width: 99%;
 	border: 2px solid lightgrey;
 	outline: none;
 }
@@ -717,7 +719,6 @@ table .projectHead {
 	
 	margin-top: 50px;
 }
-
 </style>
 </head>
 <body>
@@ -734,33 +735,24 @@ table .projectHead {
 							<tr>
 							    <td>타입</td>
 							    <td>
-							    	<select name="tpCD" id="tpCD">
-										<option value="0">선택</option>
+							    	<input name="tpCD" id="tpCD" readonly
 										<c:forEach var="item" items="${codeList}" varStatus="i">
 											<c:if test = "${item.mstCD == 'TP01'}">
-												<c:choose>
-													<c:when test = "${item.dtCD >= 2 }">
-														<c:choose>
-													         <c:when test = "${sessionScope.userDTO.raCD <= 6}">
-													            <option value="${item.dtCD}">${item.dtCDNM}</option>
-													         </c:when>
-													         <c:otherwise>
-													         
-													         </c:otherwise>
-												    	</c:choose>
-													</c:when>
-													<c:otherwise>
-												         <option value="${item.dtCD}">${item.dtCDNM}</option>
-												    </c:otherwise>
-												</c:choose>
+												<c:if test = "${item.dtCD == boardDTO.tpCD}">
+													 value="${item.dtCDNM}"
+												</c:if>
+												<c:if test = "${item.dtCD != boardDTO.tpCD}">
+													value="${item.dtCDNM}"
+												</c:if>
 											</c:if>
 										</c:forEach>
-									</select>
+										>
+									</input>
 								</td>
 							</tr>
 							<tr>
 								<td>제목</td>
-							    <td><input type="text" id="boTi" maxlength="50" value="${boardDTO.boTi}"></td>
+							    <td><input type="text" id="boTi" maxlength="50" value="${boardDTO.boTi}" readonly></td>
 							</tr>
 						</table>
 					</div>
@@ -784,7 +776,18 @@ table .projectHead {
 							</tr>
 							<tr class="boTXTRow">
 							    <td>내용</td>
-							    <td class="boTXTWrap"><textarea id="boTXT" maxlength="300" value="${boardDTO.boTXT}"></textarea></td>
+							    <td class="boTXTWrap">
+							    	<div id="viewer"></div>
+							    	<script>
+							    		const Editor = toastui.Editor;
+							    		const viewer = Editor.factory({
+											el: document.querySelector('#viewer'),
+											viewer: true,
+											height: '500px',
+											initialValue: '${boardDTO.boLob}'
+										});
+							    	</script>
+							    </td>
 							</tr>
 						</table>
 					</div>

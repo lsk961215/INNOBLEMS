@@ -14,7 +14,8 @@
   src="https://code.jquery.com/jquery-3.7.1.js"
   integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
   crossorigin="anonymous"></script>
-<script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
+<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 <script>
 	$(function(){
 		setBirth()
@@ -98,6 +99,35 @@
 				$("#checkText").css("display", "block")
 			}
 		})
+	}
+	
+	function add2() {
+		var usrSeq = '${sessionScope.userDTO.usrSeq}'
+		var usrNm = '${sessionScope.userDTO.usrNm}'
+		var tpCD = $("#tpCD").val()
+		var boTi = $("#boTi").val()
+		var boLob = editor.getHTML()
+		
+		var param = "usrSeq="+usrSeq
+        param += "&usrNm="+usrNm
+        param += "&tpCD="+tpCD
+        param += "&boTi="+boTi
+        param += "&boLob="+boLob
+                           
+        console.log("param" + param)
+                           
+        $.ajax({
+        	url: "addBoard2", 
+            type:"post",
+            data: param,
+            success: function(data) {
+            	alert("등록되었습니다.")
+            	opener.getBoardList(1)
+            },
+            error: function() {
+            	alert("통신실패")
+            }
+       	})
 	}
 	
 	function add(){
@@ -314,8 +344,8 @@ input[type=text], select {
 }
 
 #boTi {
-	border: none;
-	width: 100%;
+	border: 2px solid lightgrey;
+	width: 99%;
 	outline: none;
 }
 
@@ -675,10 +705,6 @@ table .projectHead {
 	border: 2px solid lightgrey;
 }
 
-.boTXTRow {
-	height: 500px;
-}
-
 .topSection {
 	margin-bottom: 30px;
 }
@@ -780,21 +806,30 @@ table .projectHead {
 							</tr>
 							<tr class="boTXTRow">
 							    <td>내용</td>
-							    <td class="boTXTWrap"><textarea id="boTXT" maxlength="300"></textarea></td>
+							    <td class="boTXTWrap">
+							    	<div id="editor"></div>
+							    	<script>
+									    const Editor = toastui.Editor;
+									
+									    const editor = new Editor({
+									            el: document.querySelector('#editor'),
+									            height: '500px',
+									            initialEditType: 'WYSIWYG',
+									            previewStyle: 'vertical'
+									        });
+									</script>
+							    </td>
 							</tr>
 						</table>
 					</div>
 				</div>
 				<div class="buttonSection">
-					<button id="add" onclick="add()">등록</button>
+					<button id="add" onclick="add2()">등록</button>
 					<button id="cancel" onclick="cancel()">취소</button>
 				</div>
 			</section>
 		</div>
-		
 	</div>
-	
 </main>
 </body>
 </html>
-<script src="${pageContext.request.contextPath}/resources/js/ckeditor.js"></script>

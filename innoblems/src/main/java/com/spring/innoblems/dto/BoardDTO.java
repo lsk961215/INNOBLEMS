@@ -18,4 +18,5 @@ public class BoardDTO {
 	private String minDT;
 	private String maxDT;
 	private String usrNm;
+	private String boLob;
 }
