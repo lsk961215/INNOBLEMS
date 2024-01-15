@@ -88,6 +88,8 @@ public class FileController {
                     File file = new File(uploadpath, saveFileName);
                     multi.transferTo(file);
                     
+                    Thread.sleep(5000);
+                    
                     return saveFileName;
                 }
             } else {

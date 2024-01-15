@@ -745,6 +745,15 @@ table .projectHead {
 	margin-top: 50px;
 }
 
+.boTXTNm {
+	width: 10%;
+}
+
+#editor {
+    width : 100%;
+    margin : 0 auto;
+}
+
 </style>
 </head>
 <body>
@@ -805,18 +814,42 @@ table .projectHead {
 							   	</td>
 							</tr>
 							<tr class="boTXTRow">
-							    <td>내용</td>
+							    <td class="boTXTNm">내용</td>
 							    <td class="boTXTWrap">
 							    	<div id="editor"></div>
 							    	<script>
 									    const Editor = toastui.Editor;
 									
 									    const editor = new Editor({
-									            el: document.querySelector('#editor'),
-									            height: '500px',
-									            initialEditType: 'WYSIWYG',
-									            previewStyle: 'vertical'
-									        });
+									    	el: document.querySelector('#editor'),
+									    	toolbarItems: [
+									    		['heading', 'bold', 'italic', 'strike'],
+									    		['hr', 'quote']
+									    	],
+									        height: '500px',
+									        initialEditType: 'WYSIWYG',
+									        previewStyle: 'vertical',
+									        hooks: {
+									        	addImageBlobHook: function(blob, callback) {
+									        		let formData = new FormData()
+									            	formData.append("file1", blob)
+									            		
+									            	$.ajax({
+									            		url: "boardImage", 
+									             		type:"post",
+									             		data: formData,
+									             		contentType: false,
+									                    processData: false,
+									             		success: function(data) {
+									             			callback("resources/boardImages/"+data);
+									             		},
+									             		error: function() {
+									             			callback('image_load_fail');
+									             		}
+									            	})
+									            }
+									       	}
+									  	});
 									</script>
 							    </td>
 							</tr>
