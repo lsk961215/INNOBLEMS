@@ -20,15 +20,6 @@
 	$(function(){
 		getBoardList(1)
 		
-		$("#search").click(function(){
-			if($("#maxDT").val() >= $("#minDT").val()){
-				getUserList(1)
-			} else {
-				alert("날짜값이 올바르지 않습니다.")
-			}
-			
-		})
-		
 		$("#minDT").change(function(){
 			if($("#maxDT").val() == ""){
 				
@@ -69,18 +60,21 @@
 	})
 	
 	function getBoardList(pageNum){
-		var boTi = $("#boTi").val()
-		var usrNm = $("#usrNm").val()
-		var tpCD = $("#tpCD").val()
-		var minDT = $("#minDT").val()
-		var maxDT = $("#maxDT").val()
+		var target = $("#target").val()
+		var value = $("#value").val()
 		
-		var param = "boTi="+boTi
-		param += "&usrNm="+usrNm
-		param += "&tpCD="+tpCD
-		param += "&minDT="+minDT
-		param += "&maxDT="+maxDT
-		param += "&pageNum="+pageNum
+		if(target == "boSeq"){
+			if(value == undefined || value == ""){
+				value = 0
+			}
+		} else {
+			if(value == undefined || value == ""){
+				value = ""
+			}
+		}
+		
+		var param = "&pageNum="+pageNum
+		param += "&" + target + "="+value
 		
 		console.log("param = " + param)
 		
@@ -384,10 +378,10 @@ input[type=text], select {
 	color: white;
 	
 	font-weight: bold;
-	font-size: 105%;
+	font-size: 80%;
 	
 	width: 80px;
-	height: 30px;
+	height: 20px;
 	
 	cursor: pointer;
 }
@@ -541,12 +535,12 @@ table .nameHead {
 }
 
 table .titleRow {
-	min-width: 350px;
+	min-width: 300px;
 	text-align: left;
 }
 
 table .titleHead {
-	min-width: 350px;
+	min-width: 300px;
 	text-align: center;
 }
 
@@ -587,6 +581,12 @@ table .projectHead {
 	display:flex;
 	justify-content: center;
 }
+
+.filterSection {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 30px;
+}
 </style>
 </head>
 <body>
@@ -618,6 +618,18 @@ table .projectHead {
 					</div>
 					<div class="resultPage">
 						
+					</div>
+					<div class="filterSection">
+						<label>
+							<select id="target" name="target">
+								<option value="0">선택</option>
+								<option value="usrNm">작성자</option>
+								<option value="boSeq">글번호</option>
+								<option value="boTi">제목</option>
+							</select>
+							<input type="text" id="value">
+							<button id="search" onclick="getBoardList(1)">검색</button>
+						</label>
 					</div>
 					<div class="resultButtonWrap">
 						<div class="resultButton">

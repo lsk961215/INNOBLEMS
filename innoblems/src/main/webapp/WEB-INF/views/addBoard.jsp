@@ -10,6 +10,8 @@
 <link rel="stylesheet" href="resources/css/header.css">
 <!-- aside css -->
 <link rel="stylesheet" href="resources/css/aside.css">
+<!-- header script -->
+<script src="resources/js/header.js"></script>
 <script
   src="https://code.jquery.com/jquery-3.7.1.js"
   integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
@@ -52,7 +54,12 @@
 	    });
 	})
 	
-	
+	function wait(sec) {
+	    let start = Date.now(), now = start;
+	    while (now - start < sec * 1000) {
+	        now = Date.now();
+	    }
+	}
 	
 	function setBirth (){
 		var today = new Date()
@@ -802,17 +809,6 @@ table .projectHead {
 					</div>
 					<div class="bottomSection">
 						<table>
-							
-							<tr>
-							    <td colspan="2">
-							   		<div class=imgSection>
-										<img id="img">
-										<label for="file1" class="imgLabel">사진 첨부</label> 
-										<input type="file" id="file1" name="file1"> 
-										<button id="btn_submit" onclick="javascript:fn_submit()">전송</button>    
-									</div>
-							   	</td>
-							</tr>
 							<tr class="boTXTRow">
 							    <td class="boTXTNm">내용</td>
 							    <td class="boTXTWrap">
@@ -824,7 +820,9 @@ table .projectHead {
 									    	el: document.querySelector('#editor'),
 									    	toolbarItems: [
 									    		['heading', 'bold', 'italic', 'strike'],
-									    		['hr', 'quote']
+									    		['hr', 'quote'],
+									    		['ul', 'ol', 'task', 'indent', 'outdent'],
+									    		['table', 'image', 'link']
 									    	],
 									        height: '500px',
 									        initialEditType: 'WYSIWYG',
@@ -841,6 +839,7 @@ table .projectHead {
 									             		contentType: false,
 									                    processData: false,
 									             		success: function(data) {
+									             			wait(5)
 									             			callback("resources/boardImages/"+data);
 									             		},
 									             		error: function() {

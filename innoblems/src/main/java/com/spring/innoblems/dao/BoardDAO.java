@@ -12,4 +12,5 @@ public interface BoardDAO {
 	void addBoard(BoardDTO boardDTO);
 	void addBoard2(BoardDTO boardDTO);
 	BoardDTO getBoardDetail(BoardDTO boardDTO);
+	void editBoard(BoardDTO boardDTO);
 }

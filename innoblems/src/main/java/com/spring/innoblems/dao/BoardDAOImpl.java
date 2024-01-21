@@ -42,4 +42,10 @@ public class BoardDAOImpl implements BoardDAO{
 		return sqlSession.selectOne("board.getBoardDetail", boardDTO);
 	}
 
+	@Override
+	public void editBoard(BoardDTO boardDTO) {
+		sqlSession.update("board.editBoard", boardDTO);
+		return;
+	}
+
 }

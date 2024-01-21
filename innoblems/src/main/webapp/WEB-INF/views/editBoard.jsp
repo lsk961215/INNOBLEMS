@@ -54,12 +54,41 @@
 	    });
 	})
 	
-	function edit() {
+	function edit(){
+		var usrSeq = '${sessionScope.userDTO.usrSeq}'
 		var boSeq = '${boardDTO.boSeq}'
-		
-		var param = "boSeq="+boSeq 
-		
-		location.href = "goEditBoard?" + param
+			var usrNm = '${sessionScope.userDTO.usrNm}'
+			var tpCD = $("#tpCD").val()
+			var boTi = $("#boTi").val()
+			var boLob = editor.getHTML()
+			
+			var param = "usrSeq="+usrSeq
+			param += "&boSeq="+boSeq
+	        param += "&usrNm="+usrNm
+	        param += "&tpCD="+tpCD
+	        param += "&boTi="+boTi
+	        param += "&boLob="+boLob
+	                           
+	        console.log("param" + param)
+	                           
+	        $.ajax({
+	        	url: "eidtBoard", 
+	            type:"post",
+	            data: param,
+	            success: function(data) {
+	            	alert("수정되었습니다.")
+	            },
+	            error: function() {
+	            	alert("통신실패")
+	            }
+	       	})
+	}
+	
+	function wait(sec) {
+	    let start = Date.now(), now = start;
+	    while (now - start < sec * 1000) {
+	        now = Date.now();
+	    }
 	}
 	
 	function setBirth (){
@@ -107,6 +136,35 @@
 				$("#checkText").css("display", "block")
 			}
 		})
+	}
+	
+	function add2() {
+		var usrSeq = '${sessionScope.userDTO.usrSeq}'
+		var usrNm = '${sessionScope.userDTO.usrNm}'
+		var tpCD = $("#tpCD").val()
+		var boTi = $("#boTi").val()
+		var boLob = editor.getHTML()
+		
+		var param = "usrSeq="+usrSeq
+        param += "&usrNm="+usrNm
+        param += "&tpCD="+tpCD
+        param += "&boTi="+boTi
+        param += "&boLob="+boLob
+                           
+        console.log("param" + param)
+                           
+        $.ajax({
+        	url: "addBoard2", 
+            type:"post",
+            data: param,
+            success: function(data) {
+            	alert("등록되었습니다.")
+            	opener.getBoardList(1)
+            },
+            error: function() {
+            	alert("통신실패")
+            }
+       	})
 	}
 	
 	function add(){
@@ -329,7 +387,7 @@ input[type=text], select {
 }
 
 #tpCD {
-	width: 99%;
+	width: 100%;
 	border: 2px solid lightgrey;
 	outline: none;
 }
@@ -509,6 +567,8 @@ input[type=text], select {
 	
 	cursor: pointer;
 	
+	margin-right: 50px;
+	
 	text-decoration: none;
 }
 
@@ -682,10 +742,6 @@ table .projectHead {
 	border: 2px solid lightgrey;
 }
 
-.boTXTRow {
-	height: 500px;
-}
-
 .topSection {
 	margin-bottom: 30px;
 }
@@ -734,13 +790,14 @@ table .projectHead {
     width : 100%;
     margin : 0 auto;
 }
+
 </style>
 </head>
 <body>
 <jsp:include page="header.jsp"/>
 <main>
 	<div class="wrap">
-		<div class="pageTitle"><h1>게시물 상세</h1></div>
+		<div class="pageTitle"><h1>게시물 등록</h1></div>
 		<div class="middle">
 			<jsp:include page="aside.jsp"/>
 			<section>
@@ -750,24 +807,43 @@ table .projectHead {
 							<tr>
 							    <td>타입</td>
 							    <td>
-							    	<input name="tpCD" id="tpCD" readonly
+							    	<select name="tpCD" id="tpCD">
+										<option value="0">선택</option>
 										<c:forEach var="item" items="${codeList}" varStatus="i">
 											<c:if test = "${item.mstCD == 'TP01'}">
-												<c:if test = "${item.dtCD == boardDTO.tpCD}">
-													 value="${item.dtCDNM}"
-												</c:if>
-												<c:if test = "${item.dtCD != boardDTO.tpCD}">
-													value="${item.dtCDNM}"
-												</c:if>
+												<c:choose>
+													<c:when test = "${item.dtCD >= 2 }">
+														<c:choose>
+													         <c:when test = "${sessionScope.userDTO.raCD <= 6}">
+													         	<c:if test = "${boardDTO.tpCD == item.dtCD}">
+													         		<option value="${item.dtCD}" selected>${item.dtCDNM}</option>
+													         	</c:if>
+													            <c:if test = "${boardDTO.tpCD != item.dtCD}">
+													         		<option value="${item.dtCD}">${item.dtCDNM}</option>
+													         	</c:if>
+													         </c:when>
+													         <c:otherwise>
+													         
+													         </c:otherwise>
+												    	</c:choose>
+													</c:when>
+													<c:otherwise>
+												         <c:if test = "${boardDTO.tpCD == item.dtCD}">
+													     	<option value="${item.dtCD}" selected>${item.dtCDNM}</option>
+												         </c:if>
+													     <c:if test = "${boardDTO.tpCD != item.dtCD}">
+													        <option value="${item.dtCD}">${item.dtCDNM}</option>
+													     </c:if>
+												    </c:otherwise>
+												</c:choose>
 											</c:if>
 										</c:forEach>
-										>
-									</input>
+									</select>
 								</td>
 							</tr>
 							<tr>
 								<td>제목</td>
-							    <td><input type="text" id="boTi" maxlength="50" value="${boardDTO.boTi}" readonly></td>
+							    <td><input type="text" id="boTi" maxlength="50" value="${boardDTO.boTi}"></td>
 							</tr>
 							<tr>
 								<td>작성자</td>
@@ -780,32 +856,57 @@ table .projectHead {
 							<tr class="boTXTRow">
 							    <td class="boTXTNm">내용</td>
 							    <td class="boTXTWrap">
-							    	<div id="viewer"></div>
+							    	<div id="editor"></div>
 							    	<script>
-							    		const Editor = toastui.Editor;
-							    		const viewer = Editor.factory({
-											el: document.querySelector('#viewer'),
-											viewer: true,
-											height: '500px',
-											initialValue: '${boardDTO.boLob}'
-										});
-							    	</script>
+									    const Editor = toastui.Editor;
+									
+									    const editor = new Editor({
+									    	el: document.querySelector('#editor'),
+									    	toolbarItems: [
+									    		['heading', 'bold', 'italic', 'strike'],
+									    		['hr', 'quote'],
+									    		['ul', 'ol', 'task', 'indent', 'outdent'],
+									    		['table', 'image', 'link']
+									    	],
+									        height: '500px',
+									        initialEditType: 'WYSIWYG',
+									        previewStyle: 'vertical',
+									        initialValue: '${boardDTO.boLob}',
+									        hooks: {
+									        	addImageBlobHook: function(blob, callback) {
+									        		let formData = new FormData()
+									            	formData.append("file1", blob)
+									            		
+									            	$.ajax({
+									            		url: "boardImage", 
+									             		type:"post",
+									             		data: formData,
+									             		contentType: false,
+									                    processData: false,
+									             		success: function(data) {
+									             			wait(5)
+									             			callback("resources/boardImages/"+data);
+									             		},
+									             		error: function() {
+									             			callback('image_load_fail');
+									             		}
+									            	})
+									            }
+									       	}
+									  	});
+									</script>
 							    </td>
 							</tr>
 						</table>
 					</div>
 				</div>
 				<div class="buttonSection">
-					<c:if test = "${boardDTO.usrSeq == sessionScope.userDTO.usrSeq}">
-						<button id="add" onclick="edit()">수정</button>
-					</c:if>
+					<button id="add" onclick="edit()">수정</button>
 					<button id="cancel" onclick="cancel()">취소</button>
 				</div>
 			</section>
 		</div>
-		
 	</div>
-	
 </main>
 </body>
 </html>

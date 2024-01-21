@@ -75,5 +75,11 @@ public class BoardServiceImpl implements BoardService {
 		return boardDAO.getBoardDetail(boardDTO);
 	}
 
+	@Override
+	public void editBoard(BoardDTO boardDTO) {
+		boardDAO.editBoard(boardDTO);
+		return;
+	}
+
 	
 }

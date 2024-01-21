@@ -129,4 +129,32 @@ public class BoardController {
 		
 		return "boardDetail";
 	}
+	
+	@RequestMapping("/goEditBoard")
+	public String goEditBoard (HttpServletRequest request, BoardDTO boardDTO, Model model) {
+		List codeList = mainService.getCodeList();
+		
+		boardDTO = boardService.getBoardDetail(boardDTO);
+		
+		model.addAttribute("codeList", codeList);
+		model.addAttribute("boardDTO", boardDTO);
+		
+		return "editBoard";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/eidtBoard")
+	public int eidtBoard(HttpServletRequest request, BoardDTO boardDTO) throws Exception {
+		
+		try {
+			boardService.editBoard(boardDTO);
+			
+			return 0;
+		}catch(Exception e){
+			e.printStackTrace();
+			System.out.println("오류가 발생했습니다.");
+			
+			return 1;
+		}
+	}
 }

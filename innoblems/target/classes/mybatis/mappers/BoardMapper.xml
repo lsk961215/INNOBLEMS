@@ -27,6 +27,17 @@
 					*
 				FROM
 					BOARD_INFO
+				WHERE
+					1=1
+					<if test="boardDTO.boSeq != 0">
+						AND BO_SEQ = #{boardDTO.boSeq}
+					</if>
+					<if test="boardDTO.usrNm != '' and boardDTO.usrNm != null">
+						AND USR_NM like '%' || #{boardDTO.usrNm} || '%'
+					</if>
+					<if test="boardDTO.boTi != '' and boardDTO.boTi != null">
+						AND BO_TI like '%' || #{boardDTO.boTi} || '%'
+					</if>
 				ORDER BY
 					BO_SEQ
 			) b
@@ -42,6 +53,17 @@
 				*
 			FROM
 				BOARD_INFO
+			WHERE
+				1=1
+				<if test="boardDTO.boSeq != 0">
+					AND BO_SEQ = #{boardDTO.boSeq}
+				</if>
+				<if test="boardDTO.usrNm != '' and boardDTO.usrNm != null">
+					AND USR_NM like '%' || #{boardDTO.usrNm} || '%'
+				</if>
+				<if test="boardDTO.boTi != '' and boardDTO.boTi != null">
+					AND BO_TI like '%' || #{boardDTO.boTi} || '%'
+				</if>
 			ORDER BY
 				BO_SEQ
 		)
@@ -88,8 +110,8 @@
 		 	BO_SEQ.NEXTVAL,
 		 	#{usrSeq},
 		 	#{tpCD},
-		 	'lobtest',
-		 	'lobtest',
+		 	#{boTi},
+		 	#{boTXT},
 		 	TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS'),
 		 	#{boImg},
 		 	#{usrNm},
@@ -105,5 +127,18 @@
 		WHERE
 			BO_SEQ = #{boSeq}
 	</select>
+	
+	<update id="editBoard" parameterType="com.spring.innoblems.dto.BoardDTO">
+		UPDATE
+			BOARD_INFO
+		SET
+		 	TP_CD = #{tpCD},
+		 	BO_TI = #{boTi},
+		 	BO_TXT = #{boTXT},
+		 	BO_IMG = #{boImg},
+		 	BO_LOB = #{boLob}
+		WHERE
+			BO_SEQ = #{boSeq}
+	</update>
 	
 </mapper>

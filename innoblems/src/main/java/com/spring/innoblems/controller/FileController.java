@@ -6,6 +6,7 @@ import java.util.Calendar;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.ibatis.reflection.SystemMetaObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -76,7 +77,10 @@ public class FileController {
             String uploadpath = boardImagesPath;
             String originFilename = multi.getOriginalFilename();
             String extName = originFilename.substring(originFilename.lastIndexOf("."),originFilename.length());
-            long size = multi.getSize();
+           
+            long tmp_size = multi.getSize();
+            
+            int size = (int) tmp_size;
             
             System.out.println("size = " + size);
             
@@ -87,8 +91,6 @@ public class FileController {
                 {
                     File file = new File(uploadpath, saveFileName);
                     multi.transferTo(file);
-                    
-                    Thread.sleep(5000);
                     
                     return saveFileName;
                 }
