@@ -48,7 +48,7 @@ public class MainController {
 		return "login";
 	}
 	
-	@RequestMapping("goUserListPage")
+	@RequestMapping("userList")
 	public String goUserListPage(Model model) {
 		List codeList = mainService.getCodeList();
 		model.addAttribute("codeList", codeList);
@@ -56,7 +56,7 @@ public class MainController {
 		return "userList";
 	}
 	
-	@RequestMapping("/goProjectListPage")
+	@RequestMapping("/projectList")
 	public String goProjectListPage(Model model) {
 		List codeList = mainService.getCodeList();
 		model.addAttribute("codeList", codeList);
