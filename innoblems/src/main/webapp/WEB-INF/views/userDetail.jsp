@@ -17,7 +17,6 @@
 <script>
 	$(function(){
 		setBirth()
-		setAddress()
 		setSkills()
 		
 		$("#usrNm").keyup(function (event) {
@@ -136,28 +135,13 @@
 		})
 	}
 	
-	function setAddress() {
-		var usrAd = '${userDTO.usrAd}'
-		
-		var usrAdArr = usrAd.split(", ")
-		
-		$("#postcode").val(usrAdArr[0])
-		$("#roadAddress").val(usrAdArr[1])
-		$("#detailAddress").val(usrAdArr[2])
-		
-	}
-	
 	function setSkills() {
 		var skills = '${userDTO.skills}'
-		
-		console.log(skills)
-		
 		var skillArr = skills.split(",")
-		
+			
 		for(var i = 0; i<skillArr.length; i++){
 			$("input[id=" + skillArr[i] + "]").prop('checked',true);
 		}
-		
 	}
 	
 	function cancel() {
@@ -175,7 +159,9 @@
 		var usrINDT = $("#usrINDT").val()
 		var usrPn = $("#usrPn").val()
 		var usrEm = $("#usrEm").val()
-		var usrAd = $("#postcode").val() + ", " + $("#roadAddress").val() + ", " + $("#detailAddress").val()
+		var usrZip = $("#postcode").val()
+		var usrRad = $("#roadAddress").val()
+		var usrDad = $("#detailAddress").val()
 		var raCD = $("#raCD").val()
 		var stCD = $("#stCD").val()
 		var gdCD = $("#gdCD").val()
@@ -217,7 +203,9 @@
 	       		param += "&usrINDT="+usrINDT
 	       		param += "&usrPn="+usrPn
 	       		param += "&usrEm="+usrEm
-	       		param += "&usrAd="+usrAd
+	       		param += "&usrZip="+usrZip
+	       		param += "&usrRad="+usrRad
+	       		param += "&usrDad="+usrDad
 	       		param += "&stCD="+stCD
 	       		param += "&raCD="+raCD
 	       		param += "&gdCD="+gdCD
@@ -270,7 +258,9 @@
 				       		param += "&usrINDT="+usrINDT
 				       		param += "&usrPn="+usrPn
 				       		param += "&usrEm="+usrEm
-				       		param += "&usrAd="+usrAd
+				       		param += "&usrZip="+usrZip
+				       		param += "&usrRad="+usrRad
+				       		param += "&usrDad="+usrDad
 				       		param += "&stCD="+stCD
 				       		param += "&raCD="+raCD
 				       		param += "&gdCD="+gdCD
@@ -777,10 +767,10 @@ table td{
 					    	<tr>
 					    		<td>林家</td>
 					    		<td colspan="3">				    			
-					    			<input type="text" id="postcode" placeholder="快祈锅龋" readonly>
+					    			<input type="text" id="postcode" placeholder="快祈锅龋" value="${userDTO.usrZip}" readonly>
 									<input type="button" id="search" onclick="sample4_execDaumPostcode()" value="林家 八祸"><br>
-									<input type="text" id="roadAddress" placeholder="档肺疙林家" readonly>
-									<input type="text" id="detailAddress" placeholder="惑技林家" maxlength="100">
+									<input type="text" id="roadAddress" placeholder="档肺疙林家" value="${userDTO.usrRad}" readonly>
+									<input type="text" id="detailAddress" placeholder="惑技林家" value="${userDTO.usrDad}" maxlength="100">
 					    		</td>
 					    	</tr> 
 					    	<tr>

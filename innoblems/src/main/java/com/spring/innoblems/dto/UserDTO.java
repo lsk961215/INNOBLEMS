@@ -23,7 +23,9 @@ public class UserDTO {
 	private String usrImg;
 	private String usrPn;
 	private String usrEm;
-	private String usrAd;
+	private String usrZip;
+	private String usrRad;
+	private String usrDad;
 	private String minDT;
 	private String maxDT;
 	private String skills;

@@ -19,7 +19,9 @@
 	  <result column="USR_IMG" property="usrImg"/>
 	  <result column="USR_PN" property="usrPn"/>
 	  <result column="USR_EM" property="usrEm"/>
-	  <result column="USR_AD" property="usrAd"/>
+	  <result column="USR_ZIP" property="usrZip"/>
+	  <result column="USR_RAD" property="usrRad"/>
+	  <result column="USR_DAD" property="usrDad"/>
 	  <result column="SKILLS" property="skills"/>
 	</resultMap>
 	
@@ -230,10 +232,12 @@
 			</if>
 		 	USR_PN = #{usrPn},
 		 	USR_EM = #{usrEm},
-		 	USR_AD = #{usrAd},
+		 	USR_ZIP = #{usrZip},
+		 	USR_RAD = #{usrRad},
 		 	<if test="salt != '' and salt != null">
-				SALT = #{salt}
+				SALT = #{salt},
 			</if>
+			USR_DAD = #{usrDad}
 		WHERE
 			USR_SEQ = #{usrSeq}
 	</update>
