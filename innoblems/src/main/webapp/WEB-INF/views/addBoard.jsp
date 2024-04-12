@@ -827,6 +827,7 @@ table .projectHead {
 									        height: '500px',
 									        initialEditType: 'WYSIWYG',
 									        previewStyle: 'vertical',
+									        initialValue: '${boardDTO.boLob}',
 									        hooks: {
 									        	addImageBlobHook: function(blob, callback) {
 									        		let formData = new FormData()
